@@ -1,0 +1,45 @@
+{
+    "paths": [
+        {
+            "name": "/consults",
+            "lambdaFunction": "consultsLambda",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            },
+            "policyResourceName": "/consults"
+        }
+    ],
+    "resourceName": "consultApi",
+    "apiName": "consultApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "consultsLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 1,
+        "authRoleName": "amplify-apollodashboard-dev-183826-authRole",
+        "unAuthRoleName": "amplify-apollodashboard-dev-183826-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "consultsLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
