@@ -2,6 +2,7 @@ import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import AuthNav from "../Nav/AuthNav";
+import { IsAdmin } from "../../Util/helpers"
 
 function AppNavbar() {
     return (
@@ -16,6 +17,9 @@ function AppNavbar() {
                 <LinkContainer to={"/profile"}>
                     <Nav.Link>Profile</Nav.Link>
                 </LinkContainer>
+                {IsAdmin() && <LinkContainer to={"/roles"}>
+                    <Nav.Link>Roles</Nav.Link>
+                </LinkContainer>}
             </Nav>
             <Navbar.Collapse className="justify-content-end">
                 <AuthNav />
