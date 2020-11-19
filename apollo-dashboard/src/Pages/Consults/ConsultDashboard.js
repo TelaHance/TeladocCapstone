@@ -1,14 +1,16 @@
 import React from "react";
 import {Col, Container, Jumbotron, Row} from "react-bootstrap";
 import BootstrapTable from 'react-bootstrap-table-next';
+import BootstrapButton from 'react-bootstrap/Button';
 import useSWR from "swr";
 import ReactJson from "react-json-view";
 import {fetchWithToken} from "../../Util/fetch";
+import { Link } from 'react-router-dom'
 
-const Consults = () => {
+const ConsultDashboard = (props) => {
     const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
     const { data: consultList, error, mutate: mutateConsults } = useSWR(
-        ['https://zt4g5hjpeb.execute-api.us-west-2.amazonaws.com/dev/{proxy+}', awsToken],
+        ['https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all', awsToken],
         fetchWithToken
     );
     const dateFormatter = (cell, row) =>{
@@ -22,6 +24,12 @@ const Consults = () => {
             `${cell.Last_Name}, ${cell.Given_Name}`
         );
     };
+    const buttonFormatter = (cell, row) => {
+        return <Link to={`/consults/${row.id}`}>View</Link>;
+    }
+    const handleClick = () =>{
+        
+    }
     const columns = [{
         dataField: 'id',
         text: 'Consult ID'
@@ -40,6 +48,10 @@ const Consults = () => {
     },{
         dataField: 'sentiment',
         text: 'Sentiment'
+    },{
+        dataField: 'button',
+        text: 'Actions',
+        formatter: buttonFormatter
     }];
     return (
         <Container className="mb-5">
@@ -48,4 +60,4 @@ const Consults = () => {
     );
 };
 
-export default Consults;
+export default ConsultDashboard;
