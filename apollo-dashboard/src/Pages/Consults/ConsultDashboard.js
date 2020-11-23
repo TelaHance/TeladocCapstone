@@ -54,6 +54,7 @@ const ConsultDashboard = (props) => {
     }];
     return (
         <Container className="mb-5">
+            <h1>Consult Dashboard</h1>
             <BootstrapTable keyField='id' data={ consultList || []} columns={ columns } />
         </Container>
     );

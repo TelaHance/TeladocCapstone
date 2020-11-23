@@ -11,9 +11,10 @@ import Profile from "./Pages/Profile/Profile";
 import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
 import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
-function App() {
-    const { isLoading } = useAuth0();
+import Admin from "./Pages/Admin/Admin"
 
+function App() {
+    const {isLoading} = useAuth0();
     if (isLoading) {
         return <Loading />;
     }
@@ -27,6 +28,7 @@ function App() {
                     <PrivateRoute exact path="/consults" component={ConsultDashboard} />
                     <PrivateRoute exact path="/profile" component={Profile} />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
+                    <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
             </Container>
             <AppFooter />
