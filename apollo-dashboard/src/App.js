@@ -10,9 +10,10 @@ import Home from "./Pages/Home/Home";
 import Profile from "./Pages/Profile/Profile";
 import Consults from "./Pages/Consults/Consults";
 import Loading from "./Components/Loading/Loading";
-function App() {
-    const { isLoading } = useAuth0();
+import Admin from "./Pages/Admin/Admin"
 
+function App() {
+    const {isLoading} = useAuth0();
     if (isLoading) {
         return <Loading />;
     }
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/" exact component={Home} />
                     <PrivateRoute path="/consults" component={Consults} />
                     <PrivateRoute path="/profile" component={Profile} />
+                    <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
             </Container>
             <AppFooter />
