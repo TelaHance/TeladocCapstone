@@ -27,9 +27,8 @@ const ConsultDashboard = (props) => {
     const buttonFormatter = (cell, row) => {
         return <Link to={`/consults/${row.id}`}>View</Link>;
     }
-    const handleClick = () =>{
-        
-    }
+    console.log(consultList)
+    console.log(mutateConsults)
     const columns = [{
         dataField: 'id',
         text: 'Consult ID'
