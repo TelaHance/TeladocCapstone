@@ -1,7 +1,5 @@
 # Setting up Authentication on Localhost
 
-(For authentication on Heroku, follow all of these instructions first, then scroll down to the section for Heroku).
-
 This project uses Auth0 and Google OAuth for authentication (checking usernames and passwords for logging in).
 
 Auth0 is a service that allows you to set up an application where you "login in with Google" or "login with GitHub" or "login with Facebook", etc. (This process of allowing users to login into an application with multiple providers is sometimes called _Federated Login_).
@@ -26,8 +24,6 @@ Make sure to click "Save Changes" at the bottom of the page to save your changes
 
 ## Secrets files (e.g. `.env.local.SAMPLE`)
 
-This section describes files such as `.env`, `secrets-localhost.properties`, `secrets-heroku.properties` etc. in which we store application _secrets_.
-
 It is typical for web applications to require _secrets_, i.e. values that are passed to various services (such as Auth0, a database, cloud platforms, etc.) in order to make things work. Tutorials often show code that has these secrets hardcoded into your source code (in Java, JavaScript, Python, etc.). This is a bad idea; don't do this. If you put these values in your source code, they often end up in Github, and eventually get leaked, creating security vulnerabilities.
 
 Instead, a better practice is:
@@ -42,16 +38,14 @@ In this repo, we have the following templates for secrets:
 
 | Template                              | File you should copy it to     | explanation                                     |
 | ------------------------------------- | ------------------------------ | ----------------------------------------------- |
-| `secrets-localhost.properties.SAMPLE` | `secrets-localhost.properties` | Java Spring Boot backend when running locally   |
-| `secrets-heroku.properties.SAMPLE`    | `secrets-heroku.properties`    | Java Spring Boot backend when running on Heroku |
-| `javascript/.env.local.SAMPLE`        | `javascript/.env.local`        | React Frontend code when running locally        |
-| `javascript/.env.production.SAMPLE`   | `javascript/.env.production`   | React Frontend code when running on Heroku      |
+| `apollo-dashboard/.env.local.SAMPLE`        | `apollo-dashboard/.env.local`        | React Frontend code when running locally        |
+| `apollo-dashboard/.env.production.SAMPLE`   | `apollo-dashboard/.env.production`   | React Frontend code when running on Netlify      |
 
 ## Now returning to the Auth0 configuration...
 
 On the same page you should see a "Domain" and "Client ID".
 
-- Copy those values into your `javascript/.env.local` file.
+- Copy those values into your `apollo-dashboard/.env.local` file.
 - You may also see other fields such as `REACT_APP_AUTH0_AUDIENCE`; don't worry about those for now. We'll fill in the other fields in later steps.
 
 In the "Connections" tab of **your app** (not from the sidebar)
@@ -64,7 +58,7 @@ In the "Connections" tab of **your app** (not from the sidebar)
 
 ## Creating an Auth0 API and filling in the `Audience` value
 
-To fill in the value for `REACT_APP_AUTH0_AUDIENCE` in your `javascript/.env.local` file, go to the sidebar in Auth0, and locate the `APIs` tab.
+To fill in the value for `REACT_APP_AUTH0_AUDIENCE` in your `apollo-dashboard/.env.local` file, go to the sidebar in Auth0, and locate the `APIs` tab.
 
 You should see (at least) one API listed, namely the `Auth0 Management API`. This API is used to manage all other APIs, so we'll create an API that is specific to just our application.
 
@@ -73,15 +67,15 @@ First, click on the `Create API` button.
 Next, fill in the fields as follows:
 | Field name | Value | Description |
 |------------|-------|-------------|
-| Name | The name of your application | This is just a visual name for the Auth0 API of your application, so make it readable. Example `Test Demo Spring React App`|
-| Identifier | Put a unique identifier here such as `https://REPLACE-ME.herokuapp.com`, replacing `REPLACE-ME` with your hyphenated application name | This will end up serving as the `Audience` value. |
+| Name | The name of your application | This is just a visual name for the Auth0 API of your application, so make it readable. Example `Test Teladoc`|
+| Identifier | Put a unique identifier here such as `https://REPLACE-ME.netlify.app`, replacing `REPLACE-ME` with your hyphenated application name | This will end up serving as the `Audience` value. |
 | Signing algorithm | RS256 | This determines what cryptographic algorithm is used to verify tokens. The standard is RS256, so we use that here |
 
 It should end up looking like the below image (with your application name):
 
 ![Auth0 API setup](./images/auth0-api-setup.png)
 
-Hit `Create`, and navigate to the `Settings` tab of your API, and find the `Identifier` field. You should copy that value and paste it into the `REACT_APP_AUTH0_AUDIENCE` value in your `javascript/.env.local` file.
+Hit `Create`, and navigate to the `Settings` tab of your API, and find the `Identifier` field. You should copy that value and paste it into the `REACT_APP_AUTH0_AUDIENCE` value in your `apollo-dashboard/.env.local` file.
 
 ## Setting up Google OAuth
 
@@ -91,12 +85,12 @@ To do this, you will need to log in to your Google Account and create a Google O
 
 The instructions below are based on the instructions <a href="https://developers.google.com/identity/sign-in/web/sign-in" target="_blank">here</a>.
 
-Before you start, get the Auth0 domain loaded in one of your browser tabs; you can find it by navigating to your account on <https://auth0.com>, clicking on "Applications in the side bar, locating one of the specific applications you created (e.g. `test-demo-spring-react-app` and then locating `Auth0 Domain` as a field in the settings tab. This "domain" is consistant across all applications in your tenant.
+Before you start, get the Auth0 domain loaded in one of your browser tabs; you can find it by navigating to your account on <https://auth0.com>, clicking on "Applications in the side bar, locating one of the specific applications you created (e.g. `test-teladoc-app` and then locating `Auth0 Domain` as a field in the settings tab. This "domain" is consistant across all applications in your tenant.
 
 1. Navigate to page <a href="https://developers.google.com/identity/sign-in/web/sign-in" target="_blank">Google OAuth Instructions</a> and click where it says "Go to the Credentials Page".
 2. Click `Create credentials > OAuth client ID.`
 3. Select the `Web application` application type.
-4. Name your OAuth 2.0 client (e.g. `test-demo-spring-react-app`).
+4. Name your OAuth 2.0 client (e.g. `test-app-name`).
 5. Add an authorized JavaScript origin with the value `https://<Auth0 Domain>`.
 6. Add an authorized redirect URI, with the value `https://<Auth0 Domain>/login/callback`, replacing `<Auth0 Domain>` with the `Auth0 Domain` listed in the Auth0 settings for your app. (It should look something like: `https://dev-pfjsl7rp.auth0.com/login/callback`, without the `<>` in it.)
 7. Scroll down and click "Create" to create your Google OAuth App.
@@ -113,7 +107,7 @@ When you have completed this step, you may return to the main instructions in th
 
 ![auth0 connections social](./images/auth0-connections-social.png)
 
-# Setting up Authentication on Heroku
+# Setting up Authentication on Netlify
 
 Follow all of the instructions above first for getting your app working on Localhost.
 
@@ -125,7 +119,7 @@ http://localhost:3000, add a comma-separated entry after the existing entry refe
 of localhost. It is important you include both localhost and production urls so that both your localhost and production
 apps will work properly.
 
-For example, if your production url is , https://your-heroku-app-name.heroku.com, your fields should now look like this:
+For example, if your production url is , https://your-netlify-app-name.netlify.app, your fields should now look like this:
 
 | Field                 | Value                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------- |
@@ -138,4 +132,4 @@ the production app.
 
 Don't forget to click "Save Changes" at the bottom of the page!
 
-The next step is to set up the files for production/Heroku for both the frontend and backend. Please return to the instructions in the main [../README.md](../README.md) to continue.
+The next step is to set up the files for production/Netlify for both the frontend and backend. Please return to the instructions in the main [../README.md](../README.md) to continue.
