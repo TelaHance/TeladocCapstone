@@ -1,7 +1,5 @@
 # Setting up Authentication on Localhost
 
-(For authentication on Heroku, follow all of these instructions first, then scroll down to the section for Heroku).
-
 This project uses Auth0 and Google OAuth for authentication (checking usernames and passwords for logging in).
 
 Auth0 is a service that allows you to set up an application where you "login in with Google" or "login with GitHub" or "login with Facebook", etc. (This process of allowing users to login into an application with multiple providers is sometimes called _Federated Login_).
@@ -26,8 +24,6 @@ Make sure to click "Save Changes" at the bottom of the page to save your changes
 
 ## Secrets files (e.g. `.env.local.SAMPLE`)
 
-This section describes files such as `.env`, `secrets-localhost.properties`, `secrets-heroku.properties` etc. in which we store application _secrets_.
-
 It is typical for web applications to require _secrets_, i.e. values that are passed to various services (such as Auth0, a database, cloud platforms, etc.) in order to make things work. Tutorials often show code that has these secrets hardcoded into your source code (in Java, JavaScript, Python, etc.). This is a bad idea; don't do this. If you put these values in your source code, they often end up in Github, and eventually get leaked, creating security vulnerabilities.
 
 Instead, a better practice is:
@@ -42,10 +38,8 @@ In this repo, we have the following templates for secrets:
 
 | Template                              | File you should copy it to     | explanation                                     |
 | ------------------------------------- | ------------------------------ | ----------------------------------------------- |
-| `secrets-localhost.properties.SAMPLE` | `secrets-localhost.properties` | Java Spring Boot backend when running locally   |
-| `secrets-heroku.properties.SAMPLE`    | `secrets-heroku.properties`    | Java Spring Boot backend when running on Heroku |
 | `javascript/.env.local.SAMPLE`        | `javascript/.env.local`        | React Frontend code when running locally        |
-| `javascript/.env.production.SAMPLE`   | `javascript/.env.production`   | React Frontend code when running on Heroku      |
+| `javascript/.env.production.SAMPLE`   | `javascript/.env.production`   | React Frontend code when running on Netlify      |
 
 ## Now returning to the Auth0 configuration...
 
@@ -74,7 +68,7 @@ Next, fill in the fields as follows:
 | Field name | Value | Description |
 |------------|-------|-------------|
 | Name | The name of your application | This is just a visual name for the Auth0 API of your application, so make it readable. Example `Test Teladoc`|
-| Identifier | Put a unique identifier here such as `https://REPLACE-ME.herokuapp.com`, replacing `REPLACE-ME` with your hyphenated application name | This will end up serving as the `Audience` value. |
+| Identifier | Put a unique identifier here such as `https://REPLACE-ME.netlify.app`, replacing `REPLACE-ME` with your hyphenated application name | This will end up serving as the `Audience` value. |
 | Signing algorithm | RS256 | This determines what cryptographic algorithm is used to verify tokens. The standard is RS256, so we use that here |
 
 It should end up looking like the below image (with your application name):
@@ -113,7 +107,7 @@ When you have completed this step, you may return to the main instructions in th
 
 ![auth0 connections social](./images/auth0-connections-social.png)
 
-# Setting up Authentication on Heroku
+# Setting up Authentication on Netlify
 
 Follow all of the instructions above first for getting your app working on Localhost.
 
@@ -138,4 +132,4 @@ the production app.
 
 Don't forget to click "Save Changes" at the bottom of the page!
 
-The next step is to set up the files for production/Heroku for both the frontend and backend. Please return to the instructions in the main [../README.md](../README.md) to continue.
+The next step is to set up the files for production/Netlify for both the frontend and backend. Please return to the instructions in the main [../README.md](../README.md) to continue.
