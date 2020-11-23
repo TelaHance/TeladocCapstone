@@ -73,7 +73,7 @@ First, click on the `Create API` button.
 Next, fill in the fields as follows:
 | Field name | Value | Description |
 |------------|-------|-------------|
-| Name | The name of your application | This is just a visual name for the Auth0 API of your application, so make it readable. Example `Test Demo Spring React App`|
+| Name | The name of your application | This is just a visual name for the Auth0 API of your application, so make it readable. Example `Test Teladoc`|
 | Identifier | Put a unique identifier here such as `https://REPLACE-ME.herokuapp.com`, replacing `REPLACE-ME` with your hyphenated application name | This will end up serving as the `Audience` value. |
 | Signing algorithm | RS256 | This determines what cryptographic algorithm is used to verify tokens. The standard is RS256, so we use that here |
 
@@ -91,12 +91,12 @@ To do this, you will need to log in to your Google Account and create a Google O
 
 The instructions below are based on the instructions <a href="https://developers.google.com/identity/sign-in/web/sign-in" target="_blank">here</a>.
 
-Before you start, get the Auth0 domain loaded in one of your browser tabs; you can find it by navigating to your account on <https://auth0.com>, clicking on "Applications in the side bar, locating one of the specific applications you created (e.g. `test-demo-spring-react-app` and then locating `Auth0 Domain` as a field in the settings tab. This "domain" is consistant across all applications in your tenant.
+Before you start, get the Auth0 domain loaded in one of your browser tabs; you can find it by navigating to your account on <https://auth0.com>, clicking on "Applications in the side bar, locating one of the specific applications you created (e.g. `test-teladoc-app` and then locating `Auth0 Domain` as a field in the settings tab. This "domain" is consistant across all applications in your tenant.
 
 1. Navigate to page <a href="https://developers.google.com/identity/sign-in/web/sign-in" target="_blank">Google OAuth Instructions</a> and click where it says "Go to the Credentials Page".
 2. Click `Create credentials > OAuth client ID.`
 3. Select the `Web application` application type.
-4. Name your OAuth 2.0 client (e.g. `test-demo-spring-react-app`).
+4. Name your OAuth 2.0 client (e.g. `test-app-name`).
 5. Add an authorized JavaScript origin with the value `https://<Auth0 Domain>`.
 6. Add an authorized redirect URI, with the value `https://<Auth0 Domain>/login/callback`, replacing `<Auth0 Domain>` with the `Auth0 Domain` listed in the Auth0 settings for your app. (It should look something like: `https://dev-pfjsl7rp.auth0.com/login/callback`, without the `<>` in it.)
 7. Scroll down and click "Create" to create your Google OAuth App.
@@ -125,7 +125,7 @@ http://localhost:3000, add a comma-separated entry after the existing entry refe
 of localhost. It is important you include both localhost and production urls so that both your localhost and production
 apps will work properly.
 
-For example, if your production url is , https://your-heroku-app-name.heroku.com, your fields should now look like this:
+For example, if your production url is , https://your-netlify-app-name.netlify.app, your fields should now look like this:
 
 | Field                 | Value                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------- |
