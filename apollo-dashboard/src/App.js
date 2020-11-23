@@ -8,7 +8,8 @@ import AppNavbar from "./Components/Nav/AppNavbar";
 import AppFooter from "./Components/Footer/AppFooter";
 import Home from "./Pages/Home/Home";
 import Profile from "./Pages/Profile/Profile";
-import Consults from "./Pages/Consults/Consults";
+import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
+import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
 
@@ -24,8 +25,9 @@ function App() {
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <PrivateRoute path="/consults" component={Consults} />
-                    <PrivateRoute path="/profile" component={Profile} />
+                    <PrivateRoute exact path="/consults" component={ConsultDashboard} />
+                    <PrivateRoute exact path="/profile" component={Profile} />
+                    <PrivateRoute path="/consults/:consultId" component={Consult} />
                     <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
             </Container>
