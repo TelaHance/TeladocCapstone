@@ -11,7 +11,7 @@ Auth0 is a service that allows you to set up an application where you "login in 
 First, [sign up for an account with Auth0](https://auth0.com/signup); we suggest using your GitHub credentials as your login for Auth0. You will be asked to create a _tenant_ (a _tenant_ in this case, is just an instance of using Auth0 for some application or set of applications. You need at least one _tenant_ before you can start using Auth0.)
 
 Next, register a new application. You do this by navigating to the "Applications" page in the sidebar and clicking the
-"Create Application" button. Give it a name (e.g. `test-demo-spring-react-app`) and ensure you set it up as a "Single Page Application".
+"Create Application" button. Give it a name (e.g. `your-name-teladoc-capstone`) and ensure you set it up as a "Single Page Application".
 
 In the configuration for the application you just created, click on the "Settings" tab and fill in the following values
 in the appropriate fields:
