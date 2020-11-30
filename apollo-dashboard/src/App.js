@@ -11,6 +11,7 @@ import Profile from "./Pages/Profile/Profile";
 import Consults from "./Pages/Consults/Consults";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
+import AuthorizedRoute from "./Components/Nav/AuthorizedRoute";
 
 function App() {
     const {isLoading} = useAuth0();
@@ -24,9 +25,9 @@ function App() {
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <PrivateRoute path="/consults" component={Consults} />
+                    <AuthorizedRoute path="/consults" component={Consults} authorizedRoles={["admin", "doctor", "patient"]}  />
                     <PrivateRoute path="/profile" component={Profile} />
-                    <PrivateRoute path="/admin" component={Admin} />
+                    <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["Admin"]}  />
                 </Switch>
             </Container>
             <AppFooter />
