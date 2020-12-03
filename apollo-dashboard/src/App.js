@@ -12,6 +12,7 @@ import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
 import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
+import AuthorizedRoute from "./Components/Nav/AuthorizedRoute";
 
 function App() {
     const {isLoading} = useAuth0();
@@ -25,10 +26,10 @@ function App() {
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <PrivateRoute exact path="/consults" component={ConsultDashboard} />
-                    <PrivateRoute exact path="/profile" component={Profile} />
+                    <AuthorizedRoute path="/consults" component={Consults} authorizedRoles={["admin", "doctor", "patient"]}  />
+                    <PrivateRoute path="/profile" component={Profile} />
+                    <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["Admin"]}  />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
-                    <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
             </Container>
             <AppFooter />
