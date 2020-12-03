@@ -1,33 +1,58 @@
-import React from "react";
-import { Table, DropdownButton, Dropdown} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import { Image, Button, Col, Row} from "react-bootstrap";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import Container from "react-bootstrap/Container";
 import { Device } from 'twilio-client';
-const TwilioCall = () => {
-    //
-    //
-    // $.getJSON('https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token').done(function(data) {
-    //     Device.setup(data.token);
-    // }).fail(function(err) {
-    //     console.log(err);
-    //     self.setState({log: 'Could not fetch token, see console.log'});
-    // });
-    //
-    // // Configure event handlers for Twilio Device
-    // Device.disconnect(function() {
-    //     self.setState({
-    //         onPhone: false,
-    //         log: 'Call ended.'
-    //     });
-    // });
-    //
-    // Device.ready(function() {
-    //     self.log = 'Connected';
-    // });
+import fetch from "isomorphic-fetch"
+import {useAuth0} from "@auth0/auth0-react";
+import phoneIcon from  "../../assets/phoneIcon.png";
+
+const TwilioCall = ({match}) => {
+    const { params:{phoneNumber} } = match;
+    useEffect(() => {
+        fetch('https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token')
+            .then( r => r.json())
+            .then(data => {
+                Device.setup(JSON.parse(data).token,{closeProtection: true});
+            }).catch(err => console.log(err));
+        });
+    function call() {
+        const params = {"callTo": phoneNumber};
+        Device.connect(params);
+    }
+
+    function hangup() {
+        Device.disconnectAll();
+    }
 
     return (
-        <h1>Hello</h1>
+        <>
+            <h1>Patient Consultation</h1>
+            <Container className="mb-5">
+                <Row>
+                    <Col>
+                        <Image
+                            width={200}
+                            height={200}
+                            src={phoneIcon}
+                            alt="Profile"
+                            rounded
+                            fluid
+                        />
+                    </Col>
+                </Row>
+                <br/>
+                <Row>
+                    <Col md={{ span: 3, offset: 3 }}>
+                        <Button className="call" onClick={call} size="lg" variant="success">Call</Button>
+                    </Col>
+                    <Col md={{ span: 3, offset: 0 }}>
+                         <Button className="hangup" onClick={hangup} size="lg" variant="danger">Hangup</Button>
+                    </Col>
+                </Row>
+            </Container>
+        </>
     );
 };
 
