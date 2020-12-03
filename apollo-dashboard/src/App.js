@@ -30,7 +30,7 @@ function App() {
                     <PrivateRoute exact path="/consults" component={ConsultDashboard} />
                     <PrivateRoute exact path="/profile" component={Profile} />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
-                    <PrivateRoute path="/TwilioCall/:userId" component={TwilioCall} />
+                    <PrivateRoute path="/TwilioCall/:phoneNumber" component={TwilioCall} />
                     <PrivateRoute path="/patients" component={Patient} />
                     <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
