@@ -16,6 +16,9 @@ function AppNavbar() {
                 <LinkContainer to={"/admin"}>
                     <Nav.Link>Admin</Nav.Link>
                 </LinkContainer>}
+                <LinkContainer to={"/patients"}>
+                    <Nav.Link>Patients</Nav.Link>
+                </LinkContainer>
                 <LinkContainer to={"/profile"}>
                     <Nav.Link>Profile</Nav.Link>
                 </LinkContainer>
