@@ -15,6 +15,7 @@ function AppNavbar() {
         fetchWithUser);
     const isLoggedIn = (roleInfo?.body) ? JSON.parse(roleInfo.body).role.toLowerCase() : null;
     const isAdmin = (roleInfo?.body) ? "admin" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
+    const isDoctor = (roleInfo?.body) ? "doctor" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
     console.log();
     return (
         <Navbar bg="dark" variant="dark">
@@ -31,6 +32,11 @@ function AppNavbar() {
                     (<LinkContainer to={"/admin"}>
                         <Nav.Link>Admin</Nav.Link>
                     </LinkContainer>)
+                }
+                {isDoctor &&
+                (<LinkContainer to={"/patients"}>
+                    <Nav.Link>Patients</Nav.Link>
+                </LinkContainer>)
                 }
                 {isLoggedIn &&
                     (<LinkContainer to={"/profile"}>
