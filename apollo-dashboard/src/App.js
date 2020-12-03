@@ -8,7 +8,8 @@ import AppNavbar from "./Components/Nav/AppNavbar";
 import AppFooter from "./Components/Footer/AppFooter";
 import Home from "./Pages/Home/Home";
 import Profile from "./Pages/Profile/Profile";
-import Consults from "./Pages/Consults/Consults";
+import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
+import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
 import AuthorizedRoute from "./Components/Nav/AuthorizedRoute";
@@ -28,6 +29,7 @@ function App() {
                     <AuthorizedRoute path="/consults" component={Consults} authorizedRoles={["admin", "doctor", "patient"]}  />
                     <PrivateRoute path="/profile" component={Profile} />
                     <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["Admin"]}  />
+                    <PrivateRoute path="/consults/:consultId" component={Consult} />
                 </Switch>
             </Container>
             <AppFooter />

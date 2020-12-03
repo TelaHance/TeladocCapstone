@@ -5,7 +5,7 @@ export async function fetchWithToken(url, token, options) {
         ...options,
         headers: {
             ...options?.headers,
-            "x-api-key": token,
+            "x-api-key": `${token}`,
         },
     });
     if (response.status >= 400 && response.status < 600) {
