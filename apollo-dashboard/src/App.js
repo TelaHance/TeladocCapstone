@@ -12,6 +12,7 @@ import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
 import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
+import AuthorizedRoute from "./Components/Nav/AuthorizedRoute";
 import TwilioCall from "./Pages/Patients/TwilioCall";
 import Patient from "./Pages/Patients/Patients";
 
@@ -27,12 +28,12 @@ function App() {
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <PrivateRoute exact path="/consults" component={ConsultDashboard} />
-                    <PrivateRoute exact path="/profile" component={Profile} />
+                    <AuthorizedRoute path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
+                    <PrivateRoute path="/profile" component={Profile} />
+                    <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
-                    <PrivateRoute path="/TwilioCall/:phoneNumber" component={TwilioCall} />
-                    <PrivateRoute path="/patients" component={Patient} />
-                    <PrivateRoute path="/admin" component={Admin} />
+                    <AuthorizedRoute path="/TwilioCall/:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
+                    <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
                 </Switch>
             </Container>
             <AppFooter />
