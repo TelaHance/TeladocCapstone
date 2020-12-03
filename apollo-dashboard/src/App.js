@@ -12,6 +12,8 @@ import ConsultDashboard from "./Pages/Consults/ConsultDashboard";
 import Consult from "./Pages/Consults/Consult";
 import Loading from "./Components/Loading/Loading";
 import Admin from "./Pages/Admin/Admin"
+import TwilioCall from "./Pages/Patients/TwilioCall";
+import Patient from "./Pages/Patients/Patients";
 
 function App() {
     const {isLoading} = useAuth0();
@@ -28,6 +30,8 @@ function App() {
                     <PrivateRoute exact path="/consults" component={ConsultDashboard} />
                     <PrivateRoute exact path="/profile" component={Profile} />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
+                    <PrivateRoute path="/TwilioCall/:userId" component={TwilioCall} />
+                    <PrivateRoute path="/patients" component={Patient} />
                     <PrivateRoute path="/admin" component={Admin} />
                 </Switch>
             </Container>
