@@ -3,14 +3,17 @@ import {Col, Container, Jumbotron, Row} from "react-bootstrap";
 import BootstrapTable from 'react-bootstrap-table-next';
 import BootstrapButton from 'react-bootstrap/Button';
 import useSWR from "swr";
+import { useAuth0 } from "@auth0/auth0-react";
 import ReactJson from "react-json-view";
 import {fetchWithToken} from "../../Util/fetch";
 import { Link } from 'react-router-dom'
 
 const ConsultDashboard = (props) => {
+    const { user } = useAuth0();
+    const user_id = user ? user.sub.split('|')[1] : "NULL";
     const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
     const { data: consultList, error, mutate: mutateConsults } = useSWR(
-        ['https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all', awsToken],
+        [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`, awsToken],
         fetchWithToken
     );
     const dateFormatter = (cell, row) =>{
@@ -21,27 +24,27 @@ const ConsultDashboard = (props) => {
     };
     const nameFormatter = (cell, row) =>{
         return (
-            `${cell.Last_Name}, ${cell.Given_Name}`
+            `${cell.family_name}, ${cell.given_name}`
         );
     };
     const buttonFormatter = (cell, row) => {
-        return <Link to={`/consults/${row.id}`}>View</Link>;
+        return <Link to={`/consults/${row.consult_id}`}>View</Link>;
     }
     console.log(consultList)
     console.log(mutateConsults)
     const columns = [{
-        dataField: 'id',
+        dataField: 'consult_id',
         text: 'Consult ID'
     }, {
         dataField: 'created',
         text: 'Appointment Date',
         formatter: dateFormatter
     },{
-        dataField: 'Doctor_Full_Name',
+        dataField: 'doctor',
         text: 'Doctor Name',
         formatter: nameFormatter
     },{
-        dataField: 'Patient_Full_Name',
+        dataField: 'patient',
         text: 'Patient Name',
         formatter: nameFormatter
     },{

@@ -10,6 +10,7 @@ const Admin = () => {
         ['https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-get-all', awsToken],
         fetchWithToken
     );
+    console.log(users)
 
     const changeRole = async (id, role) => {
         try {
