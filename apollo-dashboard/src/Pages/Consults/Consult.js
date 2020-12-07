@@ -7,7 +7,7 @@ import {Container, Col, Row} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
 import { TimedTextEditor } from "@bbc/react-transcript-editor/TimedTextEditor";
 import DEMO_TRANSCRIPT from "./assets/transcript.json";
-import media from "./assets/media.mp4";
+import DEMO_MEDIA from "./assets/media.m4a";
 
 
 
@@ -27,11 +27,11 @@ const Consult = ({match}) =>{
     }
     console.log(consult);
     const transcript = require('./assets/transcript.json');
-    // const media = require('./assets/audio.mp3');
+    // const DEMO_MEDIA = require('./assets/audio.mp3');
     var binaryData = [];
-    binaryData.push(media);
+    binaryData.push(DEMO_MEDIA);
     // const fileURL = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mp3"}))
-    // const fileURL = URL.createObjectURL(media);
+    // const fileURL = URL.createObjectURL(DEMO_MEDIA);
     return (
         // <Container className="mb-5">
         //     <Row className="text-left">
@@ -42,11 +42,11 @@ const Consult = ({match}) =>{
             <Col md={9}>
                 <TranscriptEditor
                     transcriptData={DEMO_TRANSCRIPT}
-                    mediaUrl={media}
+                    mediaUrl={DEMO_MEDIA}
                     isEditable={true}
                     spellCheck={false}
                     sttJsonType={"amazontranscribe"}
-                    mediaType={"video"}
+                    mediaType={"audio"}
                 />
             </Col>
             <Col>
