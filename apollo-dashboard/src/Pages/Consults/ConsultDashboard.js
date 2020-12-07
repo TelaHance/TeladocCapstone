@@ -16,6 +16,7 @@ const ConsultDashboard = (props) => {
         [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`, awsToken],
         fetchWithToken
     );
+    console.log(consultList);
     const dateFormatter = (cell, row) =>{
         const date = new Date(cell * 1000);
         return (
@@ -56,7 +57,7 @@ const ConsultDashboard = (props) => {
     return (
         <Container className="mb-5">
             <h1>Consult Dashboard</h1>
-            <BootstrapTable keyField='id' data={ consultList || []} columns={ columns } />
+            {consultList ? <BootstrapTable keyField='id' data={ consultList || []} columns={ columns } /> : <h2>No Consults</h2>}
         </Container>
     );
 };

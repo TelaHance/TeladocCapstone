@@ -28,7 +28,7 @@ function App() {
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <AuthorizedRoute path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
+                    <AuthorizedRoute exact path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
                     <PrivateRoute path="/profile" component={Profile} />
                     <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
