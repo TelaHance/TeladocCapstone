@@ -6,8 +6,8 @@ import ReactJson from "react-json-view";
 import {Container, Col, Row} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
 import { TimedTextEditor } from "@bbc/react-transcript-editor/TimedTextEditor";
-import DEMO_TRANSCRIPT from "./assets/bbc.json";
-import media from "./assets/audio.mp3";
+import DEMO_TRANSCRIPT from "./assets/transcript.json";
+import media from "./assets/media.mp4";
 
 
 
@@ -30,7 +30,6 @@ const Consult = ({match}) =>{
     // const media = require('./assets/audio.mp3');
     var binaryData = [];
     binaryData.push(media);
-    console.log(media);
     // const fileURL = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mp3"}))
     // const fileURL = URL.createObjectURL(media);
     return (
@@ -42,12 +41,12 @@ const Consult = ({match}) =>{
         <Row>
             <Col md={9}>
                 <TranscriptEditor
-                    transcriptData={transcript}
+                    transcriptData={DEMO_TRANSCRIPT}
                     mediaUrl={media}
                     isEditable={true}
                     spellCheck={false}
                     sttJsonType={"amazontranscribe"}
-                    mediaType={"audio"}
+                    mediaType={"video"}
                 />
             </Col>
             <Col>
