@@ -29,7 +29,11 @@ const ConsultDashboard = (props) => {
         );
     };
     const buttonFormatter = (cell, row) => {
-        return <Link to={`/consults/${row.consult_id}`}>View</Link>;
+        return <Link 
+                  to={{
+                      pathname: `/consults/${row.consult_id}`,
+                      data: row}}
+                >View</Link>;
     }
     const columns = [{
         dataField: 'consult_id',

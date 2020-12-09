@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Jumbotron } from "react-bootstrap";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
@@ -8,41 +8,15 @@ import TranscriptEditor from "@bbc/react-transcript-editor";
 import { TimedTextEditor } from "@bbc/react-transcript-editor/TimedTextEditor";
 import DEMO_TRANSCRIPT from "./assets/transcript.json";
 import DEMO_MEDIA from "./assets/media.m4a";
+import Loading from "../../Components/Loading/Loading";
 
-
-
-const Consult = ({match}) =>{
-    console.log(match)
-    const { params: {consultId} } = match;
-    const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-    const { data: response, error, mutate: mutateConsults } = useSWR(
-        [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`, awsToken],
-        fetchWithToken
-    );
-    console.log(response)
-    console.log(error)
-    let consult = null;
-    if (response) {
-        consult = JSON.parse(response.body);
-    }
-    console.log(consult);
-    const transcript = require('./assets/transcript.json');
-    // const DEMO_MEDIA = require('./assets/audio.mp3');
-    var binaryData = [];
-    binaryData.push(DEMO_MEDIA);
-    // const fileURL = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mp3"}))
-    // const fileURL = URL.createObjectURL(DEMO_MEDIA);
+function renderConsult(consult) {
     return (
-        // <Container className="mb-5">
-        //     <Row className="text-left">
-        //         <ReactJson src={consult} />
-        //     </Row>
-        // </Container>
         <Row>
             <Col md={9}>
                 <TranscriptEditor
-                    transcriptData={DEMO_TRANSCRIPT}
-                    mediaUrl={DEMO_MEDIA}
+                    transcriptData={JSON.parse(consult.transcript)}
+                    mediaUrl={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
                     isEditable={true}
                     spellCheck={false}
                     sttJsonType={"amazontranscribe"}
@@ -50,9 +24,59 @@ const Consult = ({match}) =>{
                 />
             </Col>
             <Col>
-                Sentiment: {consult ? consult.sentiment : null}
+                Sentiment: {consult.sentiment}
             </Col>
         </Row>
+    )
+}
+
+function renderLoading() {
+    return (
+        <div>
+            <Loading></Loading>
+            <Jumbotron>Processing Consult</Jumbotron>
+        </div>
+    )
+}
+
+const Consult = (props) =>{
+    // console.log(match)
+    const { params: {consultId} } = props.match;
+    const { data } = props.location;
+    // const [consult, setConsult] = useState(data);
+    // React.useEffect(() => {
+    //     localStorage.setItem("consult", JSON.stringify(consult));
+    // }, [consult])
+    // React.useEffect(() => {
+    //     const storedConsult = localStorage.getItem("consult") || null;
+    //     console.log(storedConsult);
+    //     if (storedConsult)
+    //         setConsult(JSON.parse(storedConsult));
+    // }, [])
+    // let consult = null;
+    // if (!data) {
+    //     const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
+    //     const { data: response, error, mutate: mutateConsults } = useSWR(
+    //         [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`, awsToken],
+    //         fetchWithToken
+    //     );
+    //     if (response) {
+    //         consult = JSON.parse(response.body);
+    //     }
+    // } else {
+    //     consult = data;
+    // }
+    const consult = data;
+
+
+    // console.log(response)
+    // console.log(error)
+    console.log(props)
+    // let consult = null;
+   
+    console.log(consult);
+    return (
+        consult ? renderConsult(consult) : renderLoading()
     );
 }
 
