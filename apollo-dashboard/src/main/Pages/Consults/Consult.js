@@ -3,8 +3,6 @@ import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import {Container, Col, Row, Badge} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
-import DEMO_TRANSCRIPT from "./assets/transcript.json";
-import DEMO_MEDIA from "./assets/media.m4a";
 import Loading from "../../Components/Loading/Loading";
 import Jumbotron from "react-bootstrap/Jumbotron";
 

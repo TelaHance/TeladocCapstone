@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Container, Col, Badge } from "react-bootstrap";
 import ReactJson from "react-json-view";
 import useSWR from "swr";
-import {fetchWithToken, fetchWithUser} from "../../Util/fetch";
+import {fetchWithUser} from "../../Util/fetch";
 const Profile = () => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
     const { user } = useAuth0();

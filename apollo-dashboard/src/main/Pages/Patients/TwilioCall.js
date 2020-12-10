@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import { Image, Button, Col, Row} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { Device } from 'twilio-client';

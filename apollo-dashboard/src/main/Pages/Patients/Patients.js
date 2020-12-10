@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import Container from "react-bootstrap/Container";
 import BootstrapTable from "react-bootstrap-table-next";
 import {Link} from "react-router-dom";
-import {useAuth0} from "@auth0/auth0-react";
 const Patient = () => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
     const { data: patientList, mutate: mutatePatientList } = useSWR(
