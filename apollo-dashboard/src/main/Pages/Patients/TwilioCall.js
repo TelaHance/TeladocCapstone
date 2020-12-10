@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import { Device } from 'twilio-client';
 import fetch from "isomorphic-fetch"
 import {useAuth0} from "@auth0/auth0-react";
-import phoneIcon from  "../../assets/phoneIcon.png";
+import phoneIcon from "../../assets/phoneIcon.png";
 
 const TwilioCall = ({match}) => {
     const { user } = useAuth0();
