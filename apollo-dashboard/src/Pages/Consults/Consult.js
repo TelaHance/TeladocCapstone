@@ -6,6 +6,7 @@ import TranscriptEditor from "@bbc/react-transcript-editor";
 import DEMO_TRANSCRIPT from "./assets/transcript.json";
 import DEMO_MEDIA from "./assets/media.m4a";
 import Loading from "../../Components/Loading/Loading";
+import Jumbotron from "react-bootstrap/Jumbotron";
 
 function renderConsult(consult) {
     return (
@@ -17,7 +18,7 @@ function renderConsult(consult) {
             <h2>
                 {new Date(consult.timestamp).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})}
             </h2>
-            {consult.transcript && Object.keys(consult.transcript).length > 0 ? 
+            {consult.transcript && Object.keys(consult.transcript).length > 0 ?
             renderTranscript(consult) : renderLoading("Processing Consult")}
         </Container>
     )
@@ -55,7 +56,7 @@ function renderTranscript(consult) {
 function renderLoading(message) {
     return (
         <div>
-            <Loading></Loading>
+            <Loading/>
             <Jumbotron>{message}</Jumbotron>
         </div>
     )
