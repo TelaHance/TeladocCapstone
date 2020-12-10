@@ -3,8 +3,6 @@ import "./App.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Container } from "react-bootstrap";
 import { Route, Switch } from "react-router-dom";
-import PrivateRoute from "./Components/Auth/PrivateRoute";
-import AppNavbar from "./Components/Nav/AppNavbar";
 import AppFooter from "./Components/Footer/AppFooter";
 import Home from "./Pages/Home/Home";
 import Profile from "./Pages/Profile/Profile";
@@ -15,6 +13,8 @@ import Admin from "./Pages/Admin/Admin"
 import AuthorizedRoute from "./Components/Nav/AuthorizedRoute";
 import TwilioCall from "./Pages/Patients/TwilioCall";
 import Patient from "./Pages/Patients/Patients";
+import PrivateRoute from "./Components/Auth/PrivateRoute";
+import AppNavbar from "./Components/Nav/AppNavbar";
 
 function App() {
     const {isLoading} = useAuth0();
