@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
-import Auth0ProviderWithHistory from "./Components/Auth/Auth0ProviderWithHistory";
-import App from "./App";
+import Auth0ProviderWithHistory from "./main/Components/Auth/Auth0ProviderWithHistory";
+import App from "./main/App";
 
 ReactDOM.render(
     <React.StrictMode>
