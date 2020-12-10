@@ -15,7 +15,7 @@ const ConsultDashboard = (props) => {
         fetchWithToken
     );
     const dateFormatter = (cell, row) =>{
-        const date = new Date(cell * 1000);
+        const date = new Date(cell);
         return (
             date.toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})
         );
@@ -26,13 +26,17 @@ const ConsultDashboard = (props) => {
         );
     };
     const buttonFormatter = (cell, row) => {
-        return <Link to={`/consults/${row.consult_id}`}>View</Link>;
+        return <Link 
+                  to={{
+                      pathname: `/consults/${row.consult_id}`,
+                      data: row}}
+                >View</Link>;
     }
     const columns = [{
         dataField: 'consult_id',
         text: 'Consult ID'
     }, {
-        dataField: 'created',
+        dataField: 'timestamp',
         text: 'Appointment Date',
         formatter: dateFormatter
     },{
