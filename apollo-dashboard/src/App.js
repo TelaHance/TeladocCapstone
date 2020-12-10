@@ -31,8 +31,8 @@ function App() {
                     <AuthorizedRoute exact path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
                     <PrivateRoute path="/profile" component={Profile} />
                     <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
+                    <AuthorizedRoute path="/TwilioCall/:patientId&:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
                     <PrivateRoute path="/consults/:consultId" component={(props) => <Consult {...props}/>} />
-                    <AuthorizedRoute path="/TwilioCall/:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
                     <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
                 </Switch>
             </Container>

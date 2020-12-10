@@ -1,12 +1,10 @@
-import React from "react";
-import { Table, DropdownButton, Dropdown} from "react-bootstrap";
+import React, { useState } from "react";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import Container from "react-bootstrap/Container";
-import { Device } from 'twilio-client';
 import BootstrapTable from "react-bootstrap-table-next";
 import {Link} from "react-router-dom";
-import Button from "react-bootstrap/Button";
+import {useAuth0} from "@auth0/auth0-react";
 const Patient = () => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
     const { data: patientList, mutate: mutatePatientList } = useSWR(
@@ -14,7 +12,9 @@ const Patient = () => {
         fetchWithToken
     );
     const buttonFormatter = (cell, row) => {
-        return <a className="btn btn-primary" href={`/TwilioCall/${row.phone}`} role="button">Call Patient</a>
+        return <Link className="btn btn-primary" to={{
+            pathname: `/TwilioCall/${row.user_id}&${row.phone}`,
+            }}>Call Patient</Link>
     };
     const columns = [{
         dataField: 'user_id',
