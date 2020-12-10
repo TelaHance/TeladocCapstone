@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import AuthNav from "../Nav/AuthNav";
+import AuthNav from "./AuthNav";
 import {useAuth0} from "@auth0/auth0-react";
 import useSWR from "swr";
 import {fetchWithUser} from "../../Util/fetch";
