@@ -5,11 +5,13 @@ import { Device } from 'twilio-client';
 import fetch from "isomorphic-fetch"
 import {useAuth0} from "@auth0/auth0-react";
 import phoneIcon from "../../assets/phoneIcon.png";
+import { useHistory } from "react-router-dom";
 
 const TwilioCall = ({match}) => {
     const { user } = useAuth0();
     const { sub } = user;
     const { params:{phoneNumber, patientId} } = match;
+    const history = useHistory();
     useEffect(() => {
         fetch('https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token')
             .then( r => r.json())
@@ -31,6 +33,7 @@ const TwilioCall = ({match}) => {
 
     function hangup() {
         Device.disconnectAll();
+        history.push('/consults')
     }
 
     return (
