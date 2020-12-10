@@ -18,7 +18,7 @@ const ConsultDashboard = (props) => {
     );
     console.log(consultList);
     const dateFormatter = (cell, row) =>{
-        const date = new Date(cell * 1000);
+        const date = new Date(cell);
         return (
             date.toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})
         );
@@ -39,7 +39,7 @@ const ConsultDashboard = (props) => {
         dataField: 'consult_id',
         text: 'Consult ID'
     }, {
-        dataField: 'created',
+        dataField: 'timestamp',
         text: 'Appointment Date',
         formatter: dateFormatter
     },{
