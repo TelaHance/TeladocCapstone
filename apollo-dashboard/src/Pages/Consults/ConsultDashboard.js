@@ -1,10 +1,8 @@
 import React from "react";
-import {Col, Container, Jumbotron, Row} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import BootstrapTable from 'react-bootstrap-table-next';
-import BootstrapButton from 'react-bootstrap/Button';
 import useSWR from "swr";
 import { useAuth0 } from "@auth0/auth0-react";
-import ReactJson from "react-json-view";
 import {fetchWithToken} from "../../Util/fetch";
 import { Link } from 'react-router-dom'
 
@@ -16,7 +14,6 @@ const ConsultDashboard = (props) => {
         [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`, awsToken],
         fetchWithToken
     );
-    console.log(consultList);
     const dateFormatter = (cell, row) =>{
         const date = new Date(cell);
         return (

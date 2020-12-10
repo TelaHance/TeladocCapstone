@@ -1,10 +1,8 @@
 import React from "react";
-import { Jumbotron } from "react-bootstrap";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import {Container, Col, Row, Badge} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
-import { TimedTextEditor } from "@bbc/react-transcript-editor/TimedTextEditor";
 import DEMO_TRANSCRIPT from "./assets/transcript.json";
 import DEMO_MEDIA from "./assets/media.m4a";
 import Loading from "../../Components/Loading/Loading";

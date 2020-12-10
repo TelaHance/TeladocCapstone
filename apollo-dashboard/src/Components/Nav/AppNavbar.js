@@ -16,7 +16,6 @@ function AppNavbar() {
     const isLoggedIn = (roleInfo?.body) ? JSON.parse(roleInfo.body).role.toLowerCase() : null;
     const isAdmin = (roleInfo?.body) ? "admin" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
     const isDoctor = (roleInfo?.body) ? "doctor" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
-    console.log();
     return (
         <Navbar bg="dark" variant="dark">
             <LinkContainer to={""}>
