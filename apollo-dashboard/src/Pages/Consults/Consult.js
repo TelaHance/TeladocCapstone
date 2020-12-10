@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Jumbotron } from "react-bootstrap";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
-import ReactJson from "react-json-view";
-import {Container, Col, Row} from 'react-bootstrap';
+import {Container, Col, Row, Badge} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
 import { TimedTextEditor } from "@bbc/react-transcript-editor/TimedTextEditor";
 import DEMO_TRANSCRIPT from "./assets/transcript.json";
@@ -11,6 +10,28 @@ import DEMO_MEDIA from "./assets/media.m4a";
 import Loading from "../../Components/Loading/Loading";
 
 function renderConsult(consult) {
+    return (
+        <Container>
+            <h1>
+                Consult Between Doctor {consult.doctor.given_name} {consult.doctor.family_name} and
+                 Patient {consult.patient.given_name} {consult.patient.family_name}
+            </h1>
+            <h2>
+                {new Date(consult.timestamp).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})}
+            </h2>
+            {consult.transcript && Object.keys(consult.transcript).length > 0 ? 
+            renderTranscript(consult) : renderLoading("Processing Consult")}
+        </Container>
+    )
+}
+
+function renderTranscript(consult) {
+    let textColor = '#FF0000'; // red text
+    if (consult.sentiment > 0.7) {
+        textColor = '#00FF00'; // green text
+    } else if (consult.sentiment > 0.4) {
+        textColor = '#ffff00'; // yellow text
+    }
     return (
         <Row>
             <Col md={9}>
@@ -21,62 +42,42 @@ function renderConsult(consult) {
                     spellCheck={false}
                     sttJsonType={"amazontranscribe"}
                     mediaType={"audio"}
+                    title={consult.consult_id}
                 />
             </Col>
             <Col>
-                Sentiment: {consult.sentiment}
+                <Badge variant="info" style={{color: textColor, backgroundColor: '#C0C0C0'}}>
+                    Sentiment: {consult.sentiment}
+                </Badge>
             </Col>
         </Row>
     )
 }
 
-function renderLoading() {
+function renderLoading(message) {
     return (
         <div>
             <Loading></Loading>
-            <Jumbotron>Processing Consult</Jumbotron>
+            <Jumbotron>{message}</Jumbotron>
         </div>
     )
 }
 
 const Consult = (props) =>{
-    // console.log(match)
     const { params: {consultId} } = props.match;
-    const { data } = props.location;
-    // const [consult, setConsult] = useState(data);
-    // React.useEffect(() => {
-    //     localStorage.setItem("consult", JSON.stringify(consult));
-    // }, [consult])
-    // React.useEffect(() => {
-    //     const storedConsult = localStorage.getItem("consult") || null;
-    //     console.log(storedConsult);
-    //     if (storedConsult)
-    //         setConsult(JSON.parse(storedConsult));
-    // }, [])
-    // let consult = null;
-    // if (!data) {
-    //     const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-    //     const { data: response, error, mutate: mutateConsults } = useSWR(
-    //         [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`, awsToken],
-    //         fetchWithToken
-    //     );
-    //     if (response) {
-    //         consult = JSON.parse(response.body);
-    //     }
-    // } else {
-    //     consult = data;
-    // }
-    const consult = data;
-
-
-    // console.log(response)
-    // console.log(error)
-    console.log(props)
-    // let consult = null;
-   
-    console.log(consult);
+    let consult = null;
+    const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
+    const { data: response, error, mutate: mutateConsults } = useSWR(
+        [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`, awsToken],
+        fetchWithToken
+    );
+    if (response) {
+        consult = JSON.parse(response.body);
+    } else if (error) {
+        console.error(error);
+    }
     return (
-        consult ? renderConsult(consult) : renderLoading()
+        consult ? renderConsult(consult) : renderLoading("Loading Consult")
     );
 }
 
