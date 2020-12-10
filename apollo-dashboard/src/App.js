@@ -32,7 +32,7 @@ function App() {
                     <PrivateRoute path="/profile" component={Profile} />
                     <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
                     <PrivateRoute path="/consults/:consultId" component={Consult} />
-                    <AuthorizedRoute path="/TwilioCall/:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
+                    <AuthorizedRoute path="/TwilioCall/:patientId&:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
                     <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
                 </Switch>
             </Container>

@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import { Image, Button, Col, Row} from "react-bootstrap";
-import {fetchWithToken} from "../../Util/fetch";
-import useSWR from "swr";
 import Container from "react-bootstrap/Container";
 import { Device } from 'twilio-client';
 import fetch from "isomorphic-fetch"
@@ -9,7 +7,9 @@ import {useAuth0} from "@auth0/auth0-react";
 import phoneIcon from  "../../assets/phoneIcon.png";
 
 const TwilioCall = ({match}) => {
-    const { params:{phoneNumber} } = match;
+    const { user } = useAuth0();
+    const { sub } = user;
+    const { params:{phoneNumber, patientId} } = match;
     useEffect(() => {
         fetch('https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token')
             .then( r => r.json())
@@ -18,7 +18,14 @@ const TwilioCall = ({match}) => {
             }).catch(err => console.log(err));
         });
     function call() {
-        const params = {"callTo": phoneNumber};
+        const d = new Date();
+
+        const params = {
+            "callTo": phoneNumber,
+            "doctor_id": sub.split('|')[1],
+            "patient_id": patientId,
+            "timestamp":d.getTime()
+        };
         Device.connect(params);
     }
 
