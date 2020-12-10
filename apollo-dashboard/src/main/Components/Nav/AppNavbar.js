@@ -19,7 +19,7 @@ function AppNavbar() {
     return (
         <Navbar bg="dark" variant="dark">
             <LinkContainer to={""}>
-                <Navbar.Brand data-testid="brand">Apollo Dashboard</Navbar.Brand>
+                <Navbar.Brand data-testid="brand">TeleHance Dashboard</Navbar.Brand>
             </LinkContainer>
             <Nav>
                 { isLoggedIn &&

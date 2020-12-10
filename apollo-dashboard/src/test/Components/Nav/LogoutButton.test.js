@@ -1,10 +1,9 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { useAuth0 } from "@auth0/auth0-react";
-jest.mock("@auth0/auth0-react");
 import userEvent from "@testing-library/user-event";
 import LogoutButton from "../../../main/Components/Nav/LogoutButton";
-
+jest.mock("@auth0/auth0-react");
 describe("logout button tests", () => {
     beforeEach(() => {
         const logoutSpy = jest.fn();
