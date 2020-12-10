@@ -1,6 +1,6 @@
 # Teladoc Capstone
 
-A Clinical Quality Serverless web app with Create React App.
+A Clinical Quality Serverless React web app with Create React App.
 
 ## Property file values
 
