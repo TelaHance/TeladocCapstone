@@ -15,7 +15,7 @@ const ConsultDashboard = (props) => {
         fetchWithToken
     );
     const dateFormatter = (cell, row) =>{
-        const date = new Date(cell);
+        const date = new Date(Number(cell));
         return (
             date.toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})
         );
@@ -26,7 +26,7 @@ const ConsultDashboard = (props) => {
         );
     };
     const buttonFormatter = (cell, row) => {
-        return <Link 
+        return <Link
                   to={{
                       pathname: `/consults/${row.consult_id}`,
                       data: row}}
@@ -49,7 +49,7 @@ const ConsultDashboard = (props) => {
         formatter: nameFormatter
     },{
         dataField: 'sentiment',
-        text: 'Sentiment'
+        text: 'Toxicity Rating'
     },{
         dataField: 'button',
         text: 'Actions',
