@@ -14,7 +14,7 @@ function renderConsult(consult) {
                  Patient {consult.patient.given_name} {consult.patient.family_name}
             </h1>
             <h2>
-                {new Date(consult.timestamp).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})}
+                {new Date(Number(consult.timestamp)).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})}
             </h2>
             {consult.transcript && Object.keys(consult.transcript).length > 0 ?
             renderTranscript(consult) : renderLoading("Processing Consult")}
@@ -23,15 +23,15 @@ function renderConsult(consult) {
 }
 
 function renderTranscript(consult) {
-    let textColor = '#FF0000'; // red text
+    let textColor = '#00ed00'; // green text
     if (consult.sentiment > 0.7) {
-        textColor = '#00FF00'; // green text
+        textColor = '#ff0600'; // red text
     } else if (consult.sentiment > 0.4) {
-        textColor = '#ffff00'; // yellow text
+        textColor = '#d6cd00'; // yellow text
     }
     return (
         <Row>
-            <Col md={9}>
+            <Col md="10">
                 <TranscriptEditor
                     transcriptData={JSON.parse(consult.transcript)}
                     mediaUrl={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
@@ -42,10 +42,12 @@ function renderTranscript(consult) {
                     title={consult.consult_id}
                 />
             </Col>
-            <Col>
-                <Badge variant="info" style={{color: textColor, backgroundColor: '#C0C0C0'}}>
-                    Sentiment: {consult.sentiment}
-                </Badge>
+            <Col md="2">
+                <h3>
+                    <Badge variant="info" style={{color: textColor, backgroundColor: 'rgba(0,0,0,1)'}}>
+                        Toxicity Rating: {consult.sentiment}
+                    </Badge>
+                </h3>
             </Col>
         </Row>
     )
