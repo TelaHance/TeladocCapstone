@@ -45,7 +45,7 @@ function renderTranscript(consult) {
             <Col md="2">
                 <h3>
                     <Badge variant="info" style={{color: textColor, backgroundColor: 'rgba(0,0,0,1)'}}>
-                        Toxicity Rating: {consult.sentiment}
+                        Problematic Consult Rating: {consult.sentiment}
                     </Badge>
                 </h3>
             </Col>
