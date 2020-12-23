@@ -49,7 +49,7 @@ const ConsultDashboard = (props) => {
         formatter: nameFormatter
     },{
         dataField: 'sentiment',
-        text: 'Toxicity Rating'
+        text: 'Problematic Consult Rating'
     },{
         dataField: 'button',
         text: 'Actions',
