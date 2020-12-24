@@ -6,13 +6,13 @@ A Clinical Quality Serverless React web app made with Create React App.
 
 This section serves as a quick reference for values found in [`.env.local.sample`](./.env.local.sample).
 
-| Property name                                                     | Explanation                                                               |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `REACT_APP_AUTH0_DOMAIN`                                                   | See `Getting Started` below                                               |
-| `REACT_APP_AUTH0_CLIENT_ID`                                                              | See `Getting Started` below        |
-| `REACT_APP_AUTH0_AUDIENCE`                                                      | See `Getting Started` below  |
-| `REACT_APP_CONSULT_API_KEY`                                                                  | Ask for an API Key                                              |
-| `REACT_APP_MANAGEMENT_API_KEY`                                                                | Ask for an API Key                                                |
+| Property name                  | Explanation                 |
+| ------------------------------ | --------------------------- |
+| `REACT_APP_AUTH0_DOMAIN`       | See `Getting Started` below |
+| `REACT_APP_AUTH0_CLIENT_ID`    | See `Getting Started` below |
+| `REACT_APP_AUTH0_AUDIENCE`     | See `Getting Started` below |
+| `REACT_APP_CONSULT_API_KEY`    | Ask for an API Key          |
+| `REACT_APP_MANAGEMENT_API_KEY` | Ask for an API Key          |
 
 
 ## Getting started
