@@ -2,22 +2,22 @@
   font-family: Effra, Arial, Sans-serif;
   font-size: 16px;
   border-radius: 20px;
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.20);
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.2);
   display: inline-block;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  max-width: 75%;
   padding: 8px 15px;
   position: relative;
   text-align: start;
-  word-wrap: break-word;
 }
 
 .self {
   align-self: flex-end;
   background-color: #5b2f91;
+  background: linear-gradient(#9d50bb, #5b2f91);
   color: #fff;
   border-radius: 10px 10px 0 10px;
-  margin-left: 25%;
 }
 
 .other {
@@ -25,5 +25,17 @@
   background-color: #fff;
   color: #000;
   border-radius: 10px 10px 10px 0;
-  margin-right: 25%;
+}
+
+.highlight {
+  padding: 0.1em 0.2em;
+  border-radius: 5px;
+}
+
+.self .highlight {
+  background-color: #4290da;
+}
+
+.other .highlight {
+  background-color: #95c6f3;
 }

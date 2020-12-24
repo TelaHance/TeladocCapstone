@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
@@ -29,8 +29,7 @@ function getMessageBlocks(self, other) {
 
   let selfStartTime = parseFloat(self.items[0].start_time) ?? 0;
   let otherStartTime = parseFloat(other.items[0].start_time) ?? 0;
-  let prevSpeaker =
-    selfStartTime < otherStartTime ? SELF_LABEL : OTHER_LABEL;
+  let prevSpeaker = selfStartTime < otherStartTime ? SELF_LABEL : OTHER_LABEL;
 
   const blocks = [];
   let block = [];
@@ -49,8 +48,7 @@ function getMessageBlocks(self, other) {
     selfStartTime = parseFloat(next_items[SELF_LABEL].start_time ?? 0);
     otherStartTime = parseFloat(next_items[OTHER_LABEL].start_time ?? 0);
 
-    const speaker =
-      selfStartTime < otherStartTime ? SELF_LABEL : OTHER_LABEL;
+    const speaker = selfStartTime < otherStartTime ? SELF_LABEL : OTHER_LABEL;
 
     if (speaker === prevSpeaker) {
       // Same speaker => Add to current block
@@ -98,19 +96,40 @@ function getMessageBlocks(self, other) {
  * @param {Object} props
  */
 export default function Transcript(props) {
-  // TODO: Implement useEffect/useState to prevent multiple calls when
-  //       props don't change.
-  const blocks = getMessageBlocks(props.self, props.other);
+  const { self, other } = props;
+  const [blocks, setBlocks] = useState();
+  const [time, setTime] = useState(0.0);
+
+  useEffect(() => {
+    setBlocks(getMessageBlocks(self, other));
+  }, [self, other]);
+
+  function handleWordClick(item) {
+    if (item.type !== 'punctuation') {
+      setTime(parseFloat(item.start_time));
+    }
+  }
 
   return (
     <div className={classes.transcript}>
-      {blocks.map(({ speaker, items }) => {
-        const isSelf = speaker === props.self.channel_label;
-        return <Message items={items} isSelf={isSelf} />;
-      })}
+      {blocks
+        ? blocks.map(({ speaker, items }, idx) => {
+            const isSelf = speaker === props.self.channel_label;
+            return (
+              <Message
+                key={idx}
+                items={items}
+                isSelf={isSelf}
+                currentTime={time}
+                onWordClick={handleWordClick}
+              />
+            );
+          })
+        : null}
+        {time}
     </div>
   );
-};
+}
 
 Transcript.propTypes = {
   self: PropTypes.object.isRequired,
