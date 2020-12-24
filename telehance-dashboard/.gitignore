@@ -38,3 +38,12 @@ amplifyconfiguration.json
 amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
+
+# Lock file
+package-lock.json
+
+# VSCode configurations
+.vscode
+
+# Log files
+*.log

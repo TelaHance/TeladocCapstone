@@ -5,6 +5,7 @@ import {Container, Col, Row, Badge} from 'react-bootstrap';
 import TranscriptEditor from "@bbc/react-transcript-editor";
 import Loading from "../../Components/Loading/Loading";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import Transcript from './Transcript/Transcript';
 
 function renderConsult(consult) {
     return (
@@ -17,7 +18,7 @@ function renderConsult(consult) {
                 {new Date(Number(consult.timestamp)).toLocaleString('default', { month: 'long', day: '2-digit', year: 'numeric'})}
             </h2>
             {consult.transcript && Object.keys(consult.transcript).length > 0 ?
-            renderTranscript(consult) : renderLoading("Processing Consult")}
+            renderTranscript2(consult) : renderLoading("Processing Consult")}
         </Container>
     )
 }
@@ -50,6 +51,13 @@ function renderTranscript(consult) {
                 </h3>
             </Col>
         </Row>
+    )
+}
+
+function renderTranscript2(consult) {
+    const channels = JSON.parse(consult.transcript).results.channel_labels.channels;
+    return (
+        <Transcript self={channels[0]} other={channels[1]} />
     )
 }
 

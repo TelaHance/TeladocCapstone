@@ -1,0 +1,7 @@
+.transcript {
+  width: 50%;
+  padding: 2em;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
