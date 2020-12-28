@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 import PropTypes from 'prop-types';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
@@ -96,9 +98,10 @@ function getMessageBlocks(self, other) {
  * @param {Object} props
  */
 export default function Transcript(props) {
-  const { self, other } = props;
+  const { self, other, audioSrc } = props;
   const [blocks, setBlocks] = useState();
-  const [time, setTime] = useState(0.0);
+  const [time, setTime] = useState();
+  const [player, setPlayer] = useState();
 
   useEffect(() => {
     setBlocks(getMessageBlocks(self, other));
@@ -106,8 +109,12 @@ export default function Transcript(props) {
 
   function handleWordClick(item) {
     if (item.type !== 'punctuation') {
-      setTime(parseFloat(item.start_time));
+      player.audio.current.currentTime = parseFloat(item.start_time);
     }
+  }
+
+  function updateTime() {
+    setTime(player ? player.audio.current.currentTime : 0);
   }
 
   return (
@@ -126,7 +133,7 @@ export default function Transcript(props) {
             );
           })
         : null}
-        {time}
+      <AudioPlayer src={audioSrc} listenInterval={10} onListen={updateTime} customAdditionalControls={[]} ref={setPlayer}/>
     </div>
   );
 }
@@ -134,4 +141,5 @@ export default function Transcript(props) {
 Transcript.propTypes = {
   self: PropTypes.object.isRequired,
   other: PropTypes.object.isRequired,
+  audioSrc: PropTypes.string.isRequired,
 };
