@@ -114,26 +114,47 @@ export default function Transcript(props) {
   }
 
   function updateTime() {
-    setTime(player ? player.audio.current.currentTime : 0);
+    setTime(player?.audio?.current?.currentTime ?? 0);
+  }
+
+  function previous() {
+    setTime(0);
+    player.audio.current.currentTime = 0;
+  }
+
+  function next() {
+    setTime(player?.audio?.current?.duration ?? 0);
+    player.audio.current.currentTime = player.audio.current.duration;
   }
 
   return (
     <div className={classes.transcript}>
-      {blocks
-        ? blocks.map(({ speaker, items }, idx) => {
-            const isSelf = speaker === props.self.channel_label;
-            return (
-              <Message
-                key={idx}
-                items={items}
-                isSelf={isSelf}
-                currentTime={time}
-                onWordClick={handleWordClick}
-              />
-            );
-          })
-        : null}
-      <AudioPlayer src={audioSrc} listenInterval={10} onListen={updateTime} customAdditionalControls={[]} ref={setPlayer}/>
+      <AudioPlayer
+        src={audioSrc}
+        listenInterval={10}
+        onListen={updateTime}
+        showSkipControls
+        onClickPrevious={previous}
+        onClickNext={next}
+        customAdditionalControls={[]}
+        ref={setPlayer}
+      />
+      <div className={classes.messages}>
+        {blocks
+          ? blocks.map(({ speaker, items }, idx) => {
+              const isSelf = speaker === props.self.channel_label;
+              return (
+                <Message
+                  key={idx}
+                  items={items}
+                  isSelf={isSelf}
+                  currentTime={time}
+                  onWordClick={handleWordClick}
+                />
+              );
+            })
+          : null}
+      </div>
     </div>
   );
 }
