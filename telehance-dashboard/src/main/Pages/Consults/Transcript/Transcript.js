@@ -110,6 +110,7 @@ export default function Transcript(props) {
   function handleWordClick(item) {
     if (item.type !== 'punctuation') {
       player.audio.current.currentTime = parseFloat(item.start_time);
+      updateTime();
     }
   }
 

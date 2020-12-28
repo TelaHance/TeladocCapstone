@@ -15,7 +15,7 @@
 .self {
   align-self: flex-end;
   background-color: #5b2f91;
-  background: linear-gradient(#9d50bb, #5b2f91);
+  /* background: linear-gradient(#9d50bb, #5b2f91); */
   color: #fff;
   border-radius: 10px 10px 0 10px;
 }
@@ -29,7 +29,7 @@
 
 .highlight {
   /* padding: 0.1em 0.2em; */
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .self .highlight {
