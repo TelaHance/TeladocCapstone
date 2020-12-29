@@ -16,15 +16,13 @@ export default function Transcript(props) {
   const [time, setTime] = useState();
   const [player, setPlayer] = useState();
 
-  function handleWordClick(item) {
-    if (item.type !== 'punctuation') {
-      player.audio.current.currentTime = parseFloat(item.start_time);
-      updateTime();
-    }
+  function setNewTime(newTime) {
+    setTime(newTime);
+    player.audio.current.currentTime = newTime;
   }
 
   function updateTime() {
-    setTime(player?.audio?.current?.currentTime ?? 0);
+    setTime(player?.audio?.current?.currentTime.toFixed(2) ?? 0);
   }
 
   function previous() {
@@ -60,7 +58,7 @@ export default function Transcript(props) {
                   items={items}
                   isSelf={isSelf}
                   currentTime={time}
-                  onWordClick={handleWordClick}
+                  setCurrTime={setNewTime}
                 />
               );
             })
