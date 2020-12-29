@@ -1,10 +1,49 @@
 import React from "react";
 import {Container} from "react-bootstrap";
 import BootstrapTable from 'react-bootstrap-table-next';
+import "./ConsultDashboard.css";
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import useSWR from "swr";
 import { useAuth0 } from "@auth0/auth0-react";
-import {fetchWithToken} from "../../Util/fetch";
+import {fetchWithToken} from "../../../Util/fetch";
 import { Link } from 'react-router-dom'
+
+function renderConsults(consultList, columns) {
+    const pagination = paginationFactory({
+        lastPageText: '>>',
+        sizePerPage: 10,
+        firstPageText: '<<',
+        nextPageText: '>',
+        prePageText: '<',
+        showTotal: true,
+        alwaysShowAllBtns: true
+    });
+
+    const { SearchBar } = Search;
+    return (
+        <ToolkitProvider
+            bootstrap4
+            keyField="id"
+            data={ consultList }
+            columns={ columns }
+            search={ {
+                searchFormatted: true
+                } }
+            >
+            {
+                props => (
+                <div>
+                    <SearchBar { ...props.searchProps } />
+                    <hr />
+                    <BootstrapTable pagination={pagination} { ...props.baseProps } />
+                </div>
+                )
+            }
+        </ToolkitProvider>
+    )
+}
 
 const ConsultDashboard = (props) => {
     const { user } = useAuth0();
@@ -14,6 +53,7 @@ const ConsultDashboard = (props) => {
         [`https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`, awsToken],
         fetchWithToken
     );
+    console.log(consultList)
     const dateFormatter = (cell, row) =>{
         const date = new Date(Number(cell));
         return (
@@ -38,7 +78,8 @@ const ConsultDashboard = (props) => {
     }, {
         dataField: 'timestamp',
         text: 'Appointment Date',
-        formatter: dateFormatter
+        formatter: dateFormatter,
+        sort: true
     },{
         dataField: 'doctor',
         text: 'Doctor Name',
@@ -49,7 +90,8 @@ const ConsultDashboard = (props) => {
         formatter: nameFormatter
     },{
         dataField: 'sentiment',
-        text: 'Toxicity Rating'
+        text: 'Toxicity Rating',
+        sort: true
     },{
         dataField: 'button',
         text: 'Actions',
@@ -58,7 +100,8 @@ const ConsultDashboard = (props) => {
     return (
         <Container className="mb-5">
             <h1>Consult Dashboard</h1>
-            {consultList ? <BootstrapTable keyField='id' data={ consultList || []} columns={ columns } /> : <h2>No Consults</h2>}
+            {/* {consultList ? <BootstrapTable keyField='id' data={ consultList } columns={ columns } /> : <h2>No Consults</h2>} */}
+            {consultList ? renderConsults(consultList, columns) : <h2>No Consults</h2>}
         </Container>
     );
 };
