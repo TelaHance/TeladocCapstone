@@ -11,7 +11,7 @@ import classes from './Transcript.module.css';
  */
 export default function Transcript(props) {
   const { transcript, audioSrc } = props;
-  // TODO: Use setBlocks later to edit content.
+  // TODO: Use setBlocks later to save edited content.
   const [blocks, setBlocks] = useState(transcript.blocks);
   const [time, setTime] = useState();
   const [player, setPlayer] = useState();
