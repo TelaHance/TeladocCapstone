@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./Pages/Home/Home";
@@ -13,6 +12,7 @@ import TwilioCall from "./Pages/Patients/TwilioCall";
 import Patient from "./Pages/Patients/Patients";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
 import AppNavbar from "./Components/Nav/AppNavbar";
+import classes from "./App.module.css";
 
 function App() {
     const {isLoading} = useAuth0();
@@ -21,9 +21,9 @@ function App() {
     }
 
     return (
-        <div className="App">
+        <div className={classes.App}>
             <AppNavbar />
-            <div className="flex-grow-1 mt-5">
+            <div className={classes["App-content"]}>
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <AuthorizedRoute exact path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
