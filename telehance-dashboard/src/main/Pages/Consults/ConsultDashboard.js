@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -73,7 +72,7 @@ const ConsultDashboard = (props) => {
     },
   ];
   return (
-    <Container className='mb-5'>
+    <div className='mb-5'>
       <h1>Consult Dashboard</h1>
       {consultList ? (
         <BootstrapTable
@@ -84,7 +83,7 @@ const ConsultDashboard = (props) => {
       ) : (
         <h2>No Consults</h2>
       )}
-    </Container>
+    </div>
   );
 };
 

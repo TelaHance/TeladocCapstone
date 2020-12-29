@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import classes from './Message.module.css';
 
 export default function Message(props) {
-  const { items, isSelf, currentTime, onWordClick } = props;
+  const { items, isSelf, currentTime, setCurrTime } = props;
   const [currWordIdx, setCurrWordIdx] = useState();
 
+  // Update current word when media is playing.
   useEffect(() => {
     const messageStartTime = items[0].start_time;
     const messageEndTime = items[items.length - 1].end_time;
@@ -23,6 +24,12 @@ export default function Message(props) {
     }
   }, [currentTime, items]);
 
+  function handleWordClick(item) {
+    const newIdx = items.indexOf(item);
+    setCurrWordIdx(newIdx);
+    setCurrTime(item.start_time);
+  }
+
   return (
     <div
       className={clsx(classes.message, {
@@ -35,18 +42,17 @@ export default function Message(props) {
             // Put span with " " before words (except for first)
             const spacing = idx === 0 ? null : <span> </span>;
             return (
-              <>
+              <React.Fragment key={idx}>
                 {spacing}
                 <span
-                  key={idx}
                   className={clsx(classes.item, {
                     [classes.highlight]: currWordIdx === idx,
                   })}
-                  onClick={() => onWordClick(item)}
+                  onClick={() => handleWordClick(item)}
                 >
                   {item.content}
                 </span>
-              </>
+              </React.Fragment>
             );
           })
         : null}
@@ -57,6 +63,6 @@ export default function Message(props) {
 Message.propTypes = {
   items: PropTypes.array.isRequired,
   isSelf: PropTypes.bool.isRequired,
-  currentTime: PropTypes.number.isRequired,
-  onWordClick: PropTypes.func.isRequired,
+  currentTime: PropTypes.number,
+  setCurrTime: PropTypes.func.isRequired,
 };
