@@ -64,12 +64,9 @@ function renderTranscript(consult) {
 }
 
 function renderTranscript2(consult) {
-  const channels = JSON.parse(consult.transcript).results.channel_labels
-    .channels;
   return (
     <Transcript
-      self={channels[0]}
-      other={channels[1]}
+      transcript={consult.transcript}
       audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
     />
   );

@@ -3,34 +3,19 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import classes from './Message.module.css';
 
-function getMessageEndTime(items) {
-  for (let i = items.length - 1; i >= 0; i--) {
-    if (items[i].end_time) {
-      return parseFloat(items[i].end_time);
-    }
-  }
-}
-
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 export default function Message(props) {
   const { items, isSelf, currentTime, onWordClick } = props;
   const [currWordIdx, setCurrWordIdx] = useState();
 
   useEffect(() => {
-    const messageStartTime = parseFloat(items[0].start_time);
-    const messageEndTime = getMessageEndTime(items);
+    const messageStartTime = items[0].start_time;
+    const messageEndTime = items[items.length - 1].end_time;
 
     // Determine if the current time is within this message block, and set the
     // state variables accordingly.
     if (messageStartTime <= currentTime && currentTime < messageEndTime) {
       const currIdx = items.findIndex(
-        (item) =>
-          item.type !== 'punctuation' &&
-          item.start_time <= currentTime &&
-          currentTime < item.end_time
+        (item) => item.start_time <= currentTime && currentTime < item.end_time
       );
       setCurrWordIdx(currIdx);
     } else {
@@ -47,21 +32,19 @@ export default function Message(props) {
     >
       {items
         ? items.map((item, idx) => {
-            const spacing =
-              idx === 0 || item.type === 'punctuation' ? null : <span> </span>;
-            const text = item.alternatives[0].content;
+            // Put span with " " before words (except for first)
+            const spacing = idx === 0 ? null : <span> </span>;
             return (
               <>
                 {spacing}
                 <span
                   key={idx}
                   className={clsx(classes.item, {
-                    [classes.punctuation]: item.type === 'punctuation',
                     [classes.highlight]: currWordIdx === idx,
                   })}
                   onClick={() => onWordClick(item)}
                 >
-                  {idx === 0 ? capitalize(text) : text}
+                  {item.content}
                 </span>
               </>
             );
