@@ -1,20 +1,90 @@
 import React, { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+import {
+  Editor,
+  EditorState,
+  ContentState,
+  convertFromRaw,
+  ContentBlock,
+} from 'draft-js';
 import PropTypes from 'prop-types';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
+import 'react-h5-audio-player/lib/styles.css';
+import 'draft-js/dist/Draft.css';
 
-/**
- * Transcript React Component
- * @param {Object} props
- */
+function getTextFromItems(items) {
+  const content = [];
+  items.forEach((item) => {
+    content.push(item.content);
+  });
+  return content.join(' ');
+}
+
+function generateEntityRanges(items) {
+  let position = 0;
+  return items.map((item, idx) => {
+    const mapping = {
+      key: Math.random()
+        .toString(36)
+        .substr(2, 5),
+      offset: position,
+      length: item.content.length,
+      // Additional Data
+      start_time: item.start_time,
+      end_time: item.end_time,
+      text: item.content,
+    };
+    position += item.content.length + 1;
+    return mapping;
+  });
+}
+
+function createEntityMap(blocks) {
+  const flatten = (list) =>
+    list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+
+  const entityRanges = blocks.map((block) => block.entityRanges);
+  const flatRanges = flatten(entityRanges);
+  const entityMap = {};
+
+  flatRanges.forEach((data) => {
+    entityMap[data.key] = {
+      type: 'WORD',
+      mutability: 'MUTABLE',
+      data,
+    };
+  });
+
+  return entityMap;
+}
+
+function getContentBlocks(transcript) {
+  const blocks = [];
+  transcript.blocks.forEach((block) => {
+    blocks.push({
+      type: 'paragraph',
+      text: getTextFromItems(block.items),
+      data: block,
+      entityRanges: generateEntityRanges(block.items),
+    });
+  });
+  return convertFromRaw({ blocks, entityMap: createEntityMap(blocks) });
+}
+
 export default function Transcript(props) {
   const { transcript, audioSrc } = props;
   // TODO: Use setBlocks later to save edited content.
   const [blocks, setBlocks] = useState(transcript.blocks);
   const [time, setTime] = useState();
   const [player, setPlayer] = useState();
+
+  // Populate Editor State with ContentBlocks
+  const [editorState, setEditorState] = useState(() => {
+    const blocks = getContentBlocks(transcript);
+    const contentState = ContentState.createFromBlockArray(blocks);
+    return EditorState.createWithContent(contentState);
+  });
 
   function setNewTime(newTime) {
     setTime(newTime);
@@ -37,6 +107,7 @@ export default function Transcript(props) {
 
   return (
     <div className={classes.transcript}>
+      <Editor editorState={editorState} onChange={setEditorState} />
       <AudioPlayer
         src={audioSrc}
         listenInterval={10}
