@@ -37,11 +37,6 @@ function AppNavbar() {
                     <Nav.Link>Patients</Nav.Link>
                 </LinkContainer>)
                 }
-                {isLoggedIn &&
-                    (<LinkContainer to={"/profile"}>
-                        <Nav.Link>Profile</Nav.Link>
-                    </LinkContainer>)
-                }
             </Nav>
             <Navbar.Collapse className="justify-content-end">
                 <AuthNav />
