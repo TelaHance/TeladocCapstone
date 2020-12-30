@@ -5,9 +5,12 @@
 .react-bootstrap-table-pagination div {
   display: flex;
   align-items: center;
-  margin-top: 0;
 }
 
 .react-bootstrap-table-pagination .react-bootstrap-table-pagination-list {
-  display: block;
+  justify-content: flex-end;
+}
+
+.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list ul {
+  margin-bottom: 0;
 }
