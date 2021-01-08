@@ -1,204 +1,85 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //icon
 
-import { faHospital } from "@fortawesome/free-regular-svg-icons";
-import logo from "../assets/images/logo.png";
+// import { faHospital } from "@fortawesome/free-regular-svg-icons";
+import logo from "../../assets/logo.png";
 import Dropdown from "react-bootstrap/Dropdown";
+import { useAuth0 } from "@auth0/auth0-react";
+import useSWR from "swr";
+import { fetchWithUser } from "../../Util/fetch";
+import AuthNav from "./AuthNav";
+import styles from "./Navbar.module.css";
 
 const Navbar = (props) => {
-  const url = window.location.pathname.split("/").slice(0, -1).join("/");
+  const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
+  const { user } = useAuth0();
+  const sub = user ? user.sub.split('|')[1] : "NULL";
+  const { data: roleInfo} = useSWR(
+      ["https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id", awsToken, 'POST', sub],
+      fetchWithUser);
+  const isLoggedIn = (roleInfo?.body) ? JSON.parse(roleInfo.body).role.toLowerCase() : null;
+  const isAdmin = (roleInfo?.body) ? "admin" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
+  const isDoctor = (roleInfo?.body) ? "doctor" === JSON.parse(roleInfo.body).role.toLowerCase() : null;
 
   return (
     
-    <header className="header">
-      <nav className="navbar navbar-expand-lg header-nav">
-        <div className="navbar-header">
-          <a href="#0" id="mobile_btn">
-            <span className="bar-icon">
+    <header className={styles.header}>
+      <nav className={styles.navbar + ' ' + styles.headerNav}>
+        <div className={styles.navbarHeader}>
+          <a href="#0" id={styles.mobile_btn}>
+            <span className={styles.barIcon}>
               <span></span>
               <span></span>
               <span></span>
             </span>
           </a>
-          <Link to="/home" className="navbar-brand logo">
+          <Link to="/" className={styles.navbarBrand + ' ' + styles.logo}>
             <img src={logo} className="img-fluid" alt="Logo" />
           </Link>
         </div>
-        <div className="main-menu-wrapper">
-          <div className="menu-header">
-            <Link to="/home" className="menu-logo">
+        <div className={styles.mainMenuWrapper}>
+          <div className={styles.menuHeader}>
+            {/* <Link to="/" className={styles.menuLogo}>
               <img src={logo} className="img-fluid" alt="Logo" />
-            </Link>
-            <a href="#0" id="menu_close" className="menu-close">
-              <i className="fas fa-times"></i>
+            </Link> */}
+            <a href="#0" id="menu_close" className={styles.menuClose}>
+              <i className={styles.fas + ' ' + styles.faTimes}></i>
             </a>
           </div>
-          <ul className="main-nav">
-            <li className={`has-submenu ${url === "/home" ? "active" : ""}`}>
-              <NavLink to="/home" activeClassName="active">
-                Home
+          <ul className={styles.mainNav}>
+            <li>
+              <NavLink to="/" activeClassName={styles.active}>
+                TelaHance Dashboard
               </NavLink>
             </li>
-            <li className={`has-submenu ${url === "/doctor" ? "active" : ""}`}>
-              <a href="#0">
-                Doctors<i className="fa fa-angle-down" aria-hidden="true"></i>
-              </a>
-              <ul className="submenu">
-                <li>
-                  <Link to="/doctor/doctor-dashboard">Doctor Dashboard</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/appointments">Appointments</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/schedule-timing">Schedule Timing</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/my-patients">Patients List</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/patient-profile">Patients Profile</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/chat-doctor">Chat</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/invoice">Invoices</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/profile-setting">Profile Settings</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/review">Reviews</Link>
-                </li>
-                <li>
-                  <Link to="/doctor/doctor-register">Doctor Register</Link>
-                </li>
-              </ul>
-            </li>
-            <li className={`has-submenu ${url === "/patient" ? "active" : ""}`}>
-              <a href="#0">
-                Patients <i className="fa fa-angle-down" aria-hidden="true"></i>
-              </a>
-              <ul className="submenu">
-                <li className="has-submenu">
-                  <a href="#0">Doctors</a>
-                  <ul className="submenu">
-                    <li>
-                      <Link to="/patient/doctor-grid">Map Grid</Link>
-                    </li>
-                    <li>
-                      <Link to="/patient/doctor-list">Map List</Link>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <Link to="/patient/search-doctor">Search Doctor</Link>
-                </li>
-                <li>
-                  <Link to="/patient/doctor-profile">Doctor Profile</Link>
-                </li>
-                <li>
-                  <Link to="/patient/booking">Booking</Link>
-                </li>
-                <li>
-                  <Link to="/patient/checkout">Checkout</Link>
-                </li>
-                <li>
-                  <Link to="/patient/booking-success">Booking Success</Link>
-                </li>
-                <li>
-                  <Link to="/patient/dashboard">Patient Dashboard</Link>
-                </li>
-                <li>
-                  <Link to="/patient/favourites">Favourites</Link>
-                </li>
-                <li>
-                  <Link to="/patient/patient-chat">Chat</Link>
-                </li>
-                <li>
-                  <Link to="/patient/profile">Profile Settings</Link>
-                </li>
-                <li>
-                  <Link to="/patient/change-password">Change Password</Link>
-                </li>
-              </ul>
-            </li>
-            <li className={`has-submenu ${url === "/pages" ? "active" : ""}`}>
-              <a href="#0">
-                Pages<i className="fa fa-angle-down" aria-hidden="true"></i>
-              </a>
-              <ul className="submenu">
-                <li>
-                  <Link to="/pages/voice-call">Voice Call</Link>
-                </li>
-                <li>
-                  <Link to="/pages/video-call">Video Call</Link>
-                </li>
-
-                <li>
-                  <Link to="/pages/calendar">Calendar</Link>
-                </li>
-               
-                <li className="has-submenu">
-                  <a href="#0">Invoices</a>
-                  <ul className="submenu">
-                  
-                    <li>
-                      <Link to="/pages/invoice-view">Invoice View</Link>
-                    </li>
-                  </ul>
-                </li>
-      
-                <li className="active">
-                  <Link to="/login">Login</Link>
-                </li>
-                <li>
-                  <Link to="/register">Register</Link>
-                </li>
-                <li>
-                  <Link to="/forgot-password">Forgot Password</Link>
-                </li>
-              </ul>
-            </li>
-            <li className={`has-submenu ${url === "/blog" ? "active" : ""}`}>
-              <a href="#0">
-                Blog<i className="fa fa-angle-down" aria-hidden="true"></i>
-              </a>
-              <ul className="submenu">
-                <li>
-                  <Link to="/blog/blog-list">Blog List</Link>
-                </li>
-                <li>
-                  <Link to="/blog/blog-grid">Blog Grid</Link>
-                </li>
-                <li>
-                  <Link to="/blog/blog-details">Blog Details</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="/admin" target="_blank" to="/admin">Admin</a>
-            </li>
-            <li className="login-link">
-              <Link to="/">Login / Signup</Link>
-            </li>
+            {isLoggedIn && 
+              <li>
+                <NavLink to="/consults">
+                  Consults
+                </NavLink>
+              </li>
+            }
+            {isAdmin &&
+              <li>
+                <NavLink to="/admin">
+                  Admin
+                </NavLink>
+              </li>
+            }
+            {isDoctor && 
+              <li>
+                <NavLink to="/patients">
+                  Patients
+                </NavLink>
+              </li>
+            }
           </ul>
         </div>
-        <ul className="nav header-navbar-rht">
-          <li className="nav-item contact-item">
-            <div className="header-contact-img">
-              <FontAwesomeIcon icon={faHospital} />
-            </div>
-            <div className="header-contact-detail">
-              <p className="contact-header">Contact</p>
-              <p className="contact-info-header"> +1 315 369 5943</p>
-            </div>
-          </li>
-
-          {props.location.pathname === "/pages/voice-call" ||
+        <ul className={styles['nav'] + ' ' + styles['header-navbar-rht']}>
+          <AuthNav role={(roleInfo?.body) ? JSON.parse(roleInfo.body).role : null}/>
+          {/* {props.location.pathname === "/pages/voice-call" ||
           "/pages/video-call" ? (
             <>
               <Dropdown className="user-drop nav-item dropdown has-arrow logged-item">
@@ -243,7 +124,7 @@ const Navbar = (props) => {
                 </Link>
               </li>{" "}
             </>
-          )}
+          )} */}
         </ul>
       </nav>
     </header>

@@ -13,11 +13,12 @@ import TwilioCall from "../../Pages/Patients/TwilioCall";
 import Patient from "../../Pages/Patients/Patients";
 import PrivateRoute from "../Auth/PrivateRoute";
 import AppNavbar from "../Nav/AppNavbar";
+import Navbar from "../Nav/Navbar";
 
 function AppLayout() {
     return (
         <div>
-            <AppNavbar />
+            <Navbar />
             <Container className="flex-grow-1 mt-5">
                 <Switch>
                     <Route path="/" exact component={Home} />
