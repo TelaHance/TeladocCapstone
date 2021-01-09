@@ -50,27 +50,27 @@ const Navbar = (props) => {
           </div>
           <ul className={styles.mainNav}>
             <li>
-              <NavLink to="/" activeClassName={styles.active}>
+              <NavLink exact to="/" activeClassName={styles.active}>
                 TelaHance Dashboard
               </NavLink>
             </li>
             {isLoggedIn && 
               <li>
-                <NavLink to="/consults">
+                <NavLink to="/consults" activeClassName={styles.active}>
                   Consults
                 </NavLink>
               </li>
             }
             {isAdmin &&
               <li>
-                <NavLink to="/admin">
+                <NavLink to="/admin" activeClassName={styles.active}>
                   Admin
                 </NavLink>
               </li>
             }
             {isDoctor && 
               <li>
-                <NavLink to="/patients">
+                <NavLink to="/patients" activeClassName={styles.active}>
                   Patients
                 </NavLink>
               </li>

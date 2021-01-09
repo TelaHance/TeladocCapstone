@@ -15,7 +15,7 @@ const AuthNav = (props) => {
             {/* <Navbar.Text style={{marginRight: 15}}>{"Hello, " + name}</Navbar.Text> */}
             <li>{"Hello, " + name}</li>
             <Dropdown className={styles['user-drop'] + ' ' + styles['nav-item'] + ' ' + styles['dropdown'] + ' ' + styles['has-arrow'] + ' ' + styles['logged-item']}>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <Dropdown.Toggle variant="success" id="dropdown-basic" className={styles['dropdown-toggle']}>
                   <img
                     className="rounded-circle"
                     src={picture}
@@ -24,7 +24,7 @@ const AuthNav = (props) => {
                   />
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                <Dropdown.Menu className={styles['dropdown-menu']}>
                   <div className={styles['user-header']}>
                     <div className={styles['avatar'] + ' ' + styles['avatar-sm']}>
                       <img
@@ -38,13 +38,13 @@ const AuthNav = (props) => {
                       <p className="text-muted mb-0">{props.role}</p>
                     </div>
                   </div>
-                  <Dropdown.Item href="/doctor/doctor-dashboard">
+                  <Dropdown.Item href="/doctor/doctor-dashboard" className={styles['dropdown-item']}>
                     Dashboard
                   </Dropdown.Item>
-                  <Dropdown.Item href="/profile">
+                  <Dropdown.Item href="/profile" className={styles['dropdown-item']}>
                     Profile Settings
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => logout({ returnTo: window.location.origin })}>Logout</Dropdown.Item>
+                  <Dropdown.Item className={styles['dropdown-item']} onClick={() => logout({ returnTo: window.location.origin })}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
         </>
