@@ -122,10 +122,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: #2E3842;
+	color: #2E3842;
 }
 a:hover {
-	color: #09dca4;
+	color: inherit;
 }
 a:hover,
 a:active,
@@ -215,7 +215,7 @@ input[type=password] {
 	-webkit-transition: all 0.4s ease;
 }
 .login:hover {
-	color: #09dca4;
+	color: #34BCCC;
 }
 
 .gm-style-iw-d .profile-widget p.speciality{    min-height: 18px;}
@@ -247,9 +247,27 @@ input[type=password] {
 	margin: 0;
 	padding: 0;
 }
-.mainNav > li.active > a {
-	color: #09dca4;
+
+.mainNav li a:after {
+    transition: all ease-in-out .2s;
+    background: none repeat scroll 0 0 #34BCCC;
+    content: "";
+    display: block;
+    height: 2px;
+    width: 0;
 }
+
+.mainNav li a:hover:after {
+	width:100%;
+}
+
+.mainNav li a.active:after {
+	width:100% !important;
+}
+
+/* .mainNav > li > a.active {
+	border-bottom: 3px solid #34BCCC
+} */
 /* .mainNav > li .submenu li a {
     display: block;
     padding: 10px 15px;
@@ -276,8 +294,9 @@ input[type=password] {
 } */
 .mainNav li a {
 	display: block;
-    font-size: 14px;
+    font-size: 18px;
 	font-weight: 500;
+	line-height: 40px;
 }
 /* .mainNav li.login-link {
 	display: none;
@@ -346,6 +365,8 @@ input[type=password] {
 	justify-content: center;
 	-webkit-justify-content: center;
 	-ms-flex-pack: center;
+	font-size: 18px;
+	font-weight: 500;
 }
 .header-navbar-rht li:last-child {
 	padding-right:0px;
@@ -387,7 +408,7 @@ input[type=password] {
     color: #fff;
 }
 .header-navbar-rht li .dropdown-menu a:hover {
-    color: #09dca4;
+    color: #34BCCC;
 	letter-spacing: 0.5px;
 	padding-left: 20px;
 	background-color: #fff;
@@ -483,7 +504,7 @@ input[type=password] {
     padding: 10px 15px;
 }
 .header-navbar-rht .dropdown-menu .dropdown-item:hover {
-    color: #09dca4;
+    color: #34BCCC;
 }
 .user-header {
 	display: -webkit-box;
@@ -765,7 +786,7 @@ html.menu-opened body {
     font-size: 13px;
 }
 .login-right .dont-have a {
-	color: #09dca4;
+	color: #34BCCC;
 }
 .login-btn {
     font-size: 18px;
@@ -4950,7 +4971,7 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		position: relative;
 	}
 	.mainNav > li > a {
-		line-height: 85px;
+		/* line-height: 40px; */
 		padding: 0 !important;
 	}
 	.mainNav > li > a > i {
@@ -5000,10 +5021,10 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		transform: translateY(0);
 	}
 	.mainNav .has-submenu.active > a {
-		color: #09dca4;
+		color: #34BCCC;
 	}
 	.mainNav .has-submenu.active .submenu li.active > a {
-		color: #09dca4;
+		color: #34BCCC;
 	}
 	.mainNav > li .submenu li:first-child a {
 		border-top: 0;
@@ -5020,7 +5041,7 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		margin-top: 10px;
 	}
 	.mainNav li .submenu a:hover {
-		color: #09dca4;
+		color: #34BCCC;
 		letter-spacing: 0.5px;
 		padding-left: 20px;
 	}
@@ -5169,10 +5190,10 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		content: "\f078";
 	}
 	.mainNav .has-submenu.active > a {
-		color: #09dca4;
+		color: #34BCCC;
 	}
 	.mainNav .has-submenu.active .submenu li.active > a {
-		color: #09dca4;
+		color: #34BCCC;
 	}
 	.login-left {
 		display: none;
@@ -6084,7 +6105,7 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		outline: none;
 	}
 	.delete-icon{display:inline-block;}
-.user-drop button, .user-drop button:hover{background-color:inherit !important;border:none !important}		
+.user-drop button, .user-drop button:hover{background-color:inherit !important;border:none !important; box-shadow: none !important}		
 	.dashboard-menu.nav a{    color: #757575;
 		display: block;
 		padding: 16px 20px;}	
