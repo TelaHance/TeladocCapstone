@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import {
   Editor,
@@ -7,21 +7,20 @@ import {
   convertFromRaw,
   ContentBlock,
 } from 'draft-js';
-import PropTypes from 'prop-types';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
 
-function getTextFromItems(items) {
-  const content = [];
+function getTextFromItems(items: BlockItem[]) {
+  const content: string[] = [];
   items.forEach((item) => {
     content.push(item.content);
   });
   return content.join(' ');
 }
 
-function generateEntityRanges(items) {
+function generateEntityRanges(items: BlockItem[]) {
   let position = 0;
   return items.map((item, idx) => {
     const mapping = {
@@ -40,44 +39,49 @@ function generateEntityRanges(items) {
   });
 }
 
-function createEntityMap(blocks) {
-  const flatten = (list) =>
-    list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+// function createEntityMap(blocks: TranscriptBlock[]) {
+//   const flatten = (list) =>
+//     list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 
-  const entityRanges = blocks.map((block) => block.entityRanges);
-  const flatRanges = flatten(entityRanges);
-  const entityMap = {};
+//   const entityRanges = blocks.map((block) => block.entityRanges);
+//   const flatRanges = flatten(entityRanges);
+//   const entityMap = {};
 
-  flatRanges.forEach((data) => {
-    entityMap[data.key] = {
-      type: 'WORD',
-      mutability: 'MUTABLE',
-      data,
-    };
-  });
+//   flatRanges.forEach((data) => {
+//     entityMap[data.key] = {
+//       type: 'WORD',
+//       mutability: 'MUTABLE',
+//       data,
+//     };
+//   });
 
-  return entityMap;
-}
+//   return entityMap;
+// }
 
-function getContentBlocks(transcript) {
-  const blocks = [];
+function getContentBlocks(transcript: Transcript) {
+  const blocks: ContentBlock[] = [];
   transcript.blocks.forEach((block) => {
-    blocks.push({
+    const draftJsContentBlock = new ContentBlock({
       type: 'paragraph',
       text: getTextFromItems(block.items),
       data: block,
       entityRanges: generateEntityRanges(block.items),
     });
+    blocks.push(draftJsContentBlock);
   });
-  return convertFromRaw({ blocks, entityMap: createEntityMap(blocks) });
+  return blocks;
 }
 
-export default function Transcript(props) {
-  const { transcript, audioSrc } = props;
+type TranscriptProps = {
+  transcript: Transcript;
+  audioSrc: string;
+}
+
+export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   // TODO: Use setBlocks later to save edited content.
   const [blocks, setBlocks] = useState(transcript.blocks);
-  const [time, setTime] = useState();
-  const [player, setPlayer] = useState();
+  const [time, setTime] = useState(0);
+  const player = useRef<AudioPlayer>(null);
 
   // Populate Editor State with ContentBlocks
   const [editorState, setEditorState] = useState(() => {
@@ -86,23 +90,26 @@ export default function Transcript(props) {
     return EditorState.createWithContent(contentState);
   });
 
-  function setNewTime(newTime) {
+  function setNewTime(newTime: number) {
     setTime(newTime);
-    player.audio.current.currentTime = newTime;
+    if (player?.current?.audio?.current?.currentTime)
+      player.current.audio.current.currentTime = newTime;
   }
 
   function updateTime() {
-    setTime(player?.audio?.current?.currentTime.toFixed(2) ?? 0);
+    setTime(player?.current?.audio?.current?.currentTime ?? 0);
   }
 
   function previous() {
     setTime(0);
-    player.audio.current.currentTime = 0;
+    if (player?.current?.audio?.current?.currentTime)
+      player.current.audio.current.currentTime = 0;
   }
 
   function next() {
-    setTime(player?.audio?.current?.duration ?? 0);
-    player.audio.current.currentTime = player.audio.current.duration;
+    setTime(player?.current?.audio?.current?.duration ?? 0);
+    if (player?.current?.audio?.current?.currentTime)
+      player.current.audio.current.currentTime = player.current.audio.current.duration;
   }
 
   return (
@@ -116,7 +123,7 @@ export default function Transcript(props) {
         onClickPrevious={previous}
         onClickNext={next}
         customAdditionalControls={[]}
-        ref={setPlayer}
+        ref={player}
       />
       <div className={classes.messages}>
         {blocks
@@ -138,8 +145,3 @@ export default function Transcript(props) {
     </div>
   );
 }
-
-Transcript.propTypes = {
-  transcript: PropTypes.object.isRequired,
-  audioSrc: PropTypes.string.isRequired,
-};

@@ -1,4 +1,5 @@
 import React from "react";
+import { hot } from 'react-hot-loader/root';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./Pages/Home/Home";
@@ -38,4 +39,4 @@ function App() {
     );
 }
 
-export default App;
+export default process.env.NODE_ENV === "development" ? hot(App) : App;

@@ -41,6 +41,7 @@ amplifytools.xcconfig
 
 # Lock file
 package-lock.json
+yarn.lock
 
 # VSCode configurations
 .vscode
