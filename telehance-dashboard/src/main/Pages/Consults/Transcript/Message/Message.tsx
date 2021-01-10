@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import classes from './Message.module.css';
 
-export default function Message(props) {
-  const { items, isSelf, currentTime, setCurrTime } = props;
-  const [currWordIdx, setCurrWordIdx] = useState();
+type MessageProps = {
+  items: BlockItem[];
+  isSelf: boolean;
+  currentTime: number;
+  setCurrTime: (newTime: number) => void;
+};
+
+export default function Message({
+  items,
+  isSelf,
+  currentTime,
+  setCurrTime,
+}: MessageProps) {
+  const [currWordIdx, setCurrWordIdx] = useState(-1);
 
   // Update current word when media is playing.
   useEffect(() => {
@@ -24,7 +34,7 @@ export default function Message(props) {
     }
   }, [currentTime, items]);
 
-  function handleWordClick(item) {
+  function handleWordClick(item: BlockItem) {
     const newIdx = items.indexOf(item);
     setCurrWordIdx(newIdx);
     setCurrTime(item.start_time);
@@ -59,10 +69,3 @@ export default function Message(props) {
     </div>
   );
 }
-
-Message.propTypes = {
-  items: PropTypes.array.isRequired,
-  isSelf: PropTypes.bool.isRequired,
-  currentTime: PropTypes.number,
-  setCurrTime: PropTypes.func.isRequired,
-};
