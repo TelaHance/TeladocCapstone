@@ -1,0 +1,4 @@
+/* Overrides and Additions for DraftJS Classes */
+.public-DraftEditor-content div[data-contents='true'] div[data-block='true']{
+  display: flex;
+}
