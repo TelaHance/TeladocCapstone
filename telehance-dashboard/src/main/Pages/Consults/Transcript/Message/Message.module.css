@@ -13,7 +13,8 @@
 }
 
 .self {
-  align-self: flex-end;
+  /* align-self: flex-end; */
+  margin-left: auto;
   background-color: #5b2f91;
   /* background: linear-gradient(#9d50bb, #5b2f91); */
   color: #fff;
@@ -21,14 +22,13 @@
 }
 
 .other {
-  align-self: flex-start;
+  margin-right: auto;
   background-color: #fff;
   color: #000;
   border-radius: 10px 10px 10px 0;
 }
 
 .highlight {
-  /* padding: 0.1em 0.2em; */
   border-radius: 3px;
 }
 

@@ -4,12 +4,6 @@
   border-radius: 20px;
 }
 
-.messages {
-  /* overflow-y: scroll; */
-  display: flex;
-  flex-direction: column;
-}
-
 ::-webkit-scrollbar {
   width: 20px;
 }

@@ -4,13 +4,14 @@ import {
   Editor,
   EditorState,
   ContentState,
-  convertFromRaw,
   ContentBlock,
+  RawDraftContentBlock,
 } from 'draft-js';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
+const generateRandomKey = require('draft-js/lib/generateRandomKey');
 
 function getTextFromItems(items: BlockItem[]) {
   const content: string[] = [];
@@ -20,16 +21,22 @@ function getTextFromItems(items: BlockItem[]) {
   return content.join(' ');
 }
 
-function generateEntityRanges(items: BlockItem[]) {
+type EntityRange = {
+  key: any;
+  offset: number;
+  length: number;
+  start_time: number;
+  end_time: number;
+  text: string;
+};
+
+function generateEntityRanges(items: BlockItem[]): EntityRange[] {
   let position = 0;
-  return items.map((item, idx) => {
+  return items.map((item) => {
     const mapping = {
-      key: Math.random()
-        .toString(36)
-        .substr(2, 5),
+      key: generateRandomKey(),
       offset: position,
       length: item.content.length,
-      // Additional Data
       start_time: item.start_time,
       end_time: item.end_time,
       text: item.content,
@@ -39,34 +46,44 @@ function generateEntityRanges(items: BlockItem[]) {
   });
 }
 
-// function createEntityMap(blocks: TranscriptBlock[]) {
-//   const flatten = (list) =>
-//     list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+function createEntityMap(blocks: RawDraftContentBlock[]) {
+  // @ts-ignore
+  function flatten(list) {
+    return list.reduce(
+      // @ts-ignore
+      (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b),
+      []
+    );
+  }
 
-//   const entityRanges = blocks.map((block) => block.entityRanges);
-//   const flatRanges = flatten(entityRanges);
-//   const entityMap = {};
+  const entityRanges = blocks.map((block) => block.entityRanges);
+  const flatRanges = flatten(entityRanges);
+  const entityMap = {};
 
-//   flatRanges.forEach((data) => {
-//     entityMap[data.key] = {
-//       type: 'WORD',
-//       mutability: 'MUTABLE',
-//       data,
-//     };
-//   });
+  // @ts-ignore
+  flatRanges.forEach((data) => {
+    // @ts-ignore
+    entityMap[data.key] = {
+      type: 'WORD',
+      mutability: 'MUTABLE',
+      data,
+    };
+  });
 
-//   return entityMap;
-// }
+  return entityMap;
+}
 
 function getContentBlocks(transcript: Transcript) {
-  const blocks: ContentBlock[] = [];
-  transcript.blocks.forEach((block) => {
+  const blocks: RawDraftContentBlock[] = [];
+  transcript.blocks.forEach((block, idx) => {
     const draftJsContentBlock = new ContentBlock({
+      key: idx,
       type: 'paragraph',
       text: getTextFromItems(block.items),
       data: block,
       entityRanges: generateEntityRanges(block.items),
     });
+    // @ts-ignore
     blocks.push(draftJsContentBlock);
   });
   return blocks;
@@ -75,46 +92,82 @@ function getContentBlocks(transcript: Transcript) {
 type TranscriptProps = {
   transcript: Transcript;
   audioSrc: string;
-}
+};
 
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   // TODO: Use setBlocks later to save edited content.
-  const [blocks, setBlocks] = useState(transcript.blocks);
+  // TIME IN MS (avoid float errors)
   const [time, setTime] = useState(0);
+  const [blocks, setBlocks] = useState(transcript.blocks);
   const player = useRef<AudioPlayer>(null);
 
   // Populate Editor State with ContentBlocks
   const [editorState, setEditorState] = useState(() => {
-    const blocks = getContentBlocks(transcript);
-    const contentState = ContentState.createFromBlockArray(blocks);
+    const contentBlocks = getContentBlocks(transcript);
+    // @ts-ignore
+    const contentState = ContentState.createFromBlockArray(contentBlocks);
     return EditorState.createWithContent(contentState);
   });
 
   function setNewTime(newTime: number) {
     setTime(newTime);
-    if (player?.current?.audio?.current?.currentTime)
-      player.current.audio.current.currentTime = newTime;
+    if (player?.current?.audio?.current?.currentTime !== undefined)
+      player.current.audio.current.currentTime = newTime / 1000;
+    forceRender();
   }
 
   function updateTime() {
-    setTime(player?.current?.audio?.current?.currentTime ?? 0);
+    setTime((player?.current?.audio?.current?.currentTime ?? 0) * 1000);
+    forceRender();
   }
 
   function previous() {
     setTime(0);
-    if (player?.current?.audio?.current?.currentTime)
+    if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime = 0;
+    forceRender();
   }
 
   function next() {
-    setTime(player?.current?.audio?.current?.duration ?? 0);
-    if (player?.current?.audio?.current?.currentTime)
-      player.current.audio.current.currentTime = player.current.audio.current.duration;
+    setTime((player?.current?.audio?.current?.duration ?? 0) * 1000);
+    if (player?.current?.audio?.current?.currentTime !== undefined)
+      player.current.audio.current.currentTime =
+        player.current.audio.current.duration;
+    forceRender();
+  }
+
+  function messageBlockRenderer(contentBlock: ContentBlock) {
+    const data = contentBlock.getData();
+    // @ts-ignore
+    const isSelf = data.speaker === 'ch_0';
+    return {
+      component: Message,
+      editable: false,
+      props: {
+        // @ts-ignore
+        items: data.items,
+        isSelf: isSelf,
+        currentTime: time,
+        setCurrTime: setNewTime,
+      },
+    };
+  }
+
+  function forceRender() {
+    const contentState = editorState.getCurrentContent();
+    const decorator = editorState.getDecorator();
+    const newEditorState = EditorState.createWithContent(contentState, decorator);
+    const editorStateCopy = EditorState.set(newEditorState, {
+      selection: editorState.getSelection(),
+      undoStack: editorState.getUndoStack(),
+      redoStack: editorState.getRedoStack(),
+      lastChangeType: editorState.getLastChangeType(),
+    });
+    setEditorState(editorStateCopy);
   }
 
   return (
     <div className={classes.transcript}>
-      <Editor editorState={editorState} onChange={setEditorState} />
       <AudioPlayer
         src={audioSrc}
         listenInterval={10}
@@ -125,23 +178,13 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         customAdditionalControls={[]}
         ref={player}
       />
-      <div className={classes.messages}>
-        {blocks
-          ? blocks.map(({ speaker, items }, idx) => {
-              // TODO: Allow speaker selection between ch_0 and ch_1.
-              const isSelf = speaker === 'ch_0';
-              return (
-                <Message
-                  key={idx}
-                  items={items}
-                  isSelf={isSelf}
-                  currentTime={time}
-                  setCurrTime={setNewTime}
-                />
-              );
-            })
-          : null}
-      </div>
+      <Editor
+        editorState={editorState}
+        onChange={setEditorState}
+        stripPastedStyles
+        readOnly
+        blockRendererFn={messageBlockRenderer}
+      />
     </div>
   );
 }
