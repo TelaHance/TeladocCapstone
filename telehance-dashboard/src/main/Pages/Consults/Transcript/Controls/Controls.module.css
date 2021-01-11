@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 1em;
+}
+
+.container button {
+  cursor: pointer;
+  margin: 0 2px;
+  padding: 0.25rem 0.5rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+  border: 0;
+}
+
+.container button:focus {
+  outline: none;
+}
+
+.edit {
+  background-color: rgba(15, 184, 108, 0.122);
+  color: #26af48;
+}
+
+.save {
+  background-color: rgba(26, 144, 255, 0.122);
+  color: #1890ff;
+}

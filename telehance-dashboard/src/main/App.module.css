@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -7,9 +11,34 @@
   pointer-events: none;
 }
 
-.App-content {
+.content {
   flex-grow: 1;
-  margin-top: 3rem;
+  margin: 3rem auto;
+  padding: 0 15px;
+}
+
+@media (min-width: 576px) {
+  .content {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .content {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .content {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content {
+    max-width: 1140px;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

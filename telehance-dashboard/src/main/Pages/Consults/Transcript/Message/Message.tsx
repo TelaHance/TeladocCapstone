@@ -64,7 +64,7 @@ export default function Message({ blockProps }: BlockStyleProps) {
                   className={clsx(classes.item, {
                     [classes.highlight]: currWordIdx === idx,
                   })}
-                  onClick={() => handleWordClick(item)}
+                  onDoubleClick={() => handleWordClick(item)}
                 >
                   {item.content}
                 </span>

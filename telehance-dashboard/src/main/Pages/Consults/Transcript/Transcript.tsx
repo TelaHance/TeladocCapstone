@@ -7,6 +7,7 @@ import {
   ContentBlock,
   RawDraftContentBlock,
 } from 'draft-js';
+import Controls from './Controls/Controls';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
@@ -95,10 +96,10 @@ type TranscriptProps = {
 };
 
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
+  const [time, setTime] = useState(0); // Time in milliseconds (avoid float errors)
+  const [isEditing, setIsEditing] = useState(false);
   // TODO: Use setBlocks later to save edited content.
-  // TIME IN MS (avoid float errors)
-  const [time, setTime] = useState(0);
-  const [blocks, setBlocks] = useState(transcript.blocks);
+  // const [blocks, setBlocks] = useState(transcript.blocks);
   const player = useRef<AudioPlayer>(null);
 
   // Populate Editor State with ContentBlocks
@@ -109,15 +110,38 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     return EditorState.createWithContent(contentState);
   });
 
+  /*
+    Makes a copy of editorState and sets the copy as the new editorState. This
+    will ensure when actions like clicking a word or playing the audio change
+    the time state, the changes are reflected in the transcript text.
+  */
+  function forceRender() {
+    const contentState = editorState.getCurrentContent();
+    const decorator = editorState.getDecorator();
+    const newEditorState = EditorState.createWithContent(
+      contentState,
+      decorator
+    );
+    const editorStateCopy = EditorState.set(newEditorState, {
+      selection: editorState.getSelection(),
+      undoStack: editorState.getUndoStack(),
+      redoStack: editorState.getRedoStack(),
+      lastChangeType: editorState.getLastChangeType(),
+    });
+    setEditorState(editorStateCopy);
+  }
+
   function setNewTime(newTime: number) {
-    setTime(newTime);
+    setTime(Math.round(newTime));
     if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime = newTime / 1000;
     forceRender();
   }
 
   function updateTime() {
-    setTime((player?.current?.audio?.current?.currentTime ?? 0) * 1000);
+    setTime(
+      Math.round((player?.current?.audio?.current?.currentTime ?? 0) * 1000)
+    );
     forceRender();
   }
 
@@ -136,15 +160,20 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     forceRender();
   }
 
+  function toggleEdit() {
+    if (isEditing) {
+      // TODO: Save edits before toggling
+    }
+    setIsEditing(!isEditing);
+  }
+
   function messageBlockRenderer(contentBlock: ContentBlock) {
-    const data = contentBlock.getData();
-    // @ts-ignore
+    const data = (contentBlock.getData() as unknown) as TranscriptBlock;
     const isSelf = data.speaker === 'ch_0';
     return {
       component: Message,
       editable: false,
       props: {
-        // @ts-ignore
         items: data.items,
         isSelf: isSelf,
         currentTime: time,
@@ -153,21 +182,18 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     };
   }
 
-  function forceRender() {
-    const contentState = editorState.getCurrentContent();
-    const decorator = editorState.getDecorator();
-    const newEditorState = EditorState.createWithContent(contentState, decorator);
-    const editorStateCopy = EditorState.set(newEditorState, {
-      selection: editorState.getSelection(),
-      undoStack: editorState.getUndoStack(),
-      redoStack: editorState.getRedoStack(),
-      lastChangeType: editorState.getLastChangeType(),
-    });
-    setEditorState(editorStateCopy);
-  }
-
   return (
-    <div className={classes.transcript}>
+    <div className={classes.container}>
+      <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
+      <div className={classes.messages}>
+        <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          stripPastedStyles
+          readOnly={isEditing}
+          blockRendererFn={messageBlockRenderer}
+        />
+      </div>
       <AudioPlayer
         src={audioSrc}
         listenInterval={10}
@@ -177,13 +203,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         onClickNext={next}
         customAdditionalControls={[]}
         ref={player}
-      />
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        stripPastedStyles
-        readOnly
-        blockRendererFn={messageBlockRenderer}
+        className={classes.audioplayer}
       />
     </div>
   );
