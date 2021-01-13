@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //icon
@@ -12,7 +12,23 @@ import { fetchWithUser } from "../../Util/fetch";
 import AuthNav from "./AuthNav";
 import styles from "./Navbar.module.css";
 
+// const handleOpen=()=>{
+//   console.log('d');
+//   // document.mainMenuWrapper.classList.toggle(styles['sidebar-open']);
+//   setActive(true);
+//   // console.log(active);
+// }
+
+// const handleClose=()=>{
+//   console.log('d');
+//   // document.mainMenuWrapper.classList.toggle(styles['sidebar-open']);
+//   setActive(false);
+//   // console.log(active);
+// }
+
+
 const Navbar = (props) => {
+  const [active, setActive] = useState(false);
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const { user } = useAuth0();
   const sub = user ? user.sub.split('|')[1] : "NULL";
@@ -28,7 +44,7 @@ const Navbar = (props) => {
     <header className={styles.header}>
       <nav className={styles.navbar + ' ' + styles.headerNav}>
         <div className={styles.navbarHeader}>
-          <a href="#0" id={styles.mobile_btn}>
+          <a id={styles.mobile_btn} onClick={()=>setActive(true)}>
             <span className={styles.barIcon}>
               <span></span>
               <span></span>
@@ -39,12 +55,12 @@ const Navbar = (props) => {
             <img src={logo} className="img-fluid" alt="Logo" />
           </Link>
         </div>
-        <div className={styles.mainMenuWrapper}>
+        <div className={active ? styles.mainMenuWrapper + ' ' + styles.sidebarOpen : styles.mainMenuWrapper}>
           <div className={styles.menuHeader}>
-            {/* <Link to="/" className={styles.menuLogo}>
+            <Link to="/" className={styles.menuLogo}>
               <img src={logo} className="img-fluid" alt="Logo" />
-            </Link> */}
-            <a href="#0" id="menu_close" className={styles.menuClose}>
+            </Link>
+            <a href="#0" id="menu_close" className={styles.menuClose} onClick={()=>setActive(false)}>
               <i className={styles.fas + ' ' + styles.faTimes}></i>
             </a>
           </div>
