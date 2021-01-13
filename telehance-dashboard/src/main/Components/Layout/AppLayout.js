@@ -19,17 +19,15 @@ function AppLayout() {
     return (
         <div>
             <Navbar />
-            <Container className="flex-grow-1 mt-5">
-                <Switch>
-                    <Route path="/" exact component={Home} />
-                    <AuthorizedRoute exact path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
-                    <PrivateRoute path="/profile" component={Profile} />
-                    <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
-                    <AuthorizedRoute path="/TwilioCall/:patientId&:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
-                    <PrivateRoute path="/consults/:consultId" component={(props) => <Consult {...props}/>} />
-                    <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
-                </Switch>
-            </Container>
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <AuthorizedRoute exact path="/consults" component={ConsultDashboard} authorizedRoles={["admin", "doctor", "patient"]}  />
+                <PrivateRoute path="/profile" component={Profile} />
+                <AuthorizedRoute path="/admin" component={Admin} authorizedRoles={["admin"]}  />
+                <AuthorizedRoute path="/TwilioCall/:patientId&:phoneNumber" component={TwilioCall} authorizedRoles={["doctor"]}/>
+                <PrivateRoute path="/consults/:consultId" component={(props) => <Consult {...props}/>} />
+                <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
+            </Switch>
             <AppFooter />
         </div>
     )
