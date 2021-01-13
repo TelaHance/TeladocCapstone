@@ -57,36 +57,36 @@ const Navbar = (props) => {
         </div>
         <div className={active ? styles.mainMenuWrapper + ' ' + styles.sidebarOpen : styles.mainMenuWrapper}>
           <div className={styles.menuHeader}>
-            <Link to="/" className={styles.menuLogo}>
+            <Link to="/" className={styles.menuLogo} onClick={()=>setActive(false)}>
               <img src={logo} className="img-fluid" alt="Logo" />
             </Link>
-            <a href="#0" id="menu_close" className={styles.menuClose} onClick={()=>setActive(false)}>
-              <i className={styles.fas + ' ' + styles.faTimes}></i>
+            <a href="" id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)}>
+              <i className="fas fa-times"></i>
             </a>
           </div>
           <ul className={styles.mainNav}>
             <li>
-              <NavLink exact to="/" activeClassName={styles.active}>
+              <NavLink exact to="/" activeClassName={styles.active} onClick={()=>setActive(false)}>
                 TelaHance Dashboard
               </NavLink>
             </li>
             {isLoggedIn && 
               <li>
-                <NavLink to="/consults" activeClassName={styles.active}>
+                <NavLink to="/consults" activeClassName={styles.active} onClick={()=>setActive(false)}>
                   Consults
                 </NavLink>
               </li>
             }
             {isAdmin &&
               <li>
-                <NavLink to="/admin" activeClassName={styles.active}>
+                <NavLink to="/admin" activeClassName={styles.active} onClick={()=>setActive(false)}>
                   Admin
                 </NavLink>
               </li>
             }
             {isDoctor && 
               <li>
-                <NavLink to="/patients" activeClassName={styles.active}>
+                <NavLink to="/patients" activeClassName={styles.active} onClick={()=>setActive(false)}>
                   Patients
                 </NavLink>
               </li>
