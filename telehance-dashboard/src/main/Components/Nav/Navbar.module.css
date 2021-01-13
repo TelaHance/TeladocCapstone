@@ -5154,6 +5154,9 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		margin-bottom: 0;
 		list-style: none;
 	}
+	.mainNav a {
+		color: white;
+	}
 	.mainNav ul {
 		background-color: #3474ac;
 		display: none;
@@ -5211,6 +5214,9 @@ background: #f9f9f9 url("../images/search-bg.png") no-repeat bottom center;
 		transform: translateX(-260px);
 		transition: all 0.4s;
 		background-color: #15558d;
+	}
+	.sidebarOpen {
+		transform: translateX(0px)!important;
 	}
 	.menuHeader {
 		display: -webkit-box;
