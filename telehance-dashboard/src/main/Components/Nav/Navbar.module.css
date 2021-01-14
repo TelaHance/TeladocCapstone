@@ -557,13 +557,14 @@ input[type=password] {
 }
 .close {
 	position: absolute;
-	right: 32px;
-	width: 16px;
+	right: 16px;
+	width: 32px;
 	height: 32px;
 	opacity: 0.3;
 }
 .close:hover {
 	opacity: 1;
+	cursor: pointer;
 }
 .close:before, .close:after {
 	position: absolute;

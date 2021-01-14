@@ -60,9 +60,8 @@ const Navbar = (props) => {
             <Link to="/" className={styles.menuLogo} onClick={()=>setActive(false)}>
               <img src={logo} className="img-fluid" alt="Logo" />
             </Link>
-            <a href="" id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)}>
-              <i className="fas fa-times"></i>
-            </a>
+            <a id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)} />
+              
           </div>
           <ul className={styles.mainNav}>
             <li>
