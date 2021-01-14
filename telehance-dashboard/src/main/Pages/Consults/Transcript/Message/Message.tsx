@@ -1,49 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import { ContentBlock, ContentState } from 'draft-js';
 import classes from './Message.module.css';
 import './draftjs-overrides.css';
 
-type BlockStyleProps = {
-  blockProps: MessageProps;
-};
-
 type MessageProps = {
-  items: BlockItem[];
-  isSelf: boolean;
-  currentTime: number;
-  setCurrTime: (newTime: number) => void;
+  block: ContentBlock;
+  contentState: ContentState;
+  blockProps: {
+    currentTime: number;
+    setCurrTime: (newTime: number) => void;
+    userSpeakerLabel: string;
+  }
 };
 
-export default function Message({ blockProps }: BlockStyleProps) {
-  const { items, isSelf, currentTime, setCurrTime } = blockProps;
+export default function Message({ block, contentState, blockProps }: MessageProps) {
+  const words = block.getData().get('words') as Word[];
+  const speaker = block.getData().get('speaker') as string;
+  const { currentTime, setCurrTime, userSpeakerLabel } = blockProps;
   const [currWordIdx, setCurrWordIdx] = useState(-1);
+
+  const isSelf = userSpeakerLabel === speaker;
 
   // Update current word when media is playing.
   useEffect(() => {
-    const messageStartTime = items[0].start_time;
-    const messageEndTime = items[items.length - 1].end_time;
+    const messageStartTime = words[0].start_time;
+    const messageEndTime = words[words.length - 1].end_time;
 
     // Determine if the current time is within this message block, and set the
     // state variables accordingly.
-    if (
-      messageStartTime * 1000 <= currentTime &&
-      currentTime < messageEndTime * 1000
-    ) {
-      const currIdx = items.findIndex(
-        (item) =>
-          item.start_time * 1000 <= currentTime &&
-          currentTime < item.end_time * 1000
+    if (messageStartTime <= currentTime && currentTime < messageEndTime) {
+      const currIdx = words.findIndex(
+        (word) =>
+          word.start_time <= currentTime && currentTime < word.end_time
       );
       setCurrWordIdx(currIdx);
     } else {
       setCurrWordIdx(-1);
     }
-  }, [currentTime, items]);
+  }, [currentTime, words]);
 
-  function handleWordClick(item: BlockItem) {
-    const newIdx = items.indexOf(item);
+  function handleWordClick(word: Word) {
+    const newIdx = words.indexOf(word);
     setCurrWordIdx(newIdx);
-    setCurrTime(item.start_time * 1000);
+    setCurrTime(word.start_time);
   }
 
   return (
@@ -53,8 +53,8 @@ export default function Message({ blockProps }: BlockStyleProps) {
         [classes.other]: !isSelf,
       })}
     >
-      {items
-        ? items.map((item, idx) => {
+      {words
+        ? words.map((word, idx) => {
             // Put span with " " before words (except for first)
             const spacing = idx === 0 ? null : <span> </span>;
             return (
@@ -64,9 +64,9 @@ export default function Message({ blockProps }: BlockStyleProps) {
                   className={clsx(classes.item, {
                     [classes.highlight]: currWordIdx === idx,
                   })}
-                  onDoubleClick={() => handleWordClick(item)}
+                  onDoubleClick={() => handleWordClick(word)}
                 >
-                  {item.content}
+                  {word.text}
                 </span>
               </React.Fragment>
             );

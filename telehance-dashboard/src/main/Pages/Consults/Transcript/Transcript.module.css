@@ -29,10 +29,6 @@
 
 .messages {
   flex: 1;
-  max-height: 85%;
+  max-height: 75%;
   overflow-y: scroll;
-}
-
-.audioplayer {
-  margin-top: auto;
 }

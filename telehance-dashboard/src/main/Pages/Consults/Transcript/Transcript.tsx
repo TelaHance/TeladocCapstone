@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import {
   Editor,
@@ -6,109 +6,32 @@ import {
   ContentState,
   ContentBlock,
   RawDraftContentBlock,
+  convertToRaw,
 } from 'draft-js';
+import amazonTranscribeToDraft from './amazonTranscribeToDraft';
 import Controls from './Controls/Controls';
 import Message from './Message/Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
-const generateRandomKey = require('draft-js/lib/generateRandomKey');
-
-function getTextFromItems(items: BlockItem[]) {
-  const content: string[] = [];
-  items.forEach((item) => {
-    content.push(item.content);
-  });
-  return content.join(' ');
-}
-
-type EntityRange = {
-  key: any;
-  offset: number;
-  length: number;
-  start_time: number;
-  end_time: number;
-  text: string;
-};
-
-function generateEntityRanges(items: BlockItem[]): EntityRange[] {
-  let position = 0;
-  return items.map((item) => {
-    const mapping = {
-      key: generateRandomKey(),
-      offset: position,
-      length: item.content.length,
-      start_time: item.start_time,
-      end_time: item.end_time,
-      text: item.content,
-    };
-    position += item.content.length + 1;
-    return mapping;
-  });
-}
-
-function createEntityMap(blocks: RawDraftContentBlock[]) {
-  // @ts-ignore
-  function flatten(list) {
-    return list.reduce(
-      // @ts-ignore
-      (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b),
-      []
-    );
-  }
-
-  const entityRanges = blocks.map((block) => block.entityRanges);
-  const flatRanges = flatten(entityRanges);
-  const entityMap = {};
-
-  // @ts-ignore
-  flatRanges.forEach((data) => {
-    // @ts-ignore
-    entityMap[data.key] = {
-      type: 'WORD',
-      mutability: 'MUTABLE',
-      data,
-    };
-  });
-
-  return entityMap;
-}
-
-function getContentBlocks(transcript: Transcript) {
-  const blocks: RawDraftContentBlock[] = [];
-  transcript.blocks.forEach((block, idx) => {
-    const draftJsContentBlock = new ContentBlock({
-      key: idx,
-      type: 'paragraph',
-      text: getTextFromItems(block.items),
-      data: block,
-      entityRanges: generateEntityRanges(block.items),
-    });
-    // @ts-ignore
-    blocks.push(draftJsContentBlock);
-  });
-  return blocks;
-}
 
 type TranscriptProps = {
-  transcript: Transcript;
+  transcript: AWS_Transcript;
   audioSrc: string;
 };
 
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   const [time, setTime] = useState(0); // Time in milliseconds (avoid float errors)
   const [isEditing, setIsEditing] = useState(false);
-  // TODO: Use setBlocks later to save edited content.
-  // const [blocks, setBlocks] = useState(transcript.blocks);
   const player = useRef<AudioPlayer>(null);
 
   // Populate Editor State with ContentBlocks
-  const [editorState, setEditorState] = useState(() => {
-    const contentBlocks = getContentBlocks(transcript);
-    // @ts-ignore
-    const contentState = ContentState.createFromBlockArray(contentBlocks);
-    return EditorState.createWithContent(contentState);
-  });
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  useEffect(() => {
+    const contentState = amazonTranscribeToDraft(transcript);
+    setEditorState(EditorState.createWithContent(contentState));
+  }, []);
 
   /*
     Makes a copy of editorState and sets the copy as the new editorState. This
@@ -161,23 +84,25 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   }
 
   function toggleEdit() {
+    // const rawContent = convertToRaw(editorState.getCurrentContent());
     if (isEditing) {
-      // TODO: Save edits before toggling
+      // TODO: Save edits
     }
     setIsEditing(!isEditing);
   }
 
   function messageBlockRenderer(contentBlock: ContentBlock) {
-    const data = (contentBlock.getData() as unknown) as TranscriptBlock;
-    const isSelf = data.speaker === 'ch_0';
+    const data = contentBlock.getData() as any;
+    if (data.length === 0) {
+      return null;
+    }
     return {
       component: Message,
-      editable: false,
+      editable: isEditing,
       props: {
-        items: data.items,
-        isSelf: isSelf,
         currentTime: time,
         setCurrTime: setNewTime,
+        userSpeakerLabel: 'ch_0',
       },
     };
   }
@@ -203,7 +128,6 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         onClickNext={next}
         customAdditionalControls={[]}
         ref={player}
-        className={classes.audioplayer}
       />
     </div>
   );
