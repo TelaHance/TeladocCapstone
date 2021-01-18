@@ -130,14 +130,11 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     setOriginalValue(slateTranscript);
     // TODO: Fetch edited transcript
     const editedTranscript = window.localStorage.getItem('editedTranscript');
-    if (editedTranscript === null) {
+    if (!editedTranscript) {
       setValue(slateTranscript);
     } else {
       setValue(JSON.parse(editedTranscript));
     }
-    return () => {
-      // TODO: Should we cleanup by saving any remaining changes?
-    };
   }, []);
 
   function setNewTime(newTime: number) {
@@ -169,6 +166,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     if (isEditing) {
       const newValue = retimeAll(originalValue, value);
       setValue(newValue);
+      // TODO: Replace with DynamoDB access
       window.localStorage.setItem('editedTranscript', JSON.stringify(newValue));
     }
     setIsEditing(!isEditing);
@@ -190,10 +188,12 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   const renderLeaf = useCallback(
     ({ attributes, children, leaf }) => {
       const isCurrent = leaf.start <= time && time < leaf.end;
+      const isFirst = leaf.text.charAt(0) !== ' ';
 
       return (
         <span
           className={clsx({
+            [classes.first]: isFirst,
             [classes.highlight]: isCurrent,
             [classes.readonly]: !isEditing,
           })}
@@ -236,6 +236,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         onClickPrevious={previous}
         onClickNext={next}
         customAdditionalControls={[]}
+        className={classes['audio-container']}
         ref={player}
       />
     </section>
