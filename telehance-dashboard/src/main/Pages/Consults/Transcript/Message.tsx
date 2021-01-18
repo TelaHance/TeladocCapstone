@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
-import classes from '../Transcript.module.css';
+import classes from './Transcript.module.css';
 
 type MessageProps = {
   userSpeakerLabel: string;
