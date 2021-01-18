@@ -27,8 +27,8 @@ function getTextFromBlock(block: Word[]) {
  */
 function normalizeWord(currentWord: AWS_Item): Word {
   return {
-    start_time: Math.round(parseFloat(currentWord.start_time) * 1000),
-    end_time: Math.round(parseFloat(currentWord.end_time) * 1000),
+    start: Math.round(parseFloat(currentWord.start_time) * 1000),
+    end: Math.round(parseFloat(currentWord.end_time) * 1000),
     text: currentWord.alternatives[0].content,
     confidence: parseFloat(currentWord.alternatives[0].confidence),
   };
@@ -95,8 +95,8 @@ function generateEntitiesRanges(words: Word[]) {
 
   return words.map((word) => {
     const result = {
-      start: word.start_time,
-      end: word.end_time,
+      start: word.start,
+      end: word.end,
       text: word.text,
       confidence: word.confidence,
       offset: position,
@@ -123,8 +123,8 @@ function groupWordsInBlocks(transcript: AWS_Transcript) {
     [PATIENT_LABEL]: 0,
   };
 
-  let doctorStartTime = doctor.items[0].start_time;
-  let patientStartTime = doctor.items[0].start_time;
+  let doctorStartTime = doctor.items[0].start;
+  let patientStartTime = doctor.items[0].start;
   let prevSpeaker =
     doctorStartTime < patientStartTime ? DOCTOR_LABEL : PATIENT_LABEL;
 
@@ -142,8 +142,8 @@ function groupWordsInBlocks(transcript: AWS_Transcript) {
     };
 
     // start time is 0 when type is 'punctuation', since .start_time will be NULL
-    doctorStartTime = next_items[DOCTOR_LABEL].start_time;
-    patientStartTime = next_items[PATIENT_LABEL].start_time;
+    doctorStartTime = next_items[DOCTOR_LABEL].start;
+    patientStartTime = next_items[PATIENT_LABEL].start;
 
     const speaker =
       doctorStartTime < patientStartTime ? DOCTOR_LABEL : PATIENT_LABEL;
@@ -202,13 +202,14 @@ export default function amazonTranscribeToDraft(amazonTranscribeJson: AWS_Transc
   const transcript = reformat(amazonTranscribeJson);
   const wordsByParagraphs = groupWordsInBlocks(transcript);
 
-  wordsByParagraphs.forEach((paragraph, i) => {
+  wordsByParagraphs.forEach((paragraph, _) => {
     const draftJsContentBlockParagraph = {
       text: paragraph.text.join(' '),
       type: 'paragraph',
       data: {
         speaker: paragraph.speaker,
         words: paragraph.words,
+        start: paragraph.words[0].start,
       },
       // the entities as ranges are each word in the space-joined text,
       // so it needs to be compute for each the offset from the beginning of the paragraph and the length
