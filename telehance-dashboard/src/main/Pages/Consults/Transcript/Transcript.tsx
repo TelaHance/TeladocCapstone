@@ -5,7 +5,7 @@ import { Slate, Editable, RenderElementProps } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
 import convertTranscribeToSlate from './convertTranscribeToSlate';
 import Controls from './Controls/Controls';
-import Message from './Message/Message';
+import Message from './Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
