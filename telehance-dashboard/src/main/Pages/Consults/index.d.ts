@@ -59,8 +59,8 @@ type Consult = {
 // Type(s) used to reformat data for display
 
 type Word = {
-  start_time: number;
-  end_time: number;
+  start: number;
+  end: number;
   text: string;
   confidence: number;
 }

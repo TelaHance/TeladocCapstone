@@ -7,10 +7,13 @@ import {
   ContentBlock,
   RawDraftContentBlock,
   convertToRaw,
+  convertFromRaw,
+  CompositeDecorator,
 } from 'draft-js';
 import amazonTranscribeToDraft from './amazonTranscribeToDraft';
 import Controls from './Controls/Controls';
 import Message from './Message/Message';
+import Word from './Message/Word/Word';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
@@ -20,17 +23,40 @@ type TranscriptProps = {
   audioSrc: string;
 };
 
+const getEntityStrategy = (mutability: string) => (
+  contentBlock: ContentBlock,
+  callback: (start: number, end: number) => void,
+  contentState: ContentState,
+) => {
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity();
+    if (entityKey === null) {
+      return false;
+    }
+
+    return contentState.getEntity(entityKey).getMutability() === mutability;
+  }, callback);
+};
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: getEntityStrategy('MUTABLE'),
+    component: Word,
+  }
+])
+
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   const [time, setTime] = useState(0); // Time in milliseconds (avoid float errors)
   const [isEditing, setIsEditing] = useState(false);
   const player = useRef<AudioPlayer>(null);
 
   // Populate Editor State with ContentBlocks
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(EditorState.createEmpty(decorator));
 
+  // Load Transcript
   useEffect(() => {
     const contentState = amazonTranscribeToDraft(transcript);
-    setEditorState(EditorState.createWithContent(contentState));
+    setEditorState(EditorState.createWithContent(contentState, decorator));
   }, []);
 
   /*
@@ -40,7 +66,6 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   */
   function forceRender() {
     const contentState = editorState.getCurrentContent();
-    const decorator = editorState.getDecorator();
     const newEditorState = EditorState.createWithContent(
       contentState,
       decorator
@@ -84,18 +109,18 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   }
 
   function toggleEdit() {
-    // const rawContent = convertToRaw(editorState.getCurrentContent());
+    const rawContent = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent())
+    );
+    window.localStorage.setItem('editorContent', rawContent);
     if (isEditing) {
       // TODO: Save edits
     }
     setIsEditing(!isEditing);
+    forceRender();
   }
 
-  function messageBlockRenderer(contentBlock: ContentBlock) {
-    const data = contentBlock.getData() as any;
-    if (data.length === 0) {
-      return null;
-    }
+  function messageBlockRenderer() {
     return {
       component: Message,
       editable: isEditing,
@@ -107,15 +132,64 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     };
   }
 
+  function handleDoubleClick(event: any) {
+    // nativeEvent --> React giving you the DOM event
+    let element = event.nativeEvent.target;
+    // find the parent in Word that contains span with time-code start attribute
+    while (!element.hasAttribute("data-start") && element.parentElement) {
+      element = element.parentElement;
+    }
+
+    if (element.hasAttribute("data-start")) {
+      const t = parseInt(element.getAttribute("data-start"));
+      setNewTime(t);
+    }
+  };
+
+  function getCurrentWord() {
+    const currentWord = {
+      start: 'NA',
+      end: 'NA',
+    };
+    if (transcript) {
+      const contentState = convertToRaw(editorState.getCurrentContent());
+      const entityMap = contentState.entityMap;
+
+      for (let key in entityMap) {
+        const word = entityMap[key].data;
+        if (word.start <= time && time < word.end) {
+          currentWord.start = word.start;
+          currentWord.end = word.end;
+        }
+      }
+    }
+    if (currentWord.start !== 'NA') {
+      const currentWordElement = document.querySelector(
+        `span.Word[data-start="${currentWord.start}"]`
+      );
+      currentWordElement?.scrollIntoView({
+        block: 'nearest',
+        inline: 'center',
+      });
+    }
+    return currentWord;
+  }
+
+  const currentWord = getCurrentWord();
+  const highlightColor = '#4290da';
+
   return (
-    <div className={classes.container}>
+    <section className={classes.container} onDoubleClick={handleDoubleClick}>
+      <style scoped>
+        {`span.Word[data-start="${currentWord.start}"] { background-color: ${highlightColor}; text-shadow: 0 0 0.01px black }`}
+        {`span.Word[data-start="${currentWord.start}"]+span { background-color: ${highlightColor} }`}
+      </style>
       <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
       <div className={classes.messages}>
         <Editor
           editorState={editorState}
           onChange={setEditorState}
           stripPastedStyles
-          readOnly={isEditing}
           blockRendererFn={messageBlockRenderer}
         />
       </div>
@@ -129,6 +203,6 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         customAdditionalControls={[]}
         ref={player}
       />
-    </div>
+    </section>
   );
 }
