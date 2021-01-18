@@ -1,5 +1,3 @@
-import { Node } from 'slate';
-
 /**
  * Converts AWS Transcribe Json to SlateJS format
  * Partially influenced by bbc/react-transcript-editor
