@@ -1,22 +1,13 @@
-import { convertFromRaw, RawDraftContentBlock } from 'draft-js';
-const generateRandomKey = require('draft-js/lib/generateRandomKey');
+import { Node } from 'slate';
 
 /**
- * Converts AWS Transcribe Json to DraftJs
- * Adapted from bbc/react-transcript-editor
+ * Converts AWS Transcribe Json to SlateJS format
+ * Partially influenced by bbc/react-transcript-editor
  * @see https://github.com/bbc/react-transcript-editor/blob/6ebe48d3130343e8a4937a30c7a4213502550c15/packages/stt-adapters/amazon-transcribe/index.js
  */
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function getTextFromBlock(block: Word[]) {
-  const blockContent: string[] = [];
-  block.forEach(({ text }) => {
-    blockContent.push(text);
-  });
-  return blockContent;
 }
 
 /**
@@ -29,7 +20,7 @@ function normalizeWord(currentWord: AWS_Item): Word {
   return {
     start: Math.round(parseFloat(currentWord.start_time) * 1000),
     end: Math.round(parseFloat(currentWord.end_time) * 1000),
-    text: currentWord.alternatives[0].content,
+    text: ' ' + currentWord.alternatives[0].content,
     confidence: parseFloat(currentWord.alternatives[0].confidence),
   };
 }
@@ -55,59 +46,6 @@ function reformat(transcript: AWS_Transcript) {
     transcriptCopy.results.channel_labels.channels[i].items = newItems;
   }
   return transcriptCopy;
-}
-
-/**
- * helper function to flatten a list.
- * converts nested arrays into one dimensional array
- * @param {array} list
- */
-// @ts-ignore
-const flatten = (list) =>
-  // @ts-ignore
-  list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
-
-/**
- * helper function to create createEntityMap
- * @param {*} blocks - draftJs blocks
- */
-function createEntityMap(blocks: RawDraftContentBlock[]) {
-  const entityRanges = blocks.map((block) => block.entityRanges);
-  const flatEntityRanges = flatten(entityRanges);
-
-  const entityMap = {};
-
-  // @ts-ignore
-  flatEntityRanges.forEach((data) => {
-    // @ts-ignore
-    entityMap[data.key] = {
-      type: 'WORD',
-      mutability: 'MUTABLE',
-      data,
-    };
-  });
-
-  return entityMap;
-}
-
-function generateEntitiesRanges(words: Word[]) {
-  let position = 0;
-
-  return words.map((word) => {
-    const result = {
-      start: word.start,
-      end: word.end,
-      text: word.text,
-      confidence: word.confidence,
-      offset: position,
-      length: word.text.length,
-      key: generateRandomKey(),
-    };
-    // increase position counter - to determine word offset in paragraph
-    position = position + word.text.length + 1;
-
-    return result;
-  });
 }
 
 function groupWordsInBlocks(transcript: AWS_Transcript) {
@@ -136,29 +74,29 @@ function groupWordsInBlocks(transcript: AWS_Transcript) {
     idx[DOCTOR_LABEL] < doctor.items.length &&
     idx[PATIENT_LABEL] < patient.items.length
   ) {
-    const next_items = {
+    const next_words = {
       [DOCTOR_LABEL]: doctor.items[idx[DOCTOR_LABEL]],
       [PATIENT_LABEL]: patient.items[idx[PATIENT_LABEL]],
     };
 
-    // start time is 0 when type is 'punctuation', since .start_time will be NULL
-    doctorStartTime = next_items[DOCTOR_LABEL].start;
-    patientStartTime = next_items[PATIENT_LABEL].start;
+    // start time is 0 when type is 'punctuation', since .start will be NULL
+    doctorStartTime = next_words[DOCTOR_LABEL].start;
+    patientStartTime = next_words[PATIENT_LABEL].start;
 
     const speaker =
       doctorStartTime < patientStartTime ? DOCTOR_LABEL : PATIENT_LABEL;
 
+    const nextWord = next_words[speaker];
     if (speaker === prevSpeaker) {
       // Same speaker => Add to current block
-      block.push(next_items[speaker]);
+      block.push(nextWord);
     } else {
       // Change speaker => End current block and make new block
       blocks.push({
         speaker: prevSpeaker,
         words: block,
-        text: getTextFromBlock(block),
       });
-      block = [next_items[speaker]];
+      block = [nextWord];
     }
 
     idx[speaker]++;
@@ -169,55 +107,47 @@ function groupWordsInBlocks(transcript: AWS_Transcript) {
   blocks.push({
     speaker: prevSpeaker,
     words: block,
-    text: getTextFromBlock(block),
   });
   block = [];
 
   // Concatenate all other sentences from either doctor or patient not reached in
   // the while loop all as one block.
   for (; idx[DOCTOR_LABEL] < doctor.items.length; idx[DOCTOR_LABEL]++) {
-    block.push(doctor.items[idx[DOCTOR_LABEL]]);
+    const nextWord = doctor.items[idx[DOCTOR_LABEL]];
+    block.push(nextWord);
     prevSpeaker = DOCTOR_LABEL;
   }
   for (; idx[PATIENT_LABEL] < patient.items.length; idx[PATIENT_LABEL]++) {
-    block.push(patient.items[idx[PATIENT_LABEL]]);
+    const nextWord = patient.items[idx[PATIENT_LABEL]];
+    block.push(nextWord);
     prevSpeaker = PATIENT_LABEL;
   }
   blocks.push({
     speaker: prevSpeaker,
     words: block,
-    text: getTextFromBlock(block),
   });
 
-  // Capitalize first word of each block
+  // Capitalize first word of each block and remove beginning space.
   blocks.forEach((block) => {
+    block.words[0].text = block.words[0].text.substring(1);
     block.words[0].text = capitalize(block.words[0].text);
   });
 
   return blocks;
 }
 
-export default function amazonTranscribeToDraft(amazonTranscribeJson: AWS_Transcript) {
-  const results: RawDraftContentBlock[] = [];
+export default function convertTranscribeToSlate(
+  amazonTranscribeJson: AWS_Transcript
+): Message[] {
   const transcript = reformat(amazonTranscribeJson);
   const wordsByParagraphs = groupWordsInBlocks(transcript);
 
-  wordsByParagraphs.forEach((paragraph, _) => {
-    const draftJsContentBlockParagraph = {
-      text: paragraph.text.join(' '),
-      type: 'paragraph',
-      data: {
-        speaker: paragraph.speaker,
-        words: paragraph.words,
-        start: paragraph.words[0].start,
-      },
-      // the entities as ranges are each word in the space-joined text,
-      // so it needs to be compute for each the offset from the beginning of the paragraph and the length
-      entityRanges: generateEntitiesRanges(paragraph.words),
+  return wordsByParagraphs.map((paragraph) => {
+    return {
+      speaker: paragraph.speaker,
+      start: paragraph.words[0].start,
+      type: 'message',
+      children: paragraph.words,
     };
-    // @ts-ignore
-    results.push(draftJsContentBlockParagraph);
   });
-
-  return convertFromRaw({ blocks: results, entityMap: createEntityMap(results) });
-};
+}

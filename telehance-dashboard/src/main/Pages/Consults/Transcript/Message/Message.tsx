@@ -1,32 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { ContentBlock, ContentState, EditorBlock } from 'draft-js';
-import classes from './Message.module.css';
-import './draftjs-overrides.css';
+import { RenderElementProps } from 'slate-react';
+import classes from '../Transcript.module.css';
+
+// type MessageProps = {
+//   block: ContentBlock;
+//   contentState: ContentState;
+//   blockProps: {
+//     currentTime: number;
+//     setCurrTime: (newTime: number) => void;
+//     userSpeakerLabel: string;
+//   };
+// };
 
 type MessageProps = {
-  block: ContentBlock;
-  contentState: ContentState;
-  blockProps: {
-    currentTime: number;
-    setCurrTime: (newTime: number) => void;
-    userSpeakerLabel: string;
-  };
+  userSpeakerLabel: string;
 };
 
-export default function Message(props: MessageProps) {
-  const { block, contentState, blockProps } = props;
-  const words = block.getData().get('words') as Word[];
-  const speaker = block.getData().get('speaker') as string;
+export default function Message({
+  attributes,
+  children,
+  element,
+  userSpeakerLabel,
+}: RenderElementProps & MessageProps) {
+  // const { block, contentState, blockProps } = props;
+  // const words = block.getData().get('words') as Word[];
+  // const speaker = block.getData().get('speaker') as string;
 
   // When first render cycle uses empty content state.
-  if (words === undefined) {
-    return null;
-  }
+  // if (words === undefined) {
+  //   return null;
+  // }
 
-  const { currentTime, setCurrTime, userSpeakerLabel } = blockProps;
-  const [currWordIdx, setCurrWordIdx] = useState(-1);
+  // const { currentTime, setCurrTime, userSpeakerLabel } = blockProps;
+  // const [currWordIdx, setCurrWordIdx] = useState(-1);
 
+  const speaker = element.speaker;
   const isSelf = userSpeakerLabel === speaker;
 
   // Update current word when media is playing.
@@ -53,13 +62,16 @@ export default function Message(props: MessageProps) {
   // }
 
   return (
-    <div
-      className={clsx(classes.message, {
-        [classes.self]: isSelf,
-        [classes.other]: !isSelf,
-      })}
-    >
-      <EditorBlock {...props} />
+    <div className={classes['message-container']}>
+      <div
+        className={clsx(classes.message, {
+          [classes.self]: isSelf,
+          [classes.other]: !isSelf,
+        })}
+        {...attributes}
+      >
+        {children}
+      </div>
     </div>
   );
 
