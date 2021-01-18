@@ -28,7 +28,6 @@ function AppLayout() {
                 <PrivateRoute path="/consults/:consultId" component={(props) => <Consult {...props}/>} />
                 <AuthorizedRoute path="/patients" component={Patient} authorizedRoles={["doctor"]}/>
             </Switch>
-            <AppFooter />
         </div>
     )
 }
