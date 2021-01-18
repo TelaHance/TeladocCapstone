@@ -1,103 +1,147 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import clsx from 'clsx';
 import AudioPlayer from 'react-h5-audio-player';
-import {
-  Editor,
-  EditorState,
-  ContentState,
-  ContentBlock,
-  RawDraftContentBlock,
-  convertToRaw,
-  convertFromRaw,
-  CompositeDecorator,
-} from 'draft-js';
-import amazonTranscribeToDraft from './amazonTranscribeToDraft';
+import { Node, Element } from 'slate';
+import { Slate, Editable, RenderElementProps } from 'slate-react';
+import useCustomEditor from './useCustomEditor';
+import convertTranscribeToSlate from './convertTranscribeToSlate';
 import Controls from './Controls/Controls';
 import Message from './Message/Message';
-import Word from './Message/Word/Word';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 import 'draft-js/dist/Draft.css';
 
-type TranscriptProps = {
-  transcript: AWS_Transcript;
-  audioSrc: string;
-};
+function getWordsBetweenTimes(words: Word[], start: number, end: number) {
+  return words.filter((word) => start <= word.start && word.end <= end);
+}
 
-const getEntityStrategy = (mutability: string) => (
-  contentBlock: ContentBlock,
-  callback: (start: number, end: number) => void,
-  contentState: ContentState,
-) => {
-  contentBlock.findEntityRanges(character => {
-    const entityKey = character.getEntity();
-    if (entityKey === null) {
-      return false;
+function retimeSection(wordsBeforeSplit: Word[], wordsAfterSplit: Word[]) {
+  const retimedWords = JSON.parse(JSON.stringify(wordsAfterSplit));
+  // If before / after have same number of words, apply the timings from the
+  // original.
+  if (wordsBeforeSplit.length === wordsAfterSplit.length) {
+    for (let i = 0; i < retimedWords.length; i++) {
+      retimedWords[i].start = wordsBeforeSplit[i].start;
+      retimedWords[i].end = wordsBeforeSplit[i].end;
+      delete retimedWords[i].splitIdx;
     }
-
-    return contentState.getEntity(entityKey).getMutability() === mutability;
-  }, callback);
-};
-
-const decorator = new CompositeDecorator([
-  {
-    strategy: getEntityStrategy('MUTABLE'),
-    component: Word,
+    return retimedWords;
   }
-])
+
+  // If before / after have different number of words, infer timings based on
+  // relative length.
+  let totalLength = 0;
+  for (let word of wordsAfterSplit) {
+    totalLength += word.text.length;
+  }
+  let start = wordsAfterSplit[0].start;
+  const duration = wordsAfterSplit[wordsAfterSplit.length - 1].end - start;
+  for (let word of retimedWords) {
+    word.start = start;
+    // Set start for next segment and as end of current segment.
+    start += Math.round((word.text.length * duration) / totalLength);
+    word.end = start;
+  }
+
+  return retimedWords;
+}
+
+function retimeAll(originalValue: Message[], value: Message[]) {
+  const retimedValue: Message[] = [];
+
+  for (let i = 0; i < value.length; i++) {
+    let retimedWords: Word[] = []; // Keeps track of all new words, after retiming those in wordsAfterSplit.
+    let wordsAfterSplit: Word[] = []; // Keeps track of words belonging to the same split segment.
+
+    const origWords = originalValue[i].children;
+    const newWords = value[i].children;
+
+    for (let word of newWords) {
+      const { splitIdx } = word;
+      // Word is part of a split section.
+      if (typeof splitIdx === 'number') {
+        // Handle start of new split section.
+        if (splitIdx === 0) {
+          // End any previous split sections.
+          if (wordsAfterSplit.length > 0) {
+            const { start } = wordsAfterSplit[0];
+            const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
+            const wordsBeforeSplit = getWordsBetweenTimes(
+              origWords,
+              start,
+              end
+            );
+            retimedWords = retimedWords.concat(
+              retimeSection(wordsBeforeSplit, wordsAfterSplit)
+            );
+          }
+          wordsAfterSplit = [word];
+        }
+        // Handle traversing the split section.
+        else {
+          wordsAfterSplit.push(word);
+        }
+      }
+      // Word is not part of a split section.
+      else {
+        // Handle when the word directly follows a split section.
+        if (wordsAfterSplit.length > 0) {
+          const { start } = wordsAfterSplit[0];
+          const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
+          const wordsBeforeSplit = getWordsBetweenTimes(origWords, start, end);
+          retimedWords = retimedWords.concat(
+            retimeSection(wordsBeforeSplit, wordsAfterSplit)
+          );
+          wordsAfterSplit = [];
+        }
+        retimedWords.push(word);
+      }
+    }
+    // Handle when the split section is at the end of the word collection.
+    if (wordsAfterSplit.length > 0) {
+      const { start } = wordsAfterSplit[0];
+      const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
+      const wordsBeforeSplit = getWordsBetweenTimes(origWords, start, end);
+      retimedWords = retimedWords.concat(
+        retimeSection(wordsBeforeSplit, wordsAfterSplit)
+      );
+    }
+    const messageCopy = JSON.parse(JSON.stringify(value[i]));
+    messageCopy.children = retimedWords;
+    retimedValue.push(messageCopy);
+  }
+
+  return retimedValue;
+}
 
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
+  const editor = useCustomEditor();
+
   const [time, setTime] = useState(0); // Time in milliseconds (avoid float errors)
+  // Original state (useful for editing purposes)
+  const [originalValue, setOriginalValue] = useState<Message[]>(
+    convertTranscribeToSlate(transcript)
+  );
+  const [value, setValue] = useState<Message[]>(originalValue); // Editor State
   const [isEditing, setIsEditing] = useState(false);
   const player = useRef<AudioPlayer>(null);
-
-  // Populate Editor State with ContentBlocks
-  const [editorState, setEditorState] = useState(EditorState.createEmpty(decorator));
-
-  // Load Transcript
-  useEffect(() => {
-    const contentState = amazonTranscribeToDraft(transcript);
-    setEditorState(EditorState.createWithContent(contentState, decorator));
-  }, []);
-
-  /*
-    Makes a copy of editorState and sets the copy as the new editorState. This
-    will ensure when actions like clicking a word or playing the audio change
-    the time state, the changes are reflected in the transcript text.
-  */
-  function forceRender() {
-    const contentState = editorState.getCurrentContent();
-    const newEditorState = EditorState.createWithContent(
-      contentState,
-      decorator
-    );
-    const editorStateCopy = EditorState.set(newEditorState, {
-      selection: editorState.getSelection(),
-      undoStack: editorState.getUndoStack(),
-      redoStack: editorState.getRedoStack(),
-      lastChangeType: editorState.getLastChangeType(),
-    });
-    setEditorState(editorStateCopy);
-  }
 
   function setNewTime(newTime: number) {
     setTime(Math.round(newTime));
     if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime = newTime / 1000;
-    forceRender();
   }
 
   function updateTime() {
     setTime(
       Math.round((player?.current?.audio?.current?.currentTime ?? 0) * 1000)
     );
-    forceRender();
   }
 
   function previous() {
     setTime(0);
     if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime = 0;
-    forceRender();
   }
 
   function next() {
@@ -105,94 +149,74 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime =
         player.current.audio.current.duration;
-    forceRender();
   }
 
   function toggleEdit() {
-    const rawContent = JSON.stringify(
-      convertToRaw(editorState.getCurrentContent())
-    );
-    window.localStorage.setItem('editorContent', rawContent);
     if (isEditing) {
-      // TODO: Save edits
+      const newValue = retimeAll(originalValue, value);
+      setValue(newValue);
     }
     setIsEditing(!isEditing);
-    forceRender();
   }
 
-  function messageBlockRenderer() {
-    return {
-      component: Message,
-      editable: isEditing,
-      props: {
-        currentTime: time,
-        setCurrTime: setNewTime,
-        userSpeakerLabel: 'ch_0',
-      },
-    };
-  }
+  const DefaultElement = useCallback(({ attributes, children }) => {
+    return <p {...attributes}>{children}</p>;
+  }, []);
 
-  function handleDoubleClick(event: any) {
-    // nativeEvent --> React giving you the DOM event
-    let element = event.nativeEvent.target;
-    // find the parent in Word that contains span with time-code start attribute
-    while (!element.hasAttribute("data-start") && element.parentElement) {
-      element = element.parentElement;
+  const renderElement = useCallback((props: RenderElementProps) => {
+    switch (props.element.type) {
+      case 'message':
+        return <Message {...props} userSpeakerLabel='ch_0' />;
+      default:
+        return <DefaultElement {...props} />;
     }
+  }, []);
 
-    if (element.hasAttribute("data-start")) {
-      const t = parseInt(element.getAttribute("data-start"));
-      setNewTime(t);
-    }
-  };
+  const renderLeaf = useCallback(
+    ({ attributes, children, leaf }) => {
+      const isCurrent = leaf.start <= time && time < leaf.end;
 
-  function getCurrentWord() {
-    const currentWord = {
-      start: 'NA',
-      end: 'NA',
-    };
-    if (transcript) {
-      const contentState = convertToRaw(editorState.getCurrentContent());
-      const entityMap = contentState.entityMap;
-
-      for (let key in entityMap) {
-        const word = entityMap[key].data;
-        if (word.start <= time && time < word.end) {
-          currentWord.start = word.start;
-          currentWord.end = word.end;
-        }
-      }
-    }
-    if (currentWord.start !== 'NA') {
-      const currentWordElement = document.querySelector(
-        `span.Word[data-start="${currentWord.start}"]`
+      return (
+        <span
+          className={clsx({
+            [classes.highlight]: isCurrent,
+            [classes.readonly]: !isEditing,
+          })}
+          onMouseDown={() => {
+            if (!isEditing) setNewTime(leaf.start);
+          }}
+          onDoubleClick={() => {
+            if (isEditing) setNewTime(leaf.start);
+          }}
+          data-start={leaf.start}
+          data-end={leaf.end}
+          {...attributes}
+        >
+          {children}
+        </span>
       );
-      currentWordElement?.scrollIntoView({
-        block: 'nearest',
-        inline: 'center',
-      });
-    }
-    return currentWord;
-  }
+    },
+    [time]
+  );
 
-  const currentWord = getCurrentWord();
-  const highlightColor = '#4290da';
+  function onChange(newValue: Message[]) {
+    setValue(newValue);
+  }
 
   return (
-    <section className={classes.container} onDoubleClick={handleDoubleClick}>
-      <style scoped>
-        {`span.Word[data-start="${currentWord.start}"] { background-color: ${highlightColor}; text-shadow: 0 0 0.01px black }`}
-        {`span.Word[data-start="${currentWord.start}"]+span { background-color: ${highlightColor} }`}
-      </style>
+    <section className={classes.container}>
       <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
-      <div className={classes.messages}>
-        <Editor
-          editorState={editorState}
-          onChange={setEditorState}
-          stripPastedStyles
-          blockRendererFn={messageBlockRenderer}
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(newValue) => onChange(newValue as Message[])}
+      >
+        <Editable
+          readOnly={!isEditing}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
         />
-      </div>
+      </Slate>
       <AudioPlayer
         src={audioSrc}
         listenInterval={10}
@@ -206,3 +230,8 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     </section>
   );
 }
+
+type TranscriptProps = {
+  transcript: AWS_Transcript;
+  audioSrc: string;
+};

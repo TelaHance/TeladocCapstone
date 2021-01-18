@@ -63,4 +63,11 @@ type Word = {
   end: number;
   text: string;
   confidence: number;
+  splitIdx?: number;
+}
+type Message = {
+  speaker: string;
+  start: number;
+  type: 'message';
+  children: Word[];
 }

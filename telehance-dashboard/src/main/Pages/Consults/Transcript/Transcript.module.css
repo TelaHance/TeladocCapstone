@@ -32,3 +32,52 @@
   max-height: 75%;
   overflow-y: scroll;
 }
+
+.message-container {
+  width: 100%;
+  display: flex;
+  font-family: Effra, Arial, Sans-serif;
+  font-size: 16px;
+}
+
+.message {
+  border-radius: 20px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.2);
+  max-width: 75%;
+  padding: 8px 15px;
+  text-align: start;
+}
+
+.readonly {
+  user-select: none;
+  cursor: pointer;
+}
+
+.self {
+  margin-left: auto;
+  background-color: #5b2f91;
+  /* background: linear-gradient(#9d50bb, #5b2f91); */
+  color: #fff;
+  border-radius: 10px 10px 0 10px;
+}
+
+.other {
+  margin-right: auto;
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px 10px 10px 0;
+}
+
+.highlight {
+  border-radius: 3px;
+}
+
+.self .highlight {
+  background-color: #4290da;
+}
+
+.other .highlight {
+  background-color: #95c6f3;
+}
