@@ -1,22 +1,23 @@
-import React, { useMemo } from 'react';
-import { createEditor, Editor, Node, Text, Transforms } from 'slate';
-import { Slate, Editable, withReact, RenderElementProps } from 'slate-react';
+import { useMemo } from 'react';
+import { createEditor, Editor, Text, Transforms } from 'slate';
+import { withReact } from 'slate-react';
 
 /**
  * If text in a node becomes empty, merge the end time of the current node with
  * the previous node (if it exists).
  * @param editor SlateJS Editor
  */
-const withMergeEndTime = (editor: Editor) => {
+const withMergeNoPrecedingSpace = (editor: Editor) => {
   const { normalizeNode } = editor;
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
-    if (Text.isText(node) && node.text.length === 0 && path[1] > 0) {
-      Transforms.setNodes(
-        editor,
-        { end: node.end },
-        { at: [path[0], path[1] - 1] }
-      );
+    if (Text.isText(node) && node.text.charAt(0) !== ' ' && path[1] > 0) {
+      const [, prevPath] = Editor.previous(editor, { at: path }) ?? [
+        undefined,
+        undefined,
+      ];
+      Transforms.mergeNodes(editor, { at: path });
+      Transforms.setNodes(editor, { end: node.end }, { at: prevPath });
       return;
     }
     normalizeNode(entry);
@@ -70,7 +71,10 @@ const withNewNodeOnSpace = (editor: Editor) => {
 type Middleware = (editor: Editor) => Editor;
 
 const initEditor = () => {
-  const middleware: Middleware[] = [withNewNodeOnSpace, withMergeEndTime];
+  const middleware: Middleware[] = [
+    withNewNodeOnSpace,
+    withMergeNoPrecedingSpace,
+  ];
   let editor = createEditor();
   for (let withMiddleware of middleware) {
     editor = withMiddleware(editor);

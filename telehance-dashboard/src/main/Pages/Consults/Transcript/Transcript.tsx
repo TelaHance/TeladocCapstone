@@ -1,7 +1,6 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import clsx from 'clsx';
 import AudioPlayer from 'react-h5-audio-player';
-import { Node, Element } from 'slate';
 import { Slate, Editable, RenderElementProps } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
 import convertTranscribeToSlate from './convertTranscribeToSlate';
@@ -117,14 +116,29 @@ function retimeAll(originalValue: Message[], value: Message[]) {
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   const editor = useCustomEditor();
 
-  const [time, setTime] = useState(0); // Time in milliseconds (avoid float errors)
-  // Original state (useful for editing purposes)
-  const [originalValue, setOriginalValue] = useState<Message[]>(
-    convertTranscribeToSlate(transcript)
-  );
-  const [value, setValue] = useState<Message[]>(originalValue); // Editor State
+  const [time, setTime] = useState(0); // Time in milliseconds (minimize float errors)
+  // Original state (used in maintaining time breakup)
+  const [originalValue, setOriginalValue] = useState<Message[]>([]);
+  const [value, setValue] = useState<Message[]>([]); // Editor State
   const [isEditing, setIsEditing] = useState(false);
   const player = useRef<AudioPlayer>(null);
+
+  // Executes ONCE (on mount)
+  useEffect(() => {
+    const slateTranscript = convertTranscribeToSlate(transcript);
+    // TODO: Fetch original transcript
+    setOriginalValue(slateTranscript);
+    // TODO: Fetch edited transcript
+    const editedTranscript = window.localStorage.getItem('editedTranscript');
+    if (editedTranscript === null) {
+      setValue(slateTranscript);
+    } else {
+      setValue(JSON.parse(editedTranscript));
+    }
+    return () => {
+      // TODO: Should we cleanup by saving any remaining changes?
+    };
+  }, []);
 
   function setNewTime(newTime: number) {
     setTime(Math.round(newTime));
@@ -155,6 +169,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     if (isEditing) {
       const newValue = retimeAll(originalValue, value);
       setValue(newValue);
+      window.localStorage.setItem('editedTranscript', JSON.stringify(newValue));
     }
     setIsEditing(!isEditing);
   }
@@ -199,17 +214,13 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     [time]
   );
 
-  function onChange(newValue: Message[]) {
-    setValue(newValue);
-  }
-
   return (
     <section className={classes.container}>
       <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
       <Slate
         editor={editor}
         value={value}
-        onChange={(newValue) => onChange(newValue as Message[])}
+        onChange={(newValue) => setValue(newValue as Message[])}
       >
         <Editable
           readOnly={!isEditing}
