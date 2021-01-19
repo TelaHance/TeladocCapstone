@@ -8,7 +8,6 @@ import Controls from './Controls/Controls';
 import Message from './Message';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
-import 'draft-js/dist/Draft.css';
 
 function getWordsBetweenTimes(words: Word[], start: number, end: number) {
   return words.filter((word) => start <= word.start && word.end <= end);

@@ -14,7 +14,6 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap-css-only": "^4.4.1",
     "clsx": "^1.1.1",
-    "draft-js": "^0.11.7",
     "isomorphic-unfetch": "^3.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
