@@ -111,29 +111,68 @@ function retimeAll(originalValue: Message[], value: Message[]) {
   return retimedValue;
 }
 
+function getStartTimes(value: Message[]) {
+  const startTimes = value
+    .map((message) => message.children.map((word) => word.start))
+    .flat();
+
+  // This will ensure that the first word is not highlighted when the playback begins.
+  startTimes.unshift(0);
+  // This will ensure that the last word is not highlighted when the playback ends.
+  const lastMessage = value[value.length - 1].children;
+  const transcriptEndTime = lastMessage[lastMessage.length - 1].end;
+  startTimes.push(transcriptEndTime);
+
+  return startTimes;
+}
+
 export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   const editor = useCustomEditor();
 
-  const [time, setTime] = useState(0); // Time in milliseconds (minimize float errors)
-  // Original state (used in maintaining time breakup)
+  // Original State (used in maintaining time breakup)
   const [originalValue, setOriginalValue] = useState<Message[]>([]);
-  const [value, setValue] = useState<Message[]>([]); // Editor State
+  // Editing / Edited State
+  const [value, setValue] = useState<Message[]>([]);
+
+  /* States for keeping track of which word is active */
+  const [time, setTime] = useState(0); // Current playback time in ms (minimize float errors)
+  const [currWordIdx, setCurrWordIdx] = useState(0); // Where in startTimes the current word lies
+  const [startTimes, setStartTimes] = useState<number[]>([]); //
+  const [currWordStartTime, setCurrWordStartTime] = useState(0);
+
   const [isEditing, setIsEditing] = useState(false);
   const player = useRef<AudioPlayer>(null);
 
   // Executes ONCE (on mount)
   useEffect(() => {
     const slateTranscript = transcript;
-    // TODO: Fetch original transcript
+    // TODO: Fetch original transcript from DynamoDB
     setOriginalValue(slateTranscript);
-    // TODO: Fetch edited transcript
+    // TODO: Fetch edited transcript from DynamoDB
     const editedTranscript = window.localStorage.getItem('editedTranscript');
     if (!editedTranscript) {
       setValue(slateTranscript);
+      setStartTimes(getStartTimes(slateTranscript));
     } else {
-      setValue(JSON.parse(editedTranscript));
+      const parsedTranscript = JSON.parse(editedTranscript);
+      setValue(parsedTranscript);
+      setStartTimes(getStartTimes(parsedTranscript));
     }
   }, []);
+
+  // Effect for updating currWordIdx
+  useEffect(() => {
+    // Index of the closest *real* start time at least as large as it.
+    const closestTimeIdx =
+      startTimes.findIndex((startTime) => time < startTime) - 1;
+    // If idx out of range (may occur due to floating point errors)
+    const nextWordIdx =
+      closestTimeIdx < 0 ? startTimes.length - 1 : closestTimeIdx;
+    if (currWordIdx !== nextWordIdx) {
+      setCurrWordIdx(nextWordIdx);
+      setCurrWordStartTime(startTimes[nextWordIdx]);
+    }
+  }, [time, startTimes]);
 
   function setNewTime(newTime: number) {
     setTime(Math.round(newTime));
@@ -164,6 +203,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     if (isEditing) {
       const newValue = retimeAll(originalValue, value);
       setValue(newValue);
+
       // TODO: Replace with DynamoDB access
       window.localStorage.setItem('editedTranscript', JSON.stringify(newValue));
     }
@@ -185,7 +225,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
 
   const renderLeaf = useCallback(
     ({ attributes, children, leaf }) => {
-      const isCurrent = leaf.start <= time && time < leaf.end;
+      const isCurrent = leaf.start === currWordStartTime;
       const isFirst = leaf.text.charAt(0) !== ' ';
 
       return (
@@ -209,7 +249,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
         </span>
       );
     },
-    [time]
+    [currWordStartTime]
   );
 
   return (
@@ -228,7 +268,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
       </Slate>
       <AudioPlayer
         src={audioSrc}
-        listenInterval={10}
+        listenInterval={50}
         onListen={updateTime}
         showSkipControls
         onClickPrevious={previous}
