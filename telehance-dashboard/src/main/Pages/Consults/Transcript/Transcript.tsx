@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import AudioPlayer from 'react-h5-audio-player';
 import { Slate, Editable, RenderElementProps } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
-import convertTranscribeToSlate from './convertTranscribeToSlate';
 import Controls from './Controls/Controls';
 import Message from './Message';
 import classes from './Transcript.module.css';
@@ -124,7 +123,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
 
   // Executes ONCE (on mount)
   useEffect(() => {
-    const slateTranscript = convertTranscribeToSlate(transcript);
+    const slateTranscript = transcript;
     // TODO: Fetch original transcript
     setOriginalValue(slateTranscript);
     // TODO: Fetch edited transcript
@@ -243,6 +242,7 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
 }
 
 type TranscriptProps = {
-  transcript: AWS_Transcript;
+  transcript: Transcript;
+  updateEditedConsultDB: (editedTranscript: Transcript) => void;
   audioSrc: string;
 };
