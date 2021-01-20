@@ -1,5 +1,5 @@
-import React from 'react';
-import { fetchWithToken } from '../../Util/fetch';
+import React, { useEffect } from 'react';
+import { fetchWithToken, putWithToken } from '../../Util/fetch';
 import useSWR from 'swr';
 import Loading from '../../Components/Loading/Loading';
 import Jumbotron from 'react-bootstrap/Jumbotron';
@@ -22,7 +22,7 @@ export default function Consult(props: any) {
 
   // Fetch consult from AWS DynamoDB
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consult, error } = useSWR<Consult>(
+  const { data: consult, error, mutate: setConsult } = useSWR<Consult>(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`,
       awsToken,
@@ -34,8 +34,14 @@ export default function Consult(props: any) {
     console.error(error);
   }
 
-  function updateTranscript(transcript: Transcript) {
-    // TODO: Update DynamoDB.
+  async function updateTranscript(transcript: Transcript) {
+    if (!consult) return;
+    const { consult_id } = consult;
+    const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
+    const url = `https://c1b65tcl64.execute-api.us-west-2.amazonaws.com/default/update-edited-transcript?consult_id=${consult_id}`;
+    putWithToken(url, token, transcript);
+    const newConsult = {...consult, 'transcript-edited': transcript}
+    setConsult(newConsult);
   }
 
   return consult ? (

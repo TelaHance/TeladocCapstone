@@ -18,11 +18,21 @@
 }
 
 .edit {
-  background-color: rgba(15, 184, 108, 0.122);
+  background-color: #0fb86c1f;
   color: #26af48;
 }
 
 .save {
-  background-color: rgba(26, 144, 255, 0.122);
+  background-color: #1a90ff1f;
+  color: #1890ff;
+}
+
+.edited {
+  background-color: #1a90ff1f;
+  color: #1890ff;
+}
+
+.original {
+  background-color: #1a90ff1f;
   color: #1890ff;
 }
