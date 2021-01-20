@@ -11,7 +11,7 @@
   pointer-events: none;
 }
 
-.content {
+/* .content {
   flex-grow: 1;
   margin: 3rem auto;
   padding: 0 15px;
@@ -39,7 +39,7 @@
   .content {
     max-width: 1140px;
   }
-}
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
