@@ -99,7 +99,7 @@ const ConsultDashboard = (props) => {
         formatter: buttonFormatter
     }];
     return (
-        <Container className="mb-5">
+        <Container className="mb-5 text-center">
             <h1>Consult Dashboard</h1>
             {/* {consultList ? <BootstrapTable keyField='id' data={ consultList } columns={ columns } /> : <h2>No Consults</h2>} */}
             {consultList ? renderConsults(consultList, columns) : <h2>No Consults</h2>}
