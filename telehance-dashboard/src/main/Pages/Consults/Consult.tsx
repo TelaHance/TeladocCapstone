@@ -21,24 +21,21 @@ export default function Consult(props: any) {
   } = props.match;
 
   // Fetch consult from AWS DynamoDB
-  let consult: Consult | null = null;
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: response, error, mutate: mutateConsults } = useSWR(
+  const { data: consult, error } = useSWR<Consult>(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`,
       awsToken,
     ],
     fetchWithToken
   );
-  if (response) {
-    consult = JSON.parse(response.body) as Consult;
-  } else if (error) {
-    // TODO: Add user-level error message.
+  if (error) {
+    // TODO: Add user-level error message
     console.error(error);
   }
 
-  function updateEditedConsultDB(editedTranscript: Transcript) {
-    
+  function updateTranscript(transcript: Transcript) {
+    // TODO: Update DynamoDB.
   }
 
   return consult ? (
@@ -59,9 +56,10 @@ export default function Consult(props: any) {
       </div>
       {consult.transcript && Object.keys(consult.transcript).length > 0 ? (
         <Transcript
-          transcript={consult.transcript}
-          updateEditedConsultDB={updateEditedConsultDB}
           audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
+          transcript={consult.transcript}
+          transcriptEdited={consult['transcript-edited']}
+          updateTranscript={updateTranscript}
         />
       ) : (
         renderLoading('Rendering Consult')
