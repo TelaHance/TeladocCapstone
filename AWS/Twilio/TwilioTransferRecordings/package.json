@@ -1,0 +1,12 @@
+{
+  "name": "twilio recording transfer",
+  "version": "1.0.0",
+  "description": "Transfer Twilio Recordings to S3",
+  "author": "Tanay Komarlu",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "s3-upload-stream": "^1.0.7",
+    "twilio": "^3.53.0"
+  }
+}
