@@ -467,7 +467,7 @@ input[type=password] {
     object-fit: cover;
 	width: 31px;
 }
-.user-menu.nav > li > a.mobile_btn {
+.user-menu.nav > li > button.mobile_btn {
 	border: 0;
 	position: relative;
 	padding: 0;
@@ -561,10 +561,14 @@ input[type=password] {
 	width: 32px;
 	height: 32px;
 	opacity: 0.3;
+	background-color: transparent;
+	border: none;
+	display: flex;
 }
 .close:hover {
 	opacity: 1;
 	cursor: pointer;
+	outline: none;
 }
 .close:before, .close:after {
 	position: absolute;
@@ -602,6 +606,8 @@ input[type=password] {
 #mobile_btn {
 	display: none;
 	margin-right: 30px;
+	background-color: transparent;
+	border: none;
 }
 html.menu-opened body {
     overflow: hidden;
