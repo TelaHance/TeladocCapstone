@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchWithToken } from '../../../Util/fetch';
 import { Link } from 'react-router-dom';
+import Loading from '../../../Components/Loading/Loading';
 
 function renderConsults(consultList, columns) {
   const pagination = paginationFactory({
@@ -44,7 +45,7 @@ function renderConsults(consultList, columns) {
   );
 }
 
-const ConsultDashboard = (props) => {
+const ConsultDashboard = () => {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
@@ -55,7 +56,6 @@ const ConsultDashboard = (props) => {
     ],
     fetchWithToken
   );
-  console.log(consultList);
   const dateFormatter = (cell, row) => {
     const date = new Date(Number(cell));
     return date.toLocaleString('default', {
@@ -118,7 +118,7 @@ const ConsultDashboard = (props) => {
       {consultList ? (
         renderConsults(consultList, columns)
       ) : (
-        <h2>No Consults</h2>
+        <Loading />
       )}
     </Container>
   );

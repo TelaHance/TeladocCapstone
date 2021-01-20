@@ -169,6 +169,8 @@ export default function Transcript({
     // If idx out of range (may occur due to floating point errors)
     const nextWordIdx =
       closestTimeIdx < 0 ? startTimes.length - 1 : closestTimeIdx;
+    console.log(currWordIdx);
+    console.log(nextWordIdx);
     if (currWordIdx !== nextWordIdx) {
       setCurrWordIdx(nextWordIdx);
       setCurrWordStartTime(startTimes[nextWordIdx]);
@@ -211,9 +213,10 @@ export default function Transcript({
     // TODO: Add readOnly prop set to true when user is a patient.
     if (isEditing && localTranscriptEdited) {
       const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as reference for retiming.
+      setLocalTranscriptEdited(newTranscript);
+      setStartTimes(getStartTimes(newTranscript));
       updateTranscript(newTranscript);
     }
-
     setIsEditing(!isEditing);
   }
 
@@ -270,7 +273,13 @@ export default function Transcript({
 
   return (
     <section className={classes.container}>
-      <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
+      <Controls
+        isEditing={isEditing}
+        toggleEdit={toggleEdit}
+        hasEditedCopy={!isEditing && localTranscriptEdited !== transcript}
+        isEdited={isViewingEdited}
+        toggleView={toggleView}
+      />
       <Slate
         editor={editor}
         value={isViewingEdited ? localTranscriptEdited : transcript}
