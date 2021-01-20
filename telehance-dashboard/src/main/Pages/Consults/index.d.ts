@@ -9,25 +9,28 @@ type Word = {
 }
 
 type Message = {
-  speaker: string;
-  start: number;
   type: 'message';
   children: Word[];
+  start: number;
+  speaker: string;
+  sentiment: number;
+  fullText: string;
 }
 
 type Transcript = Message[];
 
 type UserData = {
   given_name: string;
-  user_id: string;
   family_name: string;
+  user_id: string;
 }
 
 type Consult = {
   consult_id: string;
-  patient: UserData;
   doctor: UserData;
-  transcript: Transcript;
+  patient: UserData;
   sentiment: number;
   timestamp: number;
+  transcript: Transcript;
+  'transcript-edited'?: Transcript;
 }

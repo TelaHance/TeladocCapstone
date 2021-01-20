@@ -126,41 +126,42 @@ function getStartTimes(value: Message[]) {
   return startTimes;
 }
 
-export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
+export default function Transcript({
+  audioSrc,
+  transcript,
+  transcriptEdited = transcript,
+  updateTranscript,
+}: TranscriptProps) {
   const editor = useCustomEditor();
 
-  // Original State (used in maintaining time breakup)
-  const [originalValue, setOriginalValue] = useState<Message[]>([]);
-  // Editing / Edited State
-  const [value, setValue] = useState<Message[]>([]);
-
-  /* States for keeping track of which word is active */
-  const [time, setTime] = useState(0); // Current playback time in ms (minimize float errors)
-  const [currWordIdx, setCurrWordIdx] = useState(0); // Where in startTimes the current word lies
-  const [startTimes, setStartTimes] = useState<number[]>([]); //
-  const [currWordStartTime, setCurrWordStartTime] = useState(0);
+  // Transcript to Display
+  const [isViewingEdited, setIsViewingEdited] = useState(true);
+  // Keep track of saved edited transcript (avoid more API calls)
+  const [localTranscriptEdited, setLocalTranscriptEdited] = useState(
+    transcriptEdited
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const player = useRef<AudioPlayer>(null);
 
-  // Executes ONCE (on mount)
-  useEffect(() => {
-    const slateTranscript = transcript;
-    // TODO: Fetch original transcript from DynamoDB
-    setOriginalValue(slateTranscript);
-    // TODO: Fetch edited transcript from DynamoDB
-    const editedTranscript = window.localStorage.getItem('editedTranscript');
-    if (!editedTranscript) {
-      setValue(slateTranscript);
-      setStartTimes(getStartTimes(slateTranscript));
-    } else {
-      const parsedTranscript = JSON.parse(editedTranscript);
-      setValue(parsedTranscript);
-      setStartTimes(getStartTimes(parsedTranscript));
-    }
-  }, []);
+  // States for keeping track of which word is active
+  const [time, setTime] = useState(0); // Current playback time in ms (minimize float errors)
+  const [currWordIdx, setCurrWordIdx] = useState(0); // Where in startTimes the current word lies
+  const [startTimes, setStartTimes] = useState<number[]>( // List of each word's start time (w/ 0 at beginning and last word end time at the end)
+    getStartTimes(transcript)
+  );
+  const [currWordStartTime, setCurrWordStartTime] = useState(0); // Start time of the word s.t. time[currWord] <= time (state) < time[nextWord]
 
-  // Effect for updating currWordIdx
+  // If the display transcript changes, reset display states.
+  useEffect(() => {
+    if (isViewingEdited) {
+      setStartTimes(getStartTimes(transcript));
+    } else {
+      setStartTimes(getStartTimes(localTranscriptEdited));
+    }
+  }, [isViewingEdited]);
+
+  // Effect for updating the current word
   useEffect(() => {
     // Index of the closest *real* start time at least as large as it.
     const closestTimeIdx =
@@ -174,22 +175,29 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
     }
   }, [time, startTimes]);
 
-  function setNewTime(newTime: number) {
-    setTime(Math.round(newTime));
+  function getPlayerTime() {
+    return Math.round(
+      (player?.current?.audio?.current?.currentTime ?? 0) * 1000
+    );
+  }
+
+  function setPlayerTime(newTime: number) {
     if (player?.current?.audio?.current?.currentTime !== undefined)
       player.current.audio.current.currentTime = newTime / 1000;
   }
 
+  function setNewTime(newTime: number) {
+    setTime(newTime);
+    setPlayerTime(newTime);
+  }
+
   function updateTime() {
-    setTime(
-      Math.round((player?.current?.audio?.current?.currentTime ?? 0) * 1000)
-    );
+    setTime(getPlayerTime());
   }
 
   function previous() {
     setTime(0);
-    if (player?.current?.audio?.current?.currentTime !== undefined)
-      player.current.audio.current.currentTime = 0;
+    setPlayerTime(0);
   }
 
   function next() {
@@ -200,14 +208,22 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
   }
 
   function toggleEdit() {
-    if (isEditing) {
-      const newValue = retimeAll(originalValue, value);
-      setValue(newValue);
-
-      // TODO: Replace with DynamoDB access
-      window.localStorage.setItem('editedTranscript', JSON.stringify(newValue));
+    // TODO: Add readOnly prop set to true when user is a patient.
+    if (isEditing && localTranscriptEdited) {
+      const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as reference for retiming.
+      updateTranscript(newTranscript);
     }
+
     setIsEditing(!isEditing);
+  }
+
+  function toggleView() {
+    if (isViewingEdited) {
+      setStartTimes(getStartTimes(transcript));
+    } else {
+      setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
+    }
+    setIsViewingEdited(!isViewingEdited);
   }
 
   const DefaultElement = useCallback(({ attributes, children }) => {
@@ -257,8 +273,8 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
       <Controls isEditing={isEditing} toggleEdit={toggleEdit} />
       <Slate
         editor={editor}
-        value={value}
-        onChange={(newValue) => setValue(newValue as Message[])}
+        value={isViewingEdited ? localTranscriptEdited : transcript}
+        onChange={(newValue) => setLocalTranscriptEdited(newValue as Message[])}
       >
         <Editable
           readOnly={!isEditing}
@@ -282,7 +298,8 @@ export default function Transcript({ transcript, audioSrc }: TranscriptProps) {
 }
 
 type TranscriptProps = {
-  transcript: Transcript;
-  updateEditedConsultDB: (editedTranscript: Transcript) => void;
   audioSrc: string;
+  transcript: Transcript;
+  transcriptEdited?: Transcript;
+  updateTranscript: (transcript: Transcript) => void;
 };
