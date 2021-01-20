@@ -1,5 +1,4 @@
 import React from "react";
-import { Jumbotron } from "react-bootstrap";
 import styles from "./Home.module.css";
 const Home = () => {
     return (
