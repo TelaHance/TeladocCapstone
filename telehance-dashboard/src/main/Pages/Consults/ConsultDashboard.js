@@ -10,14 +10,15 @@ const ConsultDashboard = (props) => {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const consultList = example_consultList;
-//   const { data: consultList, error, mutate: mutateConsults } = useSWR(
-//     [
-//       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
-//       awsToken,
-//     ],
-//     fetchWithToken
-//   );
+  // STUB FOR TESTING
+  // const consultList = example_consultList;
+  const { data: consultList, error, mutate: mutateConsults } = useSWR(
+    [
+      `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
+      awsToken,
+    ],
+    fetchWithToken
+  );
   const dateFormatter = (cell, row) => {
     const date = new Date(Number(cell));
     return date.toLocaleString('default', {
