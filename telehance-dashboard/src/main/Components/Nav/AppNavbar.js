@@ -19,7 +19,7 @@ function AppNavbar() {
     return (
         <Navbar bg="dark" variant="dark">
             <LinkContainer to={""}>
-                <Navbar.Brand data-testid="brand">TeleHance Dashboard</Navbar.Brand>
+                <Navbar.Brand data-testid="brand">TelaHance Dashboard</Navbar.Brand>
             </LinkContainer>
             <Nav>
                 { isLoggedIn &&
@@ -36,11 +36,6 @@ function AppNavbar() {
                 (<LinkContainer to={"/patients"}>
                     <Nav.Link>Patients</Nav.Link>
                 </LinkContainer>)
-                }
-                {isLoggedIn &&
-                    (<LinkContainer to={"/profile"}>
-                        <Nav.Link>Profile</Nav.Link>
-                    </LinkContainer>)
                 }
             </Nav>
             <Navbar.Collapse className="justify-content-end">
