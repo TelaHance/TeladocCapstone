@@ -12,7 +12,7 @@ import AuthorizedRoute from './Components/Nav/AuthorizedRoute';
 import TwilioCall from './Pages/Patients/TwilioCall';
 import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
-import Navbar from "./Components/Nav/Navbar";
+import Navbar from './Components/Nav/Navbar';
 import classes from './App.module.css';
 
 function App() {
