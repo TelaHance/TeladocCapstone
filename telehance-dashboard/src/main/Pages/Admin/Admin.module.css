@@ -1,0 +1,20 @@
+.react-bootstrap-table table {
+  table-layout: auto !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.react-bootstrap-table-pagination div {
+  display: flex;
+  align-items: center;
+}
+
+.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list {
+  justify-content: flex-end;
+}
+
+.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list ul {
+  margin-bottom: 0;
+}

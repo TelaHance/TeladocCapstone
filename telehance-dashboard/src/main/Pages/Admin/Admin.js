@@ -3,6 +3,7 @@ import { Table, DropdownButton, Dropdown} from "react-bootstrap";
 import {fetchWithToken} from "../../Util/fetch";
 import useSWR from "swr";
 import Container from "react-bootstrap/Container";
+import "./Admin.module.css";
 
 const Admin = () => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
@@ -30,8 +31,8 @@ const Admin = () => {
     };
     return (
         <>
-        <h1>Admin Panel</h1>
-            <h2 style={{ display: 'flex', justifyContent: 'left' }}>All Users</h2>
+        <h1 className="text-center">Admin Panel</h1>
+        <h2 className="text-center">All Users</h2>
         <Container className="mb-5">
             <Table striped bordered hover>
                 <thead>
