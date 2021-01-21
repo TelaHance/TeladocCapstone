@@ -38,7 +38,7 @@ export default function Controls({
         </Button>
       )}
       {hasEditedCopy ? (
-        <ToggleButtonGroup type='radio' name='view'>
+        <ToggleButtonGroup type='checkbox' name='view'>
           <ToggleButton
             value={1}
             onClick={toggleView}

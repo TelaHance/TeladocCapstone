@@ -1,8 +1,11 @@
-function getWordsBetweenTimes(words: Word[], start: number, end: number) {
+import { WordData } from './Word';
+import { MessageData } from './Message';
+
+function getWordsBetweenTimes(words: WordData[], start: number, end: number) {
   return words.filter((word) => start <= word.start && word.end <= end);
 }
 
-function retimeSection(wordsBeforeSplit: Word[], wordsAfterSplit: Word[]) {
+function retimeSection(wordsBeforeSplit: WordData[], wordsAfterSplit: WordData[]) {
   const retimedWords = JSON.parse(JSON.stringify(wordsAfterSplit)); // Deep Copy
   // If before / after have same number of words, apply the timings from the original.
   if (wordsBeforeSplit.length === wordsAfterSplit.length) {
@@ -14,8 +17,7 @@ function retimeSection(wordsBeforeSplit: Word[], wordsAfterSplit: Word[]) {
     return retimedWords;
   }
 
-  // If before / after have different number of words, infer timings based on
-  // relative length.
+  // If before / after have different number of words, infer timings based on relative length.
   let totalLength = 0;
   for (let word of wordsAfterSplit) {
     totalLength += word.text.length;
@@ -32,12 +34,12 @@ function retimeSection(wordsBeforeSplit: Word[], wordsAfterSplit: Word[]) {
   return retimedWords;
 }
 
-export function retimeAll(originalValue: Message[], value: Message[]) {
-  const retimedValue: Message[] = [];
+export function retimeAll(originalValue: MessageData[], value: MessageData[]) {
+  const retimedValue: MessageData[] = [];
 
   for (let i = 0; i < value.length; i++) {
-    let retimedWords: Word[] = []; // Keeps track of all new words, after retiming those in wordsAfterSplit.
-    let wordsAfterSplit: Word[] = []; // Keeps track of words belonging to the same split segment.
+    let retimedWords: WordData[] = []; // Keeps track of all new words, after retiming those in wordsAfterSplit.
+    let wordsAfterSplit: WordData[] = []; // Keeps track of words belonging to the same split segment.
 
     const origWords = originalValue[i].children;
     const newWords = value[i].children;
@@ -100,7 +102,7 @@ export function retimeAll(originalValue: Message[], value: Message[]) {
   return retimedValue;
 }
 
-export function getStartTimes(value: Message[]) {
+export function getStartTimes(value: MessageData[]) {
   const startTimes = value
     .map((message) => message.children.map((word) => word.start))
     .flat();

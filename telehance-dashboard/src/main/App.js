@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
 import ConsultDashboard from './Pages/Consults/ConsultDashboard/ConsultDashboard';
-import Consult from './Pages/Consults/Consult';
+import Consult from './Pages/Consults';
 import Loading from './Components/Loading/Loading';
 import Admin from './Pages/Admin/Admin';
 import AuthorizedRoute from './Components/Nav/AuthorizedRoute';

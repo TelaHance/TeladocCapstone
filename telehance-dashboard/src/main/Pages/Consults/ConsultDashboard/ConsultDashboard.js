@@ -50,7 +50,7 @@ const ConsultDashboard = (props) => {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consultList, error, mutate: mutateConsults } = useSWR(
+  const { data: consultList } = useSWR(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
       awsToken,
@@ -68,6 +68,13 @@ const ConsultDashboard = (props) => {
   const nameFormatter = (cell, row) => {
     return `${cell.family_name}, ${cell.given_name}`;
   };
+
+  const sentimentFormatter = (cell, row) => {
+    if ( typeof(cell) === 'number') {
+      return `${Math.round(cell * 100)}%`;
+    }
+  }
+
   const buttonFormatter = (cell, row) => {
     return (
       <Button onClick={() => props.history.push(`/consults/${row.consult_id}`)}>
@@ -76,10 +83,6 @@ const ConsultDashboard = (props) => {
     );
   };
   const columns = [
-    {
-      dataField: 'consult_id',
-      text: 'Consult ID',
-    },
     {
       dataField: 'timestamp',
       text: 'Appointment Date',
@@ -100,6 +103,7 @@ const ConsultDashboard = (props) => {
       dataField: 'sentiment',
       text: 'Problematic Consult Rating',
       sort: true,
+      formatter: sentimentFormatter,
     },
     {
       dataField: 'button',
@@ -110,7 +114,6 @@ const ConsultDashboard = (props) => {
   return (
     <Container className='mb-5 text-center'>
       <h1>Consult Dashboard</h1>
-      {/* {consultList ? <BootstrapTable keyField='id' data={ consultList } columns={ columns } /> : <h2>No Consults</h2>} */}
       {consultList ? renderConsults(consultList, columns) : <Loading />}
     </Container>
   );

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { fetchWithToken, putWithToken } from '../../Util/fetch';
 import useSWR from 'swr';
 import Loading from '../../Components/Loading/Loading';
 import Jumbotron from 'react-bootstrap/Jumbotron';
-import Transcript from './Transcript/Transcript';
+import Transcript, { TranscriptData } from './Transcript';
 import classes from './Consult.module.css';
 
 function renderLoading(message: string) {
@@ -34,13 +34,13 @@ export default function Consult(props: any) {
     console.error(error);
   }
 
-  async function updateTranscript(transcript: Transcript | undefined) {
+  async function updateTranscript(transcript: TranscriptData | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
     const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
     const url = `https://c1b65tcl64.execute-api.us-west-2.amazonaws.com/default/update-edited-transcript?consult_id=${consult_id}`;
     putWithToken(url, token, transcript);
-    const newConsult = {...consult, 'transcript-edited': transcript}
+    const newConsult = { ...consult, 'transcript-edited': transcript };
     setConsult(newConsult);
   }
 
@@ -74,4 +74,20 @@ export default function Consult(props: any) {
   ) : (
     renderLoading('Fetching Consult')
   );
+}
+
+export type UserData = {
+  given_name: string;
+  family_name: string;
+  user_id: string;
+}
+
+export type Consult = {
+  consult_id: string;
+  doctor: UserData;
+  patient: UserData;
+  sentiment: number;
+  timestamp: number;
+  transcript: TranscriptData;
+  'transcript-edited'?: TranscriptData;
 }
