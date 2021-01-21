@@ -85,8 +85,8 @@
   z-index: -1;
   content: "";
   position: absolute;
-  left: 2px;
-  right: 0;
+  left: -2px;
+  right: 2px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -94,11 +94,6 @@
   background-color: #4290da;
   animation: animateHighlight .2s;
   border-radius: 5px;
-}
-
-.first.highlight::before {
-  left: -2px;
-  width: calc(100% + 4px);
 }
 
 @keyframes animateHighlight {
