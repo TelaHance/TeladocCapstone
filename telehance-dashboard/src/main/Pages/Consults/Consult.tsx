@@ -34,7 +34,7 @@ export default function Consult(props: any) {
     console.error(error);
   }
 
-  async function updateTranscript(transcript: Transcript) {
+  async function updateTranscript(transcript: Transcript | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
     const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
