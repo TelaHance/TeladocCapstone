@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchWithToken } from '../../../Util/fetch';
 import { Link } from 'react-router-dom';
+import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
 
 function renderConsults(consultList, columns) {
   const pagination = paginationFactory({
@@ -112,15 +113,16 @@ const ConsultDashboard = (props) => {
     },
   ];
   return (
+    <>
+    <BreadcrumbBar page="Consult Dashboard" />
     <Container className='mb-5 text-center'>
-      <h1>Consult Dashboard</h1>
-      {/* {consultList ? <BootstrapTable keyField='id' data={ consultList } columns={ columns } /> : <h2>No Consults</h2>} */}
       {consultList ? (
         renderConsults(consultList, columns)
       ) : (
         <h2>No Consults</h2>
       )}
     </Container>
+    </>
   );
 };
 
