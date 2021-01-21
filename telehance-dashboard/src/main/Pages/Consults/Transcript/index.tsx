@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import clsx from 'clsx';
 import AudioPlayer from 'react-h5-audio-player';
-import { Slate, Editable, RenderElementProps } from 'slate-react';
+import {
+  Slate,
+  Editable,
+  RenderElementProps,
+  RenderLeafProps,
+} from 'slate-react';
 import useCustomEditor from './useCustomEditor';
-import Controls from './Controls/Controls';
-import Message from './Message';
+import Controls from './Controls';
+import Message, { MessageData } from './Message';
+import Word from './Word';
 import { retimeAll, getStartTimes } from './retime';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
@@ -162,32 +167,22 @@ export default function Transcript({
   }, []);
 
   const renderLeaf = useCallback(
-    ({ attributes, children, leaf }) => {
+    ({ attributes, children, leaf }: RenderLeafProps) => {
       const isCurrent = leaf.start === currWordStartTime;
-      const isFirst = leaf.text.charAt(0) !== ' ';
 
       return (
-        <span
-          className={clsx({
-            [classes.first]: isFirst,
-            [classes.highlight]: isCurrent,
-            [classes.readonly]: !isEditing,
-          })}
-          onMouseDown={() => {
-            if (!isEditing) setNewTime(leaf.start);
-          }}
-          onDoubleClick={() => {
-            if (isEditing) setNewTime(leaf.start);
-          }}
-          data-start={leaf.start}
-          data-end={leaf.end}
-          {...attributes}
+        <Word
+          isEditing={isEditing}
+          isCurrent={isCurrent}
+          onClick={setNewTime}
+          startTime={leaf.start as number}
+          attributes={attributes}
         >
           {children}
-        </span>
+        </Word>
       );
     },
-    [currWordStartTime]
+    [currWordStartTime, isEditing]
   );
 
   return (
@@ -206,7 +201,7 @@ export default function Transcript({
         value={
           isViewingEdited ? localTranscriptEdited ?? transcript : transcript
         }
-        onChange={(newValue) => setLocalTranscriptEdited(newValue as Message[])}
+        onChange={(newValue) => setLocalTranscriptEdited(newValue as TranscriptData)}
       >
         <Editable
           readOnly={!isEditing}
@@ -229,9 +224,11 @@ export default function Transcript({
   );
 }
 
-type TranscriptProps = {
+export type TranscriptProps = {
   audioSrc: string;
-  transcript: Transcript;
-  transcriptEdited?: Transcript;
-  updateTranscript: (transcript: Transcript | undefined) => void;
+  transcript: TranscriptData;
+  transcriptEdited?: TranscriptData;
+  updateTranscript: (transcript: TranscriptData | undefined) => void;
 };
+
+export type TranscriptData = MessageData[];
