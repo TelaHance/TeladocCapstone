@@ -6,6 +6,7 @@ import {
   faNotesMedical,
   faFile,
   faTrash,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -17,27 +18,23 @@ export default function Controls({
   isEditing,
   onEdit,
   onSave,
+  onCancel,
+  onDelete,
   hasEditedCopy,
   isEdited,
   toggleView,
-  onDelete,
 }: ControlsProps) {
+  // Delete Confirmation
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  function cancelDelete() {
-    setShowConfirmModal(false);
-  }
-
-  function confirmDelete() {
-    onDelete();
-    setShowConfirmModal(false);
-  }
 
   return (
     <div className={classes.container}>
       {isEditing ? (
         <>
-          <Button onClick={onSave} variant='success'>
+          <Button onClick={onCancel} variant='outline-secondary' type='reset'>
+            <FontAwesomeIcon icon={faTimes} />
+          </Button>
+          <Button onClick={onSave} variant='success' type='submit'>
             <FontAwesomeIcon icon={faSave} /> Save
           </Button>
           <Button onClick={() => setShowConfirmModal(true)} variant='danger'>
@@ -55,7 +52,7 @@ export default function Controls({
             value={1}
             onClick={toggleView}
             disabled={isEdited}
-            checked={false}
+            active={false}
           >
             <FontAwesomeIcon icon={faNotesMedical} /> Edited
           </ToggleButton>
@@ -63,7 +60,7 @@ export default function Controls({
             value={2}
             onClick={toggleView}
             disabled={!isEdited}
-            checked={false}
+            active={false}
           >
             <FontAwesomeIcon icon={faFile} /> Original
           </ToggleButton>
@@ -71,8 +68,11 @@ export default function Controls({
       ) : null}
       <ConfirmModal
         show={showConfirmModal}
-        onCancel={cancelDelete}
-        onConfirm={confirmDelete}
+        onCancel={() => setShowConfirmModal(false)}
+        onConfirm={() => {
+          onDelete();
+          setShowConfirmModal(false);
+        }}
       />
     </div>
   );
@@ -82,8 +82,9 @@ type ControlsProps = {
   isEditing: boolean;
   onEdit: () => void;
   onSave: () => void;
+  onCancel: () => void;
+  onDelete: () => void;
   hasEditedCopy: boolean;
   isEdited: boolean;
   toggleView: () => void;
-  onDelete: () => void;
 };
