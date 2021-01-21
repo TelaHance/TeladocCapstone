@@ -3,46 +3,23 @@ import { createEditor, Editor, Text, Transforms } from 'slate';
 import { withReact } from 'slate-react';
 
 /**
- * If text in a node becomes empty, merge the end time of the current node with
- * the previous node (if it exists).
- * @param editor SlateJS Editor
- */
-const withMergeNoPrecedingSpace = (editor: Editor) => {
-  const { normalizeNode } = editor;
-  editor.normalizeNode = (entry) => {
-    const [node, path] = entry;
-    if (Text.isText(node) && node.text.charAt(0) !== ' ' && path[1] > 0) {
-      const [, prevPath] = Editor.previous(editor, { at: path }) ?? [
-        undefined,
-        undefined,
-      ];
-      Transforms.mergeNodes(editor, { at: path });
-      Transforms.setNodes(editor, { end: node.end }, { at: prevPath });
-      return;
-    }
-    normalizeNode(entry);
-  };
-  return editor;
-};
-
-/**
  * When typing a space (' ') character, create a new node
  * @param editor SlateJS Editor
  */
-const withNewNodeOnSpace = (editor: Editor) => {
+function withNewNodeOnSpace(editor: Editor) {
   const { normalizeNode } = editor;
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
     if (Text.isText(node) && node.text.length > 0) {
-      // Ensure we don't detect the spaces at the beginning of some nodes.
-      const offset = node.text.lastIndexOf(' ');
-      if (offset !== 0) {
+      // Detect spaces in the node, but NOT as the last character.
+      const offset = node.text.indexOf(' ') + 1;
+      if (offset > 1 && offset < node.text.length - 1) {
         Transforms.splitNodes(editor, {
           at: { path, offset },
           match: (m) => Text.isText(m),
         });
         const splitIdx = (node.splitIdx as number) ?? 0;
-        // Before Node
+        // Get New Nodes (after Split)
         Transforms.setNodes(
           editor,
           {
@@ -51,7 +28,6 @@ const withNewNodeOnSpace = (editor: Editor) => {
           },
           { at: path }
         );
-        // After Node
         Transforms.setNodes(
           editor,
           {
@@ -66,14 +42,36 @@ const withNewNodeOnSpace = (editor: Editor) => {
     normalizeNode(entry);
   };
   return editor;
-};
+}
+
+/**
+ * Merge two words if no space is at the end of the first word.
+ * @param editor SlateJS Editor
+ */
+function withMergeNoTrailingSpace(editor: Editor) {
+  const { normalizeNode } = editor;
+  editor.normalizeNode = (entry) => {
+    const [node, path] = entry;
+    if (Text.isText(node) && node.text.charAt(node.text.length - 1) !== ' ') {
+      const [, nextPath] = Editor.next(editor, { at: path }) ?? [];
+      // Check if current word and next word are in the same message block
+      if (nextPath && path[0] !== nextPath[0]) {
+        Transforms.mergeNodes(editor, { at: nextPath });
+        Transforms.setNodes(editor, { end: node.end }, { at: path });
+        return;
+      }
+    }
+    normalizeNode(entry);
+  };
+  return editor;
+}
 
 type Middleware = (editor: Editor) => Editor;
 
 const initEditor = () => {
   const middleware: Middleware[] = [
     withNewNodeOnSpace,
-    withMergeNoPrecedingSpace,
+    withMergeNoTrailingSpace,
   ];
   let editor = createEditor();
   for (let withMiddleware of middleware) {

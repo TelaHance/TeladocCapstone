@@ -169,8 +169,6 @@ export default function Transcript({
     // If idx out of range (may occur due to floating point errors)
     const nextWordIdx =
       closestTimeIdx < 0 ? startTimes.length - 1 : closestTimeIdx;
-    console.log(currWordIdx);
-    console.log(nextWordIdx);
     if (currWordIdx !== nextWordIdx) {
       setCurrWordIdx(nextWordIdx);
       setCurrWordStartTime(startTimes[nextWordIdx]);
@@ -212,7 +210,10 @@ export default function Transcript({
   function toggleEdit() {
     // TODO: Add readOnly prop set to true when user is a patient.
     if (isEditing && localTranscriptEdited) {
-      const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as reference for retiming.
+      const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as original reference for retiming.
+      newTranscript.forEach(message => {
+        message.fullText = message.children.map(word => word.text).join('').trim();
+      });
       setLocalTranscriptEdited(newTranscript);
       setStartTimes(getStartTimes(newTranscript));
       updateTranscript(newTranscript);
