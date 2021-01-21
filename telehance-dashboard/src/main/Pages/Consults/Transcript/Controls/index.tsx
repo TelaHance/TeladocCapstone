@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencilAlt,
@@ -10,6 +10,7 @@ import {
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ConfirmModal from './ConfirmModal';
 import classes from './Controls.module.css';
 
 export default function Controls({
@@ -21,6 +22,17 @@ export default function Controls({
   toggleView,
   onDelete,
 }: ControlsProps) {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  function cancelDelete() {
+    setShowConfirmModal(false);
+  }
+
+  function confirmDelete() {
+    onDelete();
+    setShowConfirmModal(false);
+  }
+
   return (
     <div className={classes.container}>
       {isEditing ? (
@@ -28,7 +40,7 @@ export default function Controls({
           <Button onClick={onSave} variant='success'>
             <FontAwesomeIcon icon={faSave} /> Save
           </Button>
-          <Button onClick={onDelete} variant='danger'>
+          <Button onClick={() => setShowConfirmModal(true)} variant='danger'>
             <FontAwesomeIcon icon={faTrash} /> Delete
           </Button>
         </>
@@ -57,6 +69,11 @@ export default function Controls({
           </ToggleButton>
         </ToggleButtonGroup>
       ) : null}
+      <ConfirmModal
+        show={showConfirmModal}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }
