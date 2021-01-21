@@ -97,6 +97,15 @@ export default function Transcript({
         player.current.audio.current.duration;
   }
 
+  function handleEdit() {
+    // Initialize new local transcript-edited with original transcript if one does not exist
+    if (!localTranscriptEdited) {
+      setLocalTranscriptEdited(transcript);
+      toggleView();
+    }
+    setIsEditing(true);
+  }
+
   function handleSave() {
     if (localTranscriptEdited) {
       const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as original reference for retiming.
@@ -123,13 +132,10 @@ export default function Transcript({
     setIsEditing(false);
   }
 
-  function handleEdit() {
-    // Initialize new local transcript-edited with original transcript if one does not exist
-    if (!localTranscriptEdited) {
-      setLocalTranscriptEdited(transcript);
-      toggleView();
-    }
-    setIsEditing(true);
+  function handleCancel() {
+    setLocalTranscriptEdited(transcriptEdited);
+    setStartTimes(getStartTimes(transcriptEdited ?? transcript));
+    setIsEditing(false);
   }
 
   function toggleView() {
@@ -191,10 +197,11 @@ export default function Transcript({
         isEditing={isEditing}
         onEdit={handleEdit}
         onSave={handleSave}
+        onCancel={handleCancel}
+        onDelete={deleteEdited}
         hasEditedCopy={!isEditing && !!localTranscriptEdited}
         isEdited={isViewingEdited}
         toggleView={toggleView}
-        onDelete={deleteEdited}
       />
       <Slate
         editor={editor}
