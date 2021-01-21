@@ -55,9 +55,9 @@ function withMergeNoTrailingSpace(editor: Editor) {
     if (Text.isText(node) && node.text.charAt(node.text.length - 1) !== ' ') {
       const [, nextPath] = Editor.next(editor, { at: path }) ?? [];
       // Check if current word and next word are in the same message block
-      if (nextPath && path[0] !== nextPath[0]) {
+      if (nextPath && path[0] === nextPath[0]) {
         Transforms.mergeNodes(editor, { at: nextPath });
-        Transforms.setNodes(editor, { end: node.end }, { at: path });
+        Transforms.setNodes(editor, { at: path });
         return;
       }
     }

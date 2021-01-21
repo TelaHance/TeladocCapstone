@@ -4,47 +4,55 @@ import {
   faPencilAlt,
   faSave,
   faNotesMedical,
-  faCopy,
   faFile,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import classes from './Controls.module.css';
 
-type ControlsProps = {
-  isEditing: boolean;
-  toggleEdit: () => void;
-  hasEditedCopy: boolean;
-  isEdited: boolean;
-  toggleView: () => void;
-};
-
 export default function Controls({
   isEditing,
-  toggleEdit,
+  onEdit,
+  onSave,
   hasEditedCopy,
   isEdited,
   toggleView,
+  onDelete,
 }: ControlsProps) {
   return (
     <div className={classes.container}>
       {isEditing ? (
-        <Button onClick={toggleEdit} variant='success'>
-          <FontAwesomeIcon icon={faSave} /> Save
-        </Button>
+        <>
+          <Button onClick={onSave} variant='success'>
+            <FontAwesomeIcon icon={faSave} /> Save
+          </Button>
+          <Button onClick={onDelete} variant='danger'>
+            <FontAwesomeIcon icon={faTrash} /> Delete
+          </Button>
+        </>
       ) : (
-        <Button onClick={toggleEdit}>
+        <Button onClick={onEdit}>
           <FontAwesomeIcon icon={faPencilAlt} /> Edit
         </Button>
       )}
       {hasEditedCopy ? (
-        <ToggleButtonGroup type="radio" name="view">
-          <ToggleButton value={1} onClick={toggleView} disabled={isEdited} checked={false}>
+        <ToggleButtonGroup type='radio' name='view'>
+          <ToggleButton
+            value={1}
+            onClick={toggleView}
+            disabled={isEdited}
+            checked={false}
+          >
             <FontAwesomeIcon icon={faNotesMedical} /> Edited
           </ToggleButton>
-          <ToggleButton value={2} onClick={toggleView} disabled={!isEdited} checked={false}>
+          <ToggleButton
+            value={2}
+            onClick={toggleView}
+            disabled={!isEdited}
+            checked={false}
+          >
             <FontAwesomeIcon icon={faFile} /> Original
           </ToggleButton>
         </ToggleButtonGroup>
@@ -52,3 +60,13 @@ export default function Controls({
     </div>
   );
 }
+
+type ControlsProps = {
+  isEditing: boolean;
+  onEdit: () => void;
+  onSave: () => void;
+  hasEditedCopy: boolean;
+  isEdited: boolean;
+  toggleView: () => void;
+  onDelete: () => void;
+};

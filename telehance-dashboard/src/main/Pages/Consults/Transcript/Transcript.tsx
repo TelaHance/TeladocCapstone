@@ -5,131 +5,14 @@ import { Slate, Editable, RenderElementProps } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
 import Controls from './Controls/Controls';
 import Message from './Message';
+import { retimeAll, getStartTimes } from './retime';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
-
-function getWordsBetweenTimes(words: Word[], start: number, end: number) {
-  return words.filter((word) => start <= word.start && word.end <= end);
-}
-
-function retimeSection(wordsBeforeSplit: Word[], wordsAfterSplit: Word[]) {
-  const retimedWords = JSON.parse(JSON.stringify(wordsAfterSplit));
-  // If before / after have same number of words, apply the timings from the
-  // original.
-  if (wordsBeforeSplit.length === wordsAfterSplit.length) {
-    for (let i = 0; i < retimedWords.length; i++) {
-      retimedWords[i].start = wordsBeforeSplit[i].start;
-      retimedWords[i].end = wordsBeforeSplit[i].end;
-      delete retimedWords[i].splitIdx;
-    }
-    return retimedWords;
-  }
-
-  // If before / after have different number of words, infer timings based on
-  // relative length.
-  let totalLength = 0;
-  for (let word of wordsAfterSplit) {
-    totalLength += word.text.length;
-  }
-  let start = wordsAfterSplit[0].start;
-  const duration = wordsAfterSplit[wordsAfterSplit.length - 1].end - start;
-  for (let word of retimedWords) {
-    word.start = start;
-    // Set start for next segment and as end of current segment.
-    start += Math.round((word.text.length * duration) / totalLength);
-    word.end = start;
-  }
-
-  return retimedWords;
-}
-
-function retimeAll(originalValue: Message[], value: Message[]) {
-  const retimedValue: Message[] = [];
-
-  for (let i = 0; i < value.length; i++) {
-    let retimedWords: Word[] = []; // Keeps track of all new words, after retiming those in wordsAfterSplit.
-    let wordsAfterSplit: Word[] = []; // Keeps track of words belonging to the same split segment.
-
-    const origWords = originalValue[i].children;
-    const newWords = value[i].children;
-
-    for (let word of newWords) {
-      const { splitIdx } = word;
-      // Word is part of a split section.
-      if (typeof splitIdx === 'number') {
-        // Handle start of new split section.
-        if (splitIdx === 0) {
-          // End any previous split sections.
-          if (wordsAfterSplit.length > 0) {
-            const { start } = wordsAfterSplit[0];
-            const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
-            const wordsBeforeSplit = getWordsBetweenTimes(
-              origWords,
-              start,
-              end
-            );
-            retimedWords = retimedWords.concat(
-              retimeSection(wordsBeforeSplit, wordsAfterSplit)
-            );
-          }
-          wordsAfterSplit = [word];
-        }
-        // Handle traversing the split section.
-        else {
-          wordsAfterSplit.push(word);
-        }
-      }
-      // Word is not part of a split section.
-      else {
-        // Handle when the word directly follows a split section.
-        if (wordsAfterSplit.length > 0) {
-          const { start } = wordsAfterSplit[0];
-          const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
-          const wordsBeforeSplit = getWordsBetweenTimes(origWords, start, end);
-          retimedWords = retimedWords.concat(
-            retimeSection(wordsBeforeSplit, wordsAfterSplit)
-          );
-          wordsAfterSplit = [];
-        }
-        retimedWords.push(word);
-      }
-    }
-    // Handle when the split section is at the end of the word collection.
-    if (wordsAfterSplit.length > 0) {
-      const { start } = wordsAfterSplit[0];
-      const { end } = wordsAfterSplit[wordsAfterSplit.length - 1];
-      const wordsBeforeSplit = getWordsBetweenTimes(origWords, start, end);
-      retimedWords = retimedWords.concat(
-        retimeSection(wordsBeforeSplit, wordsAfterSplit)
-      );
-    }
-    const messageCopy = JSON.parse(JSON.stringify(value[i]));
-    messageCopy.children = retimedWords;
-    retimedValue.push(messageCopy);
-  }
-
-  return retimedValue;
-}
-
-function getStartTimes(value: Message[]) {
-  const startTimes = value
-    .map((message) => message.children.map((word) => word.start))
-    .flat();
-
-  // This will ensure that the first word is not highlighted when the playback begins.
-  startTimes.unshift(0);
-  // This will ensure that the last word is not highlighted when the playback ends.
-  const lastMessage = value[value.length - 1].children;
-  const transcriptEndTime = lastMessage[lastMessage.length - 1].end;
-  startTimes.push(transcriptEndTime);
-
-  return startTimes;
-}
 
 export default function Transcript({
   audioSrc,
   transcript,
-  transcriptEdited = transcript,
+  transcriptEdited,
   updateTranscript,
 }: TranscriptProps) {
   const editor = useCustomEditor();
@@ -157,7 +40,7 @@ export default function Transcript({
     if (isViewingEdited) {
       setStartTimes(getStartTimes(transcript));
     } else {
-      setStartTimes(getStartTimes(localTranscriptEdited));
+      setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
     }
   }, [isViewingEdited]);
 
@@ -207,18 +90,38 @@ export default function Transcript({
         player.current.audio.current.duration;
   }
 
-  function toggleEdit() {
-    // TODO: Add readOnly prop set to true when user is a patient.
-    if (isEditing && localTranscriptEdited) {
+  function handleSave() {
+    if (localTranscriptEdited) {
       const newTranscript = retimeAll(transcript, localTranscriptEdited); // Use transcript prop as original reference for retiming.
-      newTranscript.forEach(message => {
-        message.fullText = message.children.map(word => word.text).join('').trim();
+      newTranscript.forEach((message) => {
+        message.fullText = message.children
+          .map((word) => word.text)
+          .join('')
+          .trim();
       });
-      setLocalTranscriptEdited(newTranscript);
-      setStartTimes(getStartTimes(newTranscript));
-      updateTranscript(newTranscript);
+      // If full text is the same as the original, delete local and remote edited versions.
+      if (
+        transcript.map((message) => message.fullText).join('') ===
+        newTranscript.map((message) => message.fullText).join('')
+      ) {
+        deleteEdited();
+      }
+      // Save new edit locally and update remote
+      else {
+        setLocalTranscriptEdited(newTranscript);
+        setStartTimes(getStartTimes(newTranscript));
+        updateTranscript(newTranscript);
+      }
     }
-    setIsEditing(!isEditing);
+    setIsEditing(false);
+  }
+
+  function handleEdit() {
+    // Initialize new local transcript-edited with original transcript if one does not exist
+    if (!localTranscriptEdited) {
+      setLocalTranscriptEdited(transcript);
+    }
+    setIsEditing(true);
   }
 
   function toggleView() {
@@ -228,6 +131,18 @@ export default function Transcript({
       setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
     }
     setIsViewingEdited(!isViewingEdited);
+  }
+
+  function deleteEdited() {
+    if (localTranscriptEdited) {
+      setLocalTranscriptEdited(undefined);
+      setStartTimes(getStartTimes(transcript));
+      setIsViewingEdited(false);
+      setIsEditing(false);
+      if (transcriptEdited) {
+        updateTranscript(undefined);
+      }
+    }
   }
 
   const DefaultElement = useCallback(({ attributes, children }) => {
@@ -276,14 +191,18 @@ export default function Transcript({
     <section className={classes.container}>
       <Controls
         isEditing={isEditing}
-        toggleEdit={toggleEdit}
-        hasEditedCopy={!isEditing && localTranscriptEdited !== transcript}
+        onEdit={handleEdit}
+        onSave={handleSave}
+        hasEditedCopy={!isEditing && !!localTranscriptEdited}
         isEdited={isViewingEdited}
         toggleView={toggleView}
+        onDelete={deleteEdited}
       />
       <Slate
         editor={editor}
-        value={isViewingEdited ? localTranscriptEdited : transcript}
+        value={
+          isViewingEdited ? localTranscriptEdited ?? transcript : transcript
+        }
         onChange={(newValue) => setLocalTranscriptEdited(newValue as Message[])}
       >
         <Editable
@@ -311,5 +230,5 @@ type TranscriptProps = {
   audioSrc: string;
   transcript: Transcript;
   transcriptEdited?: Transcript;
-  updateTranscript: (transcript: Transcript) => void;
+  updateTranscript: (transcript: Transcript | undefined) => void;
 };
