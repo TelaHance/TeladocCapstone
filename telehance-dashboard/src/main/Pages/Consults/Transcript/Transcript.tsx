@@ -9,6 +9,8 @@ import { retimeAll, getStartTimes } from './retime';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 
+// TODO: Refactor less relevant timing states and AudioPlayer to another component.
+
 export default function Transcript({
   audioSrc,
   transcript,
@@ -18,7 +20,7 @@ export default function Transcript({
   const editor = useCustomEditor();
 
   // Transcript to Display
-  const [isViewingEdited, setIsViewingEdited] = useState(true);
+  const [isViewingEdited, setIsViewingEdited] = useState(!!transcriptEdited);
   // Keep track of saved edited transcript (avoid more API calls)
   const [localTranscriptEdited, setLocalTranscriptEdited] = useState(
     transcriptEdited
@@ -120,6 +122,7 @@ export default function Transcript({
     // Initialize new local transcript-edited with original transcript if one does not exist
     if (!localTranscriptEdited) {
       setLocalTranscriptEdited(transcript);
+      toggleView();
     }
     setIsEditing(true);
   }
