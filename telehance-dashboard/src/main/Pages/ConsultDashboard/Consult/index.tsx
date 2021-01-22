@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchWithToken, putWithToken } from '../../../Util/fetch';
 import useSWR from 'swr';
-import Loading from '../../../Components/Loading/Loading';
+import Spinner from '../../../Components/Spinner';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Transcript, { TranscriptData } from './Transcript';
 import classes from './Consult.module.css';
@@ -9,7 +9,7 @@ import classes from './Consult.module.css';
 function renderLoading(message: string) {
   return (
     <div>
-      <Loading />
+      <Spinner />
       <Jumbotron>{message}</Jumbotron>
     </div>
   );

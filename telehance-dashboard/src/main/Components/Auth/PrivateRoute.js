@@ -1,12 +1,12 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import Loading from "../Loading/Loading";
+import Spinner from "../Spinner";
 
 const PrivateRoute = ({ component, ...args }) => (
     <Route
         component={withAuthenticationRequired(component, {
-            onRedirecting: () => <Loading />,
+            onRedirecting: () => <Spinner />,
         })}
         {...args}
     />

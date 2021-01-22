@@ -10,7 +10,7 @@ import ToolkitProvider, {
   CSVExport,
 } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import Loading from '../../Components/Loading/Loading';
+import Spinner from '../../Components/Spinner';
 import getColumns from './getColumns';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
@@ -67,7 +67,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
           )}
         </ToolkitProvider>
       ) : (
-        <Loading />
+        <Spinner />
       )}
     </Container>
   );

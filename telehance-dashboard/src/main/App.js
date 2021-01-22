@@ -19,7 +19,7 @@ function App() {
   const { isLoading } = useAuth0();
   if (isLoading) {
     return (
-      <div className={classes.Loading}>
+      <div className={classes.loading}>
         <Spinner />
       </div>
     );
