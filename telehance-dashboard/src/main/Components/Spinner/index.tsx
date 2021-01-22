@@ -6,7 +6,7 @@ import classes from './Spinner.module.css';
 export default function Spinner(props: React.ComponentProps<'div'>) {
   return (
     <div className={clsx(props.className, classes.spinner)} {...props}>
-      <img src={SpinnerSVG} />
+      <img src={SpinnerSVG} alt="Loading"/>
     </div>
   );
 }
