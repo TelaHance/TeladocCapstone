@@ -22,16 +22,15 @@ export default function Transcript({
 }: TranscriptProps) {
   const editor = useCustomEditor();
 
-  // Transcript to Display
+  // Controls States
+  const [isEditing, setIsEditing] = useState(false);
   const [isViewingEdited, setIsViewingEdited] = useState(!!transcriptEdited);
   // Keep track of saved edited transcript (avoid more API calls)
   const [localTranscriptEdited, setLocalTranscriptEdited] = useState(
     transcriptEdited
   );
 
-  const [isEditing, setIsEditing] = useState(false);
-
-  // States for keeping track of which word is active
+  // Audio / Current Word States
   const [startFrom, setStartFrom] = useState(0);
   const [startTimes, setStartTimes] = useState<number[]>( // List of each word's start time (w/ 0 at beginning and last word end time at the end)
     getStartTimes(transcript)
@@ -45,13 +44,13 @@ export default function Transcript({
     } else {
       setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
     }
-  }, [isViewingEdited]);
+  }, [isViewingEdited, transcript, localTranscriptEdited]);
 
   function handleEdit() {
     // Initialize new local transcript_edited with original transcript if one does not exist
     if (!localTranscriptEdited) {
       setLocalTranscriptEdited(transcript);
-      toggleView();
+      setIsViewingEdited(!isViewingEdited);
     }
     setIsEditing(true);
   }
@@ -88,15 +87,6 @@ export default function Transcript({
     setIsEditing(false);
   }
 
-  function toggleView() {
-    if (isViewingEdited) {
-      setStartTimes(getStartTimes(transcript));
-    } else {
-      setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
-    }
-    setIsViewingEdited(!isViewingEdited);
-  }
-
   function deleteEdited() {
     if (localTranscriptEdited) {
       setLocalTranscriptEdited(undefined);
@@ -109,42 +99,30 @@ export default function Transcript({
     }
   }
 
-  const DefaultElement = useCallback(({ attributes, children }) => {
-    return <p {...attributes}>{children}</p>;
-  }, []);
-
-  const renderElement = useCallback((props: RenderElementProps) => {
+  const useMessage = useCallback((props: RenderElementProps) => {
     switch (props.element.type) {
       case 'message':
         return <Message {...props} userSpeakerLabel='ch_0' />;
       default:
-        return <DefaultElement {...props} />;
+        return <p {...props}>{props.children}</p>;
     }
   }, []);
 
-  const renderLeaf = useCallback(
-    ({ attributes, children, leaf }: RenderLeafProps) => {
-      const isCurrent = leaf.start === currWordStartTime;
-
-      const word = useMemo(
-        () => (
-          <Word
-            isEditing={isEditing}
-            isCurrent={isCurrent}
-            onClick={setStartFrom}
-            startTime={leaf.start as number}
-            attributes={attributes}
-          >
-            {children}
-          </Word>
-        ),
-        [isEditing, isCurrent]
-      );
-      
-      return word;
-    },
-    [currWordStartTime, isEditing]
-  );
+  const useWord = ({ attributes, children, leaf }: RenderLeafProps) =>
+    useMemo(
+      () => (
+        <Word
+          isEditing={isEditing}
+          isCurrent={leaf.start === currWordStartTime}
+          onClick={setStartFrom}
+          startTime={leaf.start as number}
+          attributes={attributes}
+        >
+          {children}
+        </Word>
+      ),
+      [isEditing, leaf.start === currWordStartTime]
+    );
 
   return (
     <section className={classes.container}>
@@ -156,7 +134,7 @@ export default function Transcript({
         onDelete={deleteEdited}
         hasEditedCopy={!isEditing && !!localTranscriptEdited}
         isEdited={isViewingEdited}
-        toggleView={toggleView}
+        toggleView={() => setIsViewingEdited(!isViewingEdited)}
       />
       <Slate
         editor={editor}
@@ -169,8 +147,8 @@ export default function Transcript({
       >
         <Editable
           readOnly={!isEditing}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
+          renderElement={useMessage}
+          renderLeaf={useWord}
         />
       </Slate>
       <AudioPlayer

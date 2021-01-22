@@ -18,7 +18,7 @@ export default function AudioPlayer({
   useEffect(() => {
     setTime(startFrom);
     setPlayerTime(startFrom);
-  }, [startFrom])
+  }, [startFrom]);
 
   // Effect for updating the current word
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function AudioPlayer({
   return (
     <H5AudioPlayer
       src={src}
-      listenInterval={50}
+      listenInterval={20}
       onListen={updateTime}
       showSkipControls
       onClickPrevious={previous}
@@ -80,5 +80,5 @@ type AudioPlayerProps = {
   src?: string;
   startFrom: number;
   startTimes: number[];
-  setCurrWordStartTime: (newTime: number) => void;
+  setCurrWordStartTime: React.Dispatch<React.SetStateAction<number>>;
 };

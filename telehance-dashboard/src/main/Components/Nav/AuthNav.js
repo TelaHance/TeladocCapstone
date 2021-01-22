@@ -5,7 +5,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './Navbar.module.css';
 
 const AuthNav = (props) => {
-  console.log(props);
   const { user, logout } = useAuth0();
   if (user) {
     const { name, picture } = user;
