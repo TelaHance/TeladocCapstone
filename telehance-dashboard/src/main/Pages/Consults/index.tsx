@@ -22,7 +22,7 @@ export default function Consult(props: any) {
 
   // Fetch consult from AWS DynamoDB
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consult, error, mutate: setConsult } = useSWR<Consult>(
+  const { data: consult, error, mutate: setConsult } = useSWR<ConsultData>(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id?consult_id=${consultId}`,
       awsToken,
@@ -40,7 +40,7 @@ export default function Consult(props: any) {
     const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
     const url = `https://c1b65tcl64.execute-api.us-west-2.amazonaws.com/default/update-edited-transcript?consult_id=${consult_id}`;
     putWithToken(url, token, transcript);
-    const newConsult = { ...consult, 'transcript-edited': transcript };
+    const newConsult = { ...consult, transcript_edited: transcript };
     setConsult(newConsult);
   }
 
@@ -64,7 +64,7 @@ export default function Consult(props: any) {
         <Transcript
           audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
           transcript={consult.transcript}
-          transcriptEdited={consult['transcript-edited']}
+          transcriptEdited={consult.transcript_edited}
           updateTranscript={updateTranscript}
         />
       ) : (
@@ -80,14 +80,14 @@ export type UserData = {
   given_name: string;
   family_name: string;
   user_id: string;
-}
+};
 
-export type Consult = {
+export type ConsultData = {
   consult_id: string;
   doctor: UserData;
   patient: UserData;
-  sentiment: number;
+  sentiment?: number;
   timestamp: number;
   transcript: TranscriptData;
-  'transcript-edited'?: TranscriptData;
-}
+  transcript_edited?: TranscriptData;
+};

@@ -98,7 +98,7 @@ export default function Transcript({
   }
 
   function handleEdit() {
-    // Initialize new local transcript-edited with original transcript if one does not exist
+    // Initialize new local transcript_edited with original transcript if one does not exist
     if (!localTranscriptEdited) {
       setLocalTranscriptEdited(transcript);
       toggleView();

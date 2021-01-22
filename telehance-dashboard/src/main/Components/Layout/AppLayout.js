@@ -12,7 +12,6 @@ import AuthorizedRoute from "../Nav/AuthorizedRoute";
 import TwilioCall from "../../Pages/Patients/TwilioCall";
 import Patient from "../../Pages/Patients/Patients";
 import PrivateRoute from "../Auth/PrivateRoute";
-import AppNavbar from "../Nav/AppNavbar";
 import Navbar from "../Nav/Navbar";
 
 function AppLayout() {
