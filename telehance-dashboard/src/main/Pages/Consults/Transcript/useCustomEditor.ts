@@ -52,12 +52,12 @@ function withMergeNoTrailingSpace(editor: Editor) {
   const { normalizeNode } = editor;
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
-    if (Text.isText(node) && node.text.charAt(node.text.length - 1) !== ' ') {
-      const [, nextPath] = Editor.next(editor, { at: path }) ?? [];
+    if (Text.isText(node) && node.text.slice(-1) !== ' ') {
+      const [nextNode, nextPath] = Editor.next(editor, { at: path }) ?? [];
       // Check if current word and next word are in the same message block
-      if (nextPath && path[0] === nextPath[0]) {
+      if (nextNode && nextPath && path[0] === nextPath[0]) {
         Transforms.mergeNodes(editor, { at: nextPath });
-        Transforms.setNodes(editor, { at: path });
+        Transforms.setNodes(editor, { end: nextNode.end }, { at: path });
         return;
       }
     }

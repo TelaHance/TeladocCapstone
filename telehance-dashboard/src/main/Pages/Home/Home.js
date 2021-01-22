@@ -1,7 +1,7 @@
 import React from "react";
-import { Jumbotron } from "react-bootstrap";
 import styles from "./Home.module.css";
-const Home = () => {
+
+export default function Home() {
     return (
         <div className={styles['main-hero-section']}>
             <div className={styles['container-fluid']}>
@@ -30,5 +30,3 @@ const Home = () => {
         </div>
     );
 };
-
-export default Home;
