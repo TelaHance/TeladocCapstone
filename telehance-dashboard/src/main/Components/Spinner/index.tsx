@@ -1,15 +1,12 @@
 import React from 'react';
+import clsx from 'clsx';
 import SpinnerSVG from '@assets/spinner.svg';
+import classes from './Spinner.module.css';
 
-export default function Spinner({width='100px', height='100px'}: SpinnerProps) {
+export default function Spinner(props: React.ComponentProps<'div'>) {
   return (
-    <div style={{'width': width, 'height': height}}>
-      <img src={SpinnerSVG}/>
+    <div className={clsx(props.className, classes.spinner)} {...props}>
+      <img src={SpinnerSVG} />
     </div>
   );
-}
-
-type SpinnerProps = {
-  width?: string;
-  height?: string;
 }

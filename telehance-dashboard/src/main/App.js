@@ -12,7 +12,7 @@ import AuthorizedRoute from './Components/Nav/AuthorizedRoute';
 import TwilioCall from './Pages/Patients/TwilioCall';
 import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
-import Navbar from './Components/Nav/Navbar';
+import Layout from './Components/Layout';
 import classes from './App.module.css';
 
 function App() {
@@ -26,40 +26,37 @@ function App() {
   }
 
   return (
-    <div className={classes.App}>
-      <Navbar />
-      <div className={classes.content}>
-        <Switch>
-          <Route path='/' exact component={Home} />
-          <AuthorizedRoute
-            exact
-            path='/consults'
-            component={ConsultDashboard}
-            authorizedRoles={['admin', 'doctor', 'patient']}
-          />
-          <PrivateRoute path='/profile' component={Profile} />
-          <AuthorizedRoute
-            path='/admin'
-            component={Admin}
-            authorizedRoles={['admin']}
-          />
-          <AuthorizedRoute
-            path='/TwilioCall/:patientId&:phoneNumber'
-            component={TwilioCall}
-            authorizedRoles={['doctor']}
-          />
-          <PrivateRoute
-            path='/consults/:consultId'
-            component={(props) => <Consult {...props} />}
-          />
-          <AuthorizedRoute
-            path='/patients'
-            component={Patient}
-            authorizedRoles={['doctor']}
-          />
-        </Switch>
-      </div>
-    </div>
+    <Layout>
+      <Switch>
+        <Route path='/' exact component={Home} />
+        <AuthorizedRoute
+          exact
+          path='/consults'
+          component={ConsultDashboard}
+          authorizedRoles={['admin', 'doctor', 'patient']}
+        />
+        <PrivateRoute path='/profile' component={Profile} />
+        <AuthorizedRoute
+          path='/admin'
+          component={Admin}
+          authorizedRoles={['admin']}
+        />
+        <AuthorizedRoute
+          path='/TwilioCall/:patientId&:phoneNumber'
+          component={TwilioCall}
+          authorizedRoles={['doctor']}
+        />
+        <PrivateRoute
+          path='/consults/:consultId'
+          component={(props) => <Consult {...props} />}
+        />
+        <AuthorizedRoute
+          path='/patients'
+          component={Patient}
+          authorizedRoles={['doctor']}
+        />
+      </Switch>
+    </Layout>
   );
 }
 
