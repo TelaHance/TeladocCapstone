@@ -64,7 +64,7 @@ export default function AudioPlayer({
   return (
     <H5AudioPlayer
       src={src}
-      listenInterval={20}
+      listenInterval={50}
       onListen={updateTime}
       showSkipControls
       onClickPrevious={previous}
