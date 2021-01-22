@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 import {useAuth0} from "@auth0/auth0-react";
 import useSWR from "swr";
 import { fetchWithUser } from "../../Util/fetch";
-import Loading from "../Loading/Loading";
+import Spinner from "../Spinner";
 
 const AuthorizedRoute = ({component, authorizedRoles, ...args}) => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
@@ -14,7 +14,7 @@ const AuthorizedRoute = ({component, authorizedRoles, ...args}) => {
         fetchWithUser);
     const isAuthorized  = (roleInfo?.body) ? authorizedRoles.includes(JSON.parse(roleInfo.body).role.toLowerCase()) : null;
     if (isLoading) {
-        return <Loading />;
+        return <Spinner />;
     }
     return (
         <Route component={isAuthorized ? component : null} {...args} />

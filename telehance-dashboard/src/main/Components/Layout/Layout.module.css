@@ -8,10 +8,11 @@
 
 .content {
   width: 100%;
+  height: calc(100% - 85px);
   min-width: 300px;
   padding-right: 15px;
   padding-left: 15px;
-  margin: 0 auto 3rem;
+  margin: 0 auto;
 }
 
 @media (min-width: 576px) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import Loading from '@Components/Loading/Loading';
 import classes from './Home.module.css';
 
 export default function Home() {
