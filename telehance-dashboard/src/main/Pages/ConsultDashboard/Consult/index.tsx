@@ -2,18 +2,8 @@ import React from 'react';
 import { fetchWithToken, putWithToken } from '../../../Util/fetch';
 import useSWR from 'swr';
 import Spinner from '../../../Components/Spinner';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import Transcript, { TranscriptData } from './Transcript';
 import classes from './Consult.module.css';
-
-function renderLoading(message: string) {
-  return (
-    <div>
-      <Spinner />
-      <Jumbotron>{message}</Jumbotron>
-    </div>
-  );
-}
 
 export default function Consult(props: any) {
   const {
@@ -34,7 +24,7 @@ export default function Consult(props: any) {
     console.error(error);
   }
 
-  async function updateTranscript(transcript: TranscriptData | undefined) {
+  function updateTranscript(transcript: TranscriptData | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
     const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
@@ -44,7 +34,9 @@ export default function Consult(props: any) {
     setConsult(newConsult);
   }
 
-  return consult ? (
+  if (!consult) return <Spinner />;
+
+  return (
     <div className={classes.container}>
       <div>
         <h1>
@@ -60,19 +52,13 @@ export default function Consult(props: any) {
           })}
         </h2>
       </div>
-      {consult.transcript && Object.keys(consult.transcript).length > 0 ? (
-        <Transcript
-          audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
-          transcript={consult.transcript}
-          transcriptEdited={consult.transcript_edited}
-          updateTranscript={updateTranscript}
-        />
-      ) : (
-        renderLoading('Rendering Consult')
-      )}
+      <Transcript
+        audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
+        transcript={consult.transcript}
+        transcriptEdited={consult.transcript_edited}
+        updateTranscript={updateTranscript}
+      />
     </div>
-  ) : (
-    renderLoading('Fetching Consult')
   );
 }
 
