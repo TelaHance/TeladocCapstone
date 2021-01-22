@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/Button';
-import { ConsultData, UserData } from '..';
+import { ConsultData, UserData } from './Consult';
 
 const dateFormatter = (cell: number, row: ConsultData) => {
   if (typeof cell === 'string')

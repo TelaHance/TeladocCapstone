@@ -4,9 +4,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
-import ConsultDashboard from './Pages/Consults/ConsultDashboard/ConsultDashboard';
-import Consult from './Pages/Consults';
-import Loading from './Components/Loading/Loading';
+import ConsultDashboard from './Pages/ConsultDashboard';
+import Consult from './Pages/ConsultDashboard/Consult';
+import Spinner from '@Components/Spinner';
 import Admin from './Pages/Admin/Admin';
 import AuthorizedRoute from './Components/Nav/AuthorizedRoute';
 import TwilioCall from './Pages/Patients/TwilioCall';
@@ -18,7 +18,11 @@ import classes from './App.module.css';
 function App() {
   const { isLoading } = useAuth0();
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className={classes.Loading}>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
