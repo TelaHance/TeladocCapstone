@@ -1,7 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
-import { fetchWithToken } from '../../../Util/fetch';
+import { fetchWithToken } from '../../Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -10,11 +10,11 @@ import ToolkitProvider, {
   CSVExport,
 } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import Loading from '../../../Components/Loading/Loading';
+import Loading from '../../Components/Loading/Loading';
 import getColumns from './getColumns';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import './ConsultDashboard.css';
+import './react-bootstrap-table-overrides.css';
 
 const { SearchBar, ClearSearchButton } = Search;
 const { ExportCSVButton } = CSVExport;
