@@ -5,21 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import useSWR from 'swr';
 import { fetchWithUser } from '../../Util/fetch';
 import AuthNav from './AuthNav';
-import styles from './Navbar.module.css';
-
-// const handleOpen=()=>{
-//   console.log('d');
-//   // document.mainMenuWrapper.classList.toggle(styles['sidebar-open']);
-//   setActive(true);
-//   // console.log(active);
-// }
-
-// const handleClose=()=>{
-//   console.log('d');
-//   // document.mainMenuWrapper.classList.toggle(styles['sidebar-open']);
-//   setActive(false);
-//   // console.log(active);
-// }
+import classes from './Navbar.module.css';
 
 export default function Navbar() {
   const [active, setActive] = useState(false);
@@ -44,49 +30,48 @@ export default function Navbar() {
   const isDoctor = roleInfo?.body
     ? 'doctor' === JSON.parse(roleInfo.body).role.toLowerCase()
     : null;
-
   return (
-    <header className={styles.header}>
-      <nav className={styles.navbar + ' ' + styles.headerNav}>
-        <div className={styles.navbarHeader}>
-          <a id={styles.mobile_btn} onClick={() => setActive(true)}>
-            <span className={styles.barIcon}>
+    <header className={classes.header}>
+      <nav className={classes.navbar + ' ' + classes.headerNav}>
+        <div className={classes.navbarHeader}>
+          <a id={classes.mobile_btn} onClick={() => setActive(true)}>
+            <span className={classes.barIcon}>
               <span></span>
               <span></span>
               <span></span>
             </span>
           </a>
-          <Link to='/' className={styles.navbarBrand + ' ' + styles.logo}>
+          <Link to='/' className={classes.navbarBrand + ' ' + classes.logo}>
             <img src={logo} className='img-fluid' alt='Logo' />
           </Link>
         </div>
         <div
           className={
             active
-              ? styles.mainMenuWrapper + ' ' + styles.sidebarOpen
-              : styles.mainMenuWrapper
+              ? classes.mainMenuWrapper + ' ' + classes.sidebarOpen
+              : classes.mainMenuWrapper
           }
         >
-          <div className={styles.menuHeader}>
+          <div className={classes.menuHeader}>
             <Link
               to='/'
-              className={styles.menuLogo}
+              className={classes.menuLogo}
               onClick={() => setActive(false)}
             >
               <img src={logo} className='img-fluid' alt='Logo' />
             </Link>
             <a
               id='menu_close'
-              className={styles.close + ' ' + styles.menuClose}
+              className={classes.close + ' ' + classes.menuClose}
               onClick={() => setActive(false)}
             />
           </div>
-          <ul className={styles.mainNav}>
+          <ul className={classes.mainNav}>
             <li>
               <NavLink
                 exact
                 to='/'
-                activeClassName={styles.active}
+                activeClassName={classes.active}
                 onClick={() => setActive(false)}
               >
                 TelaHance Dashboard
@@ -96,7 +81,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/consults'
-                  activeClassName={styles.active}
+                  activeClassName={classes.active}
                   onClick={() => setActive(false)}
                 >
                   Consults
@@ -107,7 +92,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/admin'
-                  activeClassName={styles.active}
+                  activeClassName={classes.active}
                   onClick={() => setActive(false)}
                 >
                   Admin
@@ -118,7 +103,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/patients'
-                  activeClassName={styles.active}
+                  activeClassName={classes.active}
                   onClick={() => setActive(false)}
                 >
                   Patients
@@ -127,7 +112,7 @@ export default function Navbar() {
             )}
           </ul>
         </div>
-        <ul className={styles['nav'] + ' ' + styles['header-navbar-rht']}>
+        <ul className={classes['nav'] + ' ' + classes['header-navbar-rht']}>
           <AuthNav
             role={roleInfo?.body ? JSON.parse(roleInfo.body).role : null}
           />
@@ -135,4 +120,4 @@ export default function Navbar() {
       </nav>
     </header>
   );
-};
+}
