@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import AudioPlayer from 'react-h5-audio-player';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Slate,
   Editable,
@@ -7,14 +6,13 @@ import {
   RenderLeafProps,
 } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
+import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Message, { MessageData } from './Message';
 import Word from './Word';
 import { retimeAll, getStartTimes } from './retime';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
-
-// TODO: Refactor less relevant timing states and AudioPlayer to another component.
 
 export default function Transcript({
   audioSrc,
@@ -32,11 +30,9 @@ export default function Transcript({
   );
 
   const [isEditing, setIsEditing] = useState(false);
-  const player = useRef<AudioPlayer>(null);
 
   // States for keeping track of which word is active
-  const [time, setTime] = useState(0); // Current playback time in ms (minimize float errors)
-  const [currWordIdx, setCurrWordIdx] = useState(0); // Where in startTimes the current word lies
+  const [startFrom, setStartFrom] = useState(0);
   const [startTimes, setStartTimes] = useState<number[]>( // List of each word's start time (w/ 0 at beginning and last word end time at the end)
     getStartTimes(transcript)
   );
@@ -50,52 +46,6 @@ export default function Transcript({
       setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
     }
   }, [isViewingEdited]);
-
-  // Effect for updating the current word
-  useEffect(() => {
-    // Index of the closest *real* start time at least as large as it.
-    const closestTimeIdx =
-      startTimes.findIndex((startTime) => time < startTime) - 1;
-    // If idx out of range (may occur due to floating point errors)
-    const nextWordIdx =
-      closestTimeIdx < 0 ? startTimes.length - 1 : closestTimeIdx;
-    if (currWordIdx !== nextWordIdx) {
-      setCurrWordIdx(nextWordIdx);
-      setCurrWordStartTime(startTimes[nextWordIdx]);
-    }
-  }, [time, startTimes]);
-
-  function getPlayerTime() {
-    return Math.round(
-      (player?.current?.audio?.current?.currentTime ?? 0) * 1000
-    );
-  }
-
-  function setPlayerTime(newTime: number) {
-    if (player?.current?.audio?.current?.currentTime !== undefined)
-      player.current.audio.current.currentTime = newTime / 1000;
-  }
-
-  function setNewTime(newTime: number) {
-    setTime(newTime);
-    setPlayerTime(newTime);
-  }
-
-  function updateTime() {
-    setTime(getPlayerTime());
-  }
-
-  function previous() {
-    setTime(0);
-    setPlayerTime(0);
-  }
-
-  function next() {
-    setTime((player?.current?.audio?.current?.duration ?? 0) * 1000);
-    if (player?.current?.audio?.current?.currentTime !== undefined)
-      player.current.audio.current.currentTime =
-        player.current.audio.current.duration;
-  }
 
   function handleEdit() {
     // Initialize new local transcript_edited with original transcript if one does not exist
@@ -176,17 +126,22 @@ export default function Transcript({
     ({ attributes, children, leaf }: RenderLeafProps) => {
       const isCurrent = leaf.start === currWordStartTime;
 
-      return (
-        <Word
-          isEditing={isEditing}
-          isCurrent={isCurrent}
-          onClick={setNewTime}
-          startTime={leaf.start as number}
-          attributes={attributes}
-        >
-          {children}
-        </Word>
+      const word = useMemo(
+        () => (
+          <Word
+            isEditing={isEditing}
+            isCurrent={isCurrent}
+            onClick={setStartFrom}
+            startTime={leaf.start as number}
+            attributes={attributes}
+          >
+            {children}
+          </Word>
+        ),
+        [isEditing, isCurrent]
       );
+      
+      return word;
     },
     [currWordStartTime, isEditing]
   );
@@ -208,7 +163,9 @@ export default function Transcript({
         value={
           isViewingEdited ? localTranscriptEdited ?? transcript : transcript
         }
-        onChange={(newValue) => setLocalTranscriptEdited(newValue as TranscriptData)}
+        onChange={(newValue) =>
+          setLocalTranscriptEdited(newValue as TranscriptData)
+        }
       >
         <Editable
           readOnly={!isEditing}
@@ -218,14 +175,9 @@ export default function Transcript({
       </Slate>
       <AudioPlayer
         src={audioSrc}
-        listenInterval={50}
-        onListen={updateTime}
-        showSkipControls
-        onClickPrevious={previous}
-        onClickNext={next}
-        customAdditionalControls={[]}
-        className={classes['audio-container']}
-        ref={player}
+        startFrom={startFrom}
+        startTimes={startTimes}
+        setCurrWordStartTime={setCurrWordStartTime}
       />
     </section>
   );

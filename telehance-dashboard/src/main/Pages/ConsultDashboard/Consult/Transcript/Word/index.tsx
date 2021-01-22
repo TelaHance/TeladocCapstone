@@ -11,10 +11,6 @@ export default function Word({
   children,
 }: WordProps) {
 
-  useEffect(() => {
-    console.log(`[ WORD ] ${children}`)
-  }, [])
-
   return (
     <span
       className={clsx({
