@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,700,900');
+
+.card {
+  border: 1px solid #f0f0f0;
+  margin-bottom: 1.875rem;
+  font-family: "Poppins",sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border-radius: .25rem;
+}
+.card-body {
+  padding: 1.5rem;
+  flex: 1 1 auto;
+}
+.change-avatar {
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+.change-avatar::after, .change-avatar::before {
+  box-sizing: border-box;
+}
+.change-avatar .profile-img {
+	margin-right: 15px;
+}
+.change-avatar .profile-img img {
+    border-radius: 4px;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}
+.change-avatar .change-photo-btn {
+    margin: 0 0 10px;
+    width: 150px;
+}
+.form-group {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.form-control {
+  color: #333;
+  font-size: 15px;
+  min-height: 46px;
+  padding: 6px 15px;
+  display: block;
+  width: 100%;
+  height: calc(1.5em + .75rem + 2px);
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+select {
+	background: #F0F3FB;
+	border: 1px solid #F0F3FB;
+	border-radius: 4px;
+	width: 100%;
+	padding: 20px;
+	font-size: 16px;
+	color: #3F3F3F;
+
+	/* Here's the code we need */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	 -o-appearance: none;
+		appearance: none;
+}
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper:after {
+	font-family: "FontAwesome";
+  content: '\f107';
+  font-size: 20px;
+  position: absolute;
+  top: 38px;
+  right: 20px;
+  pointer-events: none;
+}
+.cal-icon {
+	display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+.cal-icon > input {
+  border: none;
+}
+.cal-icon > svg {
+	display: block;
+  margin-right: 15px;
+}
+.change-photo-btn {
+  background-color: #20c0f3;
+  border-radius: 50px;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 auto;
+  padding: 10px 15px;
+  position: relative;
+  transition: .3s;
+  text-align: center;
+  width: 220px;
+}
+.change-photo-btn input.upload {
+  bottom: 0;
+  cursor: pointer;
+  filter: alpha(opacity=0);
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 220px;
+}
+
+@media only screen and (max-width: 767.98px) {
+  .card {
+		margin-bottom: 20px;
+  }
+}
+
+@media only screen and (max-width: 575.98px) {
+  .card {
+		margin-bottom: 0.9375rem;
+  }
+  .card-body {
+		padding: 1.25rem;
+  }
+  .change-avatar .profile-img img {
+		height: 80px;
+		width: 80px;
+	}
+}

@@ -8,7 +8,7 @@ import ConsultDashboard from './Pages/ConsultDashboard';
 import Consult from './Pages/ConsultDashboard/Consult';
 import Spinner from '@Components/Spinner';
 import Admin from './Pages/Admin/Admin';
-import AuthorizedRoute from './Components/Nav/AuthorizedRoute';
+import AuthorizedRoute from './Components/Auth/AuthorizedRoute';
 import TwilioCall from './Pages/Patients/TwilioCall';
 import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
