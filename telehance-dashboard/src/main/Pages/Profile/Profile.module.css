@@ -47,7 +47,6 @@
 }
 
 .form-control {
-  border-color: #dcdcdc;
   color: #333;
   font-size: 15px;
   min-height: 46px;
@@ -60,10 +59,6 @@
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-top-color: rgb(206, 212, 218);
-  border-right-color: rgb(206, 212, 218);
-  border-bottom-color: rgb(206, 212, 218);
-  border-left-color: rgb(206, 212, 218);
   border-radius: .25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
@@ -96,24 +91,19 @@ select {
   pointer-events: none;
 }
 .cal-icon {
-	position: relative;
+	display: flex;
   width: 100%;
+  align-items: center;
+  justify-content: space-between;
   border: 1px solid #ced4da;
+  border-radius: .25rem;
 }
-.cal-icon:after {
-	color: #979797;
-  content: '\f073';
+.cal-icon > input {
+  border: none;
+}
+.cal-icon > svg {
 	display: block;
-  font-family: "FontAwesome";
-  font-size: 16px;
-  font-weight: 400;
-  margin: auto;
-  position: absolute;
-  right: 15px;
-  top: 10px;
-}
-.cal-icon .form-control{
-  border:none !important
+  margin-right: 15px;
 }
 .change-photo-btn {
   background-color: #20c0f3;
