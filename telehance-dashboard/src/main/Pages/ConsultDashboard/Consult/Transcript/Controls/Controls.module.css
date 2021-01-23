@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 1em;
+}
+
+.container > * {
+  margin: 0 0.125em;
+}
+
+.container > *:first-child {
+  margin-right: 0;
+}

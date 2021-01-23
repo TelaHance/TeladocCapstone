@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'>
+  <g transform="translate(28, 28)">
+    <path d='m 0 -28 c 2 1 4 3 4 6.5 c 0 3.5 -2 5.5 -4 6.5 c 8.2843 0 15 6.7157 15 15 c 0 8.2843 -6.7157 15 -15 15 c -2 1 -4 3 -4 6.5 c 0 3.5 2 5.5 4 6.5 c 15.4615 0 28 -12.5385 28 -28 c 0 -15.4615 -12.5385 -28 -28 -28 z' fill='#351F65'></path>
+    <path d='m 0 28 c -2 -1 -4 -3 -4 -6.5 c 0 -3.5 2 -5.5 4 -6.5 c -8.2843 0 -15 -6.7157 -15 -15 s 6.7157 -15 15 -15 c 2 -1 4 -3 4 -6.5 c 0 -3.5 -2 -5.5 -4 -6.5 c -15.4615 0 -28 12.5385 -28 28 c 0 15.4615 12.5385 28 28 28 z' fill='#00B5E2'></path>
+    <animateTransform attributeName="transform" type="rotate" from="0" to="360" repeatCount="indefinite" dur="1s" additive="sum"></animateTransform>
+  </g>
+</svg>

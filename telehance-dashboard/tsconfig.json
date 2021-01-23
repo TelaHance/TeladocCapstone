@@ -27,7 +27,7 @@
   "exclude": [
     "build",
     "node_modules",
-    "test",
+    "test"
   ],
   "include": [
     "src"
