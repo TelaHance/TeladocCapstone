@@ -4,10 +4,10 @@
   margin-bottom: 1em;
 }
 
-.container button {
-  margin: 0 2px;
+.container > * {
+  margin: 0 0.125em;
 }
 
-.container button:focus {
-  outline: none;
+.container > *:first-child {
+  margin-right: 0;
 }

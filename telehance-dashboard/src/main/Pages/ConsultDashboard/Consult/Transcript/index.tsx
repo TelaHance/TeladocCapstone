@@ -39,19 +39,16 @@ export default function Transcript({
 
   // If the display transcript changes, reset display states.
   useEffect(() => {
-    if (isViewingEdited) {
-      setStartTimes(getStartTimes(transcript));
-    } else {
-      setStartTimes(getStartTimes(localTranscriptEdited ?? transcript));
-    }
+    const currentTranscript = isViewingEdited ? localTranscriptEdited ?? transcript : transcript;
+    setStartTimes(getStartTimes(currentTranscript));
   }, [isViewingEdited, transcript, localTranscriptEdited]);
 
   function handleEdit() {
     // Initialize new local transcript_edited with original transcript if one does not exist
     if (!localTranscriptEdited) {
       setLocalTranscriptEdited(transcript);
-      setIsViewingEdited(!isViewingEdited);
     }
+    setIsViewingEdited(true);
     setIsEditing(true);
   }
 
@@ -121,7 +118,7 @@ export default function Transcript({
           {children}
         </Word>
       ),
-      [isEditing, leaf.start === currWordStartTime]
+      [isEditing, leaf.start === currWordStartTime, leaf]
     );
 
   return (

@@ -27,9 +27,8 @@ export default function Consult(props: any) {
   function updateTranscript(transcript: TranscriptData | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
-    const token = process.env.REACT_APP_UPDATE_TRANSCRIPT_API_KEY;
-    const url = `https://c1b65tcl64.execute-api.us-west-2.amazonaws.com/default/update-edited-transcript?consult_id=${consult_id}`;
-    putWithToken(url, token, transcript);
+    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/update-transcript-edited?consult_id=${consult_id}`;
+    putWithToken(url, awsToken, transcript);
     const newConsult = { ...consult, transcript_edited: transcript };
     setConsult(newConsult);
   }

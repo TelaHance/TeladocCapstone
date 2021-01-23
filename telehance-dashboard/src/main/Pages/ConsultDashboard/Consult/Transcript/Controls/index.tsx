@@ -9,6 +9,7 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ConfirmModal from './ConfirmModal';
@@ -31,7 +32,7 @@ export default function Controls({
     <div className={classes.container}>
       {isEditing ? (
         <>
-          <Button onClick={onCancel} variant='outline-secondary' type='reset'>
+          <Button onClick={onCancel} variant='secondary' type='reset'>
             <FontAwesomeIcon icon={faTimes} />
           </Button>
           <Button onClick={onSave} variant='success' type='submit'>
@@ -46,13 +47,14 @@ export default function Controls({
           <FontAwesomeIcon icon={faPencilAlt} /> Edit
         </Button>
       )}
+      {' '}
       {hasEditedCopy ? (
         <ToggleButtonGroup type='checkbox' name='view'>
           <ToggleButton
             value={1}
             onClick={toggleView}
             disabled={isEdited}
-            active={false}
+            onFocus={(e) => e.target.blur()}
           >
             <FontAwesomeIcon icon={faNotesMedical} /> Edited
           </ToggleButton>
@@ -60,7 +62,7 @@ export default function Controls({
             value={2}
             onClick={toggleView}
             disabled={!isEdited}
-            active={false}
+            onFocus={(e) => e.target.blur()}
           >
             <FontAwesomeIcon icon={faFile} /> Original
           </ToggleButton>
