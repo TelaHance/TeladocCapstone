@@ -2,10 +2,25 @@ import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Container, Col, Badge } from "react-bootstrap";
 import ReactJson from "react-json-view";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import useSWR from "swr";
 import {fetchWithUser} from "../../Util/fetch";
 import BreadcrumbBar from "../../Components/BreadcrumbBar/BreadcrumbBar";
 import styles from "./Profile.module.css";
+import { render } from "react-dom";
+
+function renderInput(label, type, defaultValue) {
+  return (
+    <div className="col-12 col-md-6">
+      <div className={styles["form-group"]}>
+        <label>{label}</label>
+        <input type={type} className={styles["form-control"]} defaultValue={defaultValue} />
+      </div>
+    </div>
+  )
+}
+
 const Profile = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const { user } = useAuth0();
@@ -36,23 +51,14 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>First Name</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Richard" />
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Last Name</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Wilson" />
-                </div>
-              </div>
+              {renderInput("First Name", "text", "Richard")}
+              {renderInput("Last Name", "text", "Wilson")}
               <div className="col-12 col-md-6">
                 <div className={styles["form-group"]}>
                   <label>Date of Birth</label>
                   <div className={styles["cal-icon"]}>
                     <input type="text" className={styles["form-control"] + " " + "datetimepicker"} defaultValue="24-07-1983" />
+                    <FontAwesomeIcon icon={faCalendarAlt} size="lg"/>
                   </div>
                 </div>
               </div>
@@ -101,7 +107,7 @@ const Profile = () => {
               <div className="col-12">
                 <div className={styles["form-group"]}>
                 <label>Address</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="806 Twin Willow Lane"/>
+                <input type="text" className={styles["form-control"]} defaultValue="806 Twin Willow Lane"/>
                 </div>
               </div>
               <div className="col-12 col-md-6">
