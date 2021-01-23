@@ -26,7 +26,11 @@
 }
 .page-breadcrumb .breadcrumb-item + .breadcrumb-item:before {
 	color: #fff;
-	font-size: 10px;
+  font-size: 10px;
+  display: inline-block;
+  padding-right: .5rem;
+  content: "/";
+  padding-left: .5rem;
 }
 
 .container-fluid {

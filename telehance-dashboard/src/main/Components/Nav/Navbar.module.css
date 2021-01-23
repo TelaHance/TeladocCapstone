@@ -165,10 +165,13 @@ body {
     width: 160px;
 }
 .header-navbar-rht {
-    margin: 0;
+  margin: 0;
 	margin-left: auto;
 	padding: 0;
 	display: flex;
+}
+.header-navbar-rht .login {
+  cursor: pointer;
 }
 .header-navbar-rht li {
 	-webkit-box-align: center;
