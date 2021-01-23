@@ -87,13 +87,13 @@ select {
   position: relative;
 }
 .select-wrapper:after {
-	font-family: FontAwesome;
-  	content: '\f107';
-    font-size: 20px;
-  	position: absolute;
-  	top: 38px;
-  	right: 20px;
-  	pointer-events: none;
+	font-family: "FontAwesome";
+  content: '\f107';
+  font-size: 20px;
+  position: absolute;
+  top: 38px;
+  right: 20px;
+  pointer-events: none;
 }
 .cal-icon {
 	position: relative;
@@ -104,7 +104,7 @@ select {
 	color: #979797;
   content: '\f073';
 	display: block;
-  font-family: "Font Awesome 5 Free";
+  font-family: "FontAwesome";
   font-size: 16px;
   font-weight: 400;
   margin: auto;

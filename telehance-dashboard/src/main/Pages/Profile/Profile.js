@@ -51,7 +51,7 @@ const Profile = () => {
               <div className="col-12 col-md-6">
                 <div className={styles["form-group"]}>
                   <label>Date of Birth</label>
-                  <div className="cal-icon">
+                  <div className={styles["cal-icon"]}>
                     <input type="text" className={styles["form-control"] + " " + "datetimepicker"} defaultValue="24-07-1983" />
                   </div>
                 </div>
