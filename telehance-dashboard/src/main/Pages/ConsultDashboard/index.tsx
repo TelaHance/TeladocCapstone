@@ -12,6 +12,7 @@ import ToolkitProvider, {
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import Spinner from '../../Components/Spinner';
 import getColumns from './getColumns';
+import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import './react-bootstrap-table-overrides.css';
@@ -41,35 +42,38 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   );
 
   return (
-    <Container className='mb-5 text-center'>
-      <h1>Consult Dashboard</h1>
-      {consultList ? (
-        <ToolkitProvider
-          bootstrap4
-          keyField='id'
-          data={consultList}
-          columns={getColumns(history)}
-          search={{
-            searchFormatted: true,
-          }}
-          exportCSV={{
-            onlyExportFiltered: true,
-          }}
-        >
-          {({ searchProps, baseProps, csvProps }) => (
-            <div>
-              <SearchBar {...searchProps} />
-              <ClearSearchButton />
-              <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
-              <hr />
-              <BootstrapTable pagination={pagination} {...baseProps} />
-            </div>
-          )}
-        </ToolkitProvider>
-      ) : (
-        <Spinner />
-      )}
-    </Container>
+    <>
+      <BreadcrumbBar page='Consult Dashboard' />
+      <Container className='mb-5 text-center'>
+        <h1>Consult Dashboard</h1>
+        {consultList ? (
+          <ToolkitProvider
+            bootstrap4
+            keyField='id'
+            data={consultList}
+            columns={getColumns(history)}
+            search={{
+              searchFormatted: true,
+            }}
+            exportCSV={{
+              onlyExportFiltered: true,
+            }}
+          >
+            {({ searchProps, baseProps, csvProps }) => (
+              <div>
+                <SearchBar {...searchProps} />
+                <ClearSearchButton />
+                <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
+                <hr />
+                <BootstrapTable pagination={pagination} {...baseProps} />
+              </div>
+            )}
+          </ToolkitProvider>
+        ) : (
+          <Spinner />
+        )}
+      </Container>
+    </>
   );
 }
 

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import logo from '../../assets/logo.png';
-import { useAuth0 } from '@auth0/auth0-react';
-import useSWR from 'swr';
-import { fetchWithUser } from '../../Util/fetch';
-import AuthNav from './AuthNav';
-import classes from './Navbar.module.css';
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { useAuth0 } from "@auth0/auth0-react";
+import useSWR from "swr";
+import { fetchWithUser } from "../../Util/fetch";
+import AuthNav from "./AuthNav";
+import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   const [active, setActive] = useState(false);
@@ -31,47 +31,45 @@ export default function Navbar() {
     ? 'doctor' === JSON.parse(roleInfo.body).role.toLowerCase()
     : null;
   return (
-    <header className={classes.header}>
-      <nav className={classes.navbar + ' ' + classes.headerNav}>
-        <div className={classes.navbarHeader}>
-          <a id={classes.mobile_btn} onClick={() => setActive(true)}>
-            <span className={classes.barIcon}>
+    
+    <header className={styles.header}>
+      <nav className={styles.navbar + ' ' + styles.headerNav}>
+        <div className={styles.navbarHeader}>
+          <button id={styles.mobile_btn} onClick={()=>setActive(true)}>
+            <span className={styles.barIcon}>
               <span></span>
               <span></span>
               <span></span>
             </span>
-          </a>
-          <Link to='/' className={classes.navbarBrand + ' ' + classes.logo}>
-            <img src={logo} className='img-fluid' alt='Logo' />
+          </button>
+          <Link to="/" className={styles.navbarBrand + ' ' + styles.logo}>
+            <img src={logo} className="img-fluid" alt="Logo" />
           </Link>
         </div>
         <div
           className={
             active
-              ? classes.mainMenuWrapper + ' ' + classes.sidebarOpen
-              : classes.mainMenuWrapper
+              ? styles.mainMenuWrapper + ' ' + styles.sidebarOpen
+              : styles.mainMenuWrapper
           }
         >
-          <div className={classes.menuHeader}>
+          <div className={styles.menuHeader}>
             <Link
               to='/'
-              className={classes.menuLogo}
+              className={styles.menuLogo}
               onClick={() => setActive(false)}
             >
               <img src={logo} className='img-fluid' alt='Logo' />
             </Link>
-            <a
-              id='menu_close'
-              className={classes.close + ' ' + classes.menuClose}
-              onClick={() => setActive(false)}
-            />
+            <button id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)} />
+              
           </div>
-          <ul className={classes.mainNav}>
+          <ul className={styles.mainNav}>
             <li>
               <NavLink
                 exact
                 to='/'
-                activeClassName={classes.active}
+                activeClassName={styles.active}
                 onClick={() => setActive(false)}
               >
                 TelaHance Dashboard
@@ -81,7 +79,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/consults'
-                  activeClassName={classes.active}
+                  activeClassName={styles.active}
                   onClick={() => setActive(false)}
                 >
                   Consults
@@ -92,7 +90,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/admin'
-                  activeClassName={classes.active}
+                  activeClassName={styles.active}
                   onClick={() => setActive(false)}
                 >
                   Admin
@@ -103,7 +101,7 @@ export default function Navbar() {
               <li>
                 <NavLink
                   to='/patients'
-                  activeClassName={classes.active}
+                  activeClassName={styles.active}
                   onClick={() => setActive(false)}
                 >
                   Patients
@@ -112,10 +110,8 @@ export default function Navbar() {
             )}
           </ul>
         </div>
-        <ul className={classes['nav'] + ' ' + classes['header-navbar-rht']}>
-          <AuthNav
-            role={roleInfo?.body ? JSON.parse(roleInfo.body).role : null}
-          />
+        <ul className={styles['nav'] + ' ' + styles['header-navbar-rht']}>
+          <AuthNav role={(roleInfo?.body) ? JSON.parse(roleInfo.body).role : null}/>
         </ul>
       </nav>
     </header>
