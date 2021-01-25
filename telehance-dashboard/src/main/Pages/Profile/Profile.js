@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Container, Col, Badge } from "react-bootstrap";
+import { Row, Container, Col, Badge, Form, InputGroup, Button } from "react-bootstrap";
 import ReactJson from "react-json-view";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
@@ -28,121 +28,208 @@ const Profile = () => {
   const { data: roleInfo} = useSWR(
     ["https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id", awsToken, 'POST', sub.split('|')[1]],
     fetchWithUser);
+  
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+  };
+
   return (
-    <div>
-      <BreadcrumbBar page="Profile" />
-      <div className={styles["card"]}>
-        <div className={styles["card-body"]}>
-          <form>
-            <div className="row form-row">
-              <div className="col-12 col-md-12">
-                <div className={styles["form-group"]}>
-                  <div className={styles["change-avatar"]}>
-                    <div className={styles["profile-img"]}>
-                      <img src={picture} alt="User" />
-                    </div>
-                    <div className="upload-img">
-                      <div className={styles["change-photo-btn"]}>
-                          <span><i className="fa fa-upload"></i> Upload Photo</span>
-                          <input type="file" className={styles["upload"]} />
-                      </div>
-                      <small className="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {renderInput("First Name", "text", "Richard")}
-              {renderInput("Last Name", "text", "Wilson")}
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Date of Birth</label>
-                  <div className={styles["cal-icon"]}>
-                    <input type="text" className={styles["form-control"] + " " + "datetimepicker"} defaultValue="24-07-1983" />
-                    <FontAwesomeIcon icon={faCalendarAlt} size="lg"/>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
-                  <label>Blood Group</label>
-                  <select className={styles["form-control"]}>
-                    <option>A-</option>
-                    <option>A+</option>
-                    <option>B-</option>
-                    <option>B+</option>
-                    <option>AB-</option>
-                    <option>AB+</option>
-                    <option>O-</option>
-                    <option>O+</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Age</label>
-                  <input type="age" className={styles["form-control"]} defaultValue="37"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
-                  <label>Sex</label>
-                  <select className={styles["form-control"] + " " + "select"}>
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Email ID</label>
-                  <input type="email" className={styles["form-control"]} defaultValue="richard@example.com"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Mobile</label>
-                  <input type="text" defaultValue="+1 202-555-0125" className={styles["form-control"]}/>
-                </div>
-              </div>
-              <div className="col-12">
-                <div className={styles["form-group"]}>
-                <label>Address</label>
-                <input type="text" className={styles["form-control"]} defaultValue="806 Twin Willow Lane"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>City</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Old Forge"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>State</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Newyork"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Zip Code</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="13420"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Country</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="United States"/>
-                </div>
-              </div>
-            </div>
-            <div className="submit-section">
-                <button type="submit" className="btn btn-primary submit-btn">Save Changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Form.Row>
+        <Form.Group as={Col} md="4" controlId="validationCustom01">
+          <Form.Label>First name</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            placeholder="First name"
+            defaultValue="Mark"
+          />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="4" controlId="validationCustom02">
+          <Form.Label>Last name</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            placeholder="Last name"
+            defaultValue="Otto"
+          />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="4" controlId="validationCustomUsername">
+          <Form.Label>Username</Form.Label>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control
+              type="text"
+              placeholder="Username"
+              aria-describedby="inputGroupPrepend"
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              Please choose a username.
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Form.Group>
+      </Form.Row>
+      <Form.Row>
+        <Form.Group as={Col} md="6" controlId="validationCustom03">
+          <Form.Label>City</Form.Label>
+          <Form.Control type="text" placeholder="City" required />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid city.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="3" controlId="validationCustom04">
+          <Form.Label>State</Form.Label>
+          <Form.Control type="text" placeholder="State" required />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid state.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="3" controlId="validationCustom05">
+          <Form.Label>Zip</Form.Label>
+          <Form.Control type="text" placeholder="Zip" required />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid zip.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Form.Row>
+      <Form.Group>
+        <Form.Check
+          required
+          label="Agree to terms and conditions"
+          feedback="You must agree before submitting."
+        />
+      </Form.Group>
+      <Button type="submit">Submit form</Button>
+    </Form>
   );
+  // return (
+  //   <div>
+  //     <BreadcrumbBar page="Profile" />
+  //     <div className={styles["card"]}>
+  //       <div className={styles["card-body"]}>
+  //         <form>
+  //           <div className="row form-row">
+  //             <div className="col-12 col-md-12">
+  //               <div className={styles["form-group"]}>
+  //                 <div className={styles["change-avatar"]}>
+  //                   <div className={styles["profile-img"]}>
+  //                     <img src={picture} alt="User" />
+  //                   </div>
+  //                   <div className="upload-img">
+  //                     <div className={styles["change-photo-btn"]}>
+  //                         <span><i className="fa fa-upload"></i> Upload Photo</span>
+  //                         <input type="file" className={styles["upload"]} />
+  //                     </div>
+  //                     <small className="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+  //                   </div>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //             {renderInput("First Name", "text", "Richard")}
+  //             {renderInput("Last Name", "text", "Wilson")}
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Date of Birth</label>
+  //                 <div className={styles["cal-icon"]}>
+  //                   <input type="text" className={styles["form-control"]} defaultValue="24-07-1983" />
+  //                   <FontAwesomeIcon icon={faCalendarAlt} size="lg"/>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
+  //                 <label>Blood Group</label>
+  //                 <select className={styles["form-control"]}>
+  //                   <option>A-</option>
+  //                   <option>A+</option>
+  //                   <option>B-</option>
+  //                   <option>B+</option>
+  //                   <option>AB-</option>
+  //                   <option>AB+</option>
+  //                   <option>O-</option>
+  //                   <option>O+</option>
+  //                 </select>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Age</label>
+  //                 <input type="age" className={styles["form-control"]} defaultValue="37"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
+  //                 <label>Sex</label>
+  //                 <select className={styles["form-control"] + " " + "select"}>
+  //                   <option>Male</option>
+  //                   <option>Female</option>
+  //                 </select>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Email ID</label>
+  //                 <input type="email" className={styles["form-control"]} defaultValue="richard@example.com"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Mobile</label>
+  //                 <input type="text" defaultValue="+1 202-555-0125" className={styles["form-control"]}/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12">
+  //               <div className={styles["form-group"]}>
+  //               <label>Address</label>
+  //               <input type="text" className={styles["form-control"]} defaultValue="806 Twin Willow Lane"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>City</label>
+  //                 <input type="text" className={styles["form-control"]} defaultValue="Old Forge"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>State</label>
+  //                 <input type="text" className={styles["form-control"]} defaultValue="Newyork"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Zip Code</label>
+  //                 <input type="text" className={styles["form-control"]} defaultValue="13420"/>
+  //               </div>
+  //             </div>
+  //             <div className="col-12 col-md-6">
+  //               <div className={styles["form-group"]}>
+  //                 <label>Country</label>
+  //                 <input type="text" className={styles["form-control"]} defaultValue="United States"/>
+  //               </div>
+  //             </div>
+  //           </div>
+  //           <div className="submit-section">
+  //               <button type="submit" className="btn btn-primary submit-btn">Save Changes</button>
+  //           </div>
+  //         </form>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default Profile;
