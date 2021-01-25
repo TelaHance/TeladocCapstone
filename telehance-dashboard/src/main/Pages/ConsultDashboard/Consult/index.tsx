@@ -32,6 +32,7 @@ export default function Consult(props: any) {
     const newConsult = { ...consult, transcript_edited: transcript };
     setConsult(newConsult);
   }
+  console.log(consult);
 
   if (!consult) return <Spinner />;
 
@@ -51,12 +52,48 @@ export default function Consult(props: any) {
           })}
         </h2>
       </div>
-      <Transcript
-        audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
-        transcript={consult.transcript}
-        transcriptEdited={consult.transcript_edited}
-        updateTranscript={updateTranscript}
-      />
+        <Transcript
+          audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
+          transcript={consult.transcript}
+          transcriptEdited={consult.transcript_edited}
+          updateTranscript={updateTranscript}
+        />
+      <div>
+        <h4>Question</h4>
+        <div>{consult.question}</div>
+        <h4>Medical Conditions</h4>
+        <ul>
+          {consult.medical_conditions.map(medicalCondition => (
+            <>
+              <li key={medicalCondition.id} className="list-group-item">
+                Common Name: {medicalCondition.common_name}
+              </li>
+              <li key={medicalCondition.id} className="list-group-item">
+                Name: {medicalCondition.name}
+              </li>
+              <li key={medicalCondition.id} className="list-group-item">
+                Probability: {medicalCondition.probability}
+              </li>
+            </>
+          ))}
+        </ul>
+        <h4>Symptoms</h4>
+        <ul>
+          {consult.symptoms.map(symptomData => (
+            <>
+              <li key={symptomData.id} className="list-group-item">
+                Common Name: {symptomData.common_name}
+              </li>
+              <li key={symptomData.id} className="list-group-item">
+                Name: {symptomData.name}
+              </li>
+              <li key={symptomData.id} className="list-group-item">
+                Choice ID: {symptomData.choice_id}
+              </li>
+            </>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -67,6 +104,22 @@ export type UserData = {
   user_id: string;
 };
 
+export type MedicalConditionData = {
+  common_name: string;
+  id: string;
+  name: string;
+  probability: number;
+}
+
+export type SymptomData = {
+  choice_id: string;
+  common_name: string;
+  id: string;
+  name: string;
+  type: string;
+}
+
+
 export type ConsultData = {
   consult_id: string;
   doctor: UserData;
@@ -74,5 +127,8 @@ export type ConsultData = {
   sentiment?: number;
   timestamp: number;
   transcript: TranscriptData;
+  medical_conditions: MedicalConditionData[];
+  question: string;
+  symptoms: SymptomData[];
   transcript_edited?: TranscriptData;
 };
