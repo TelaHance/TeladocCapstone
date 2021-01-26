@@ -30,6 +30,12 @@ const pagination = paginationFactory({
   alwaysShowAllBtns: true,
 });
 
+function getRole(consultList: any) {
+  if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
+  else if (consultList[0].patient) return 'DOCTOR';
+  else return 'PATIENT';
+}
+
 function ConsultDashboard({ history }: RouteComponentProps) {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
@@ -42,38 +48,37 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     fetchWithToken
   );
 
+  if (!consultList) return <Spinner />;
+  if (consultList.length === 0) return <h1>No Consults</h1>; // TODO: Replace with UI Component
+
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
       <Container className='mb-5 text-center'>
-        {consultList ? (
-          <ToolkitProvider
-            bootstrap4
-            keyField='id'
-            data={consultList}
-            columns={getColumns(history)}
-            search={{
-              searchFormatted: true,
-            }}
-            exportCSV={{
-              onlyExportFiltered: true,
-            }}
-          >
-            {({ searchProps, baseProps, csvProps }) => (
-              <>
-                <div className={styles.controls}>
-                  <SearchBar {...searchProps} />
-                  <ClearSearchButton />
-                  <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
-                </div>
-                <hr />
-                <BootstrapTable pagination={pagination} {...baseProps} />
-              </>
-            )}
-          </ToolkitProvider>
-        ) : (
-          <Spinner />
-        )}
+        <ToolkitProvider
+          bootstrap4
+          keyField='id'
+          data={consultList}
+          columns={getColumns(history, getRole(consultList))}
+          search={{
+            searchFormatted: true,
+          }}
+          exportCSV={{
+            onlyExportFiltered: true,
+          }}
+        >
+          {({ searchProps, baseProps, csvProps }) => (
+            <>
+              <div className={styles.controls}>
+                <SearchBar {...searchProps} />
+                <ClearSearchButton />
+                <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
+              </div>
+              <hr />
+              <BootstrapTable pagination={pagination} {...baseProps} />
+            </>
+          )}
+        </ToolkitProvider>
       </Container>
     </>
   );
