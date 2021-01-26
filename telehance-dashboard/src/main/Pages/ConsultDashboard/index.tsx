@@ -31,11 +31,8 @@ const pagination = paginationFactory({
 });
 
 function getRole(consultList: any) {
-  // Sentiment only returned if user is an admin
-  if (consultList[0].sentiment) return 'ADMIN';
-  // Patient info returned if user is an admin or doctor
+  if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
   else if (consultList[0].patient) return 'DOCTOR';
-  // Default role
   else return 'PATIENT';
 }
 

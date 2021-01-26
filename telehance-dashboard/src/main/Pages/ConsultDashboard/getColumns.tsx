@@ -126,15 +126,11 @@ function viewConsult(history: RouteComponentProps['history']) {
 
 // PRIMARY FUNCTION
 
-const ROLES = ['PATIENT', 'DOCTOR', 'ADMIN'];
-
 export default function getColumns(
   history: RouteComponentProps['history'],
   role: string
 ): ColumnDescription[] {
-  if (!ROLES.includes(role)) {
-    throw new Error('User Role Invalid');
-  }
+  console.log(role);
 
   let columns: ColumnDescription[] = [timestamp];
   if (role !== 'DOCTOR') {
