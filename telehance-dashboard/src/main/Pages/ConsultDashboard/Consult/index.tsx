@@ -52,47 +52,49 @@ export default function Consult(props: any) {
           })}
         </h2>
       </div>
+      <div className={classes.content}>
         <Transcript
           audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
           transcript={consult.transcript}
           transcriptEdited={consult.transcript_edited}
           updateTranscript={updateTranscript}
         />
-      <div>
-        <h4>Question</h4>
-        <div>{consult.question}</div>
-        <h4>Medical Conditions</h4>
-        <ul>
-          {consult.medical_conditions.map(medicalCondition => (
-            <>
-              <li key={medicalCondition.id} className="list-group-item">
-                Common Name: {medicalCondition.common_name}
+        { consult.question && consult.medical_conditions && consult.symptoms ?
+
+        <div className={classes.infermedica}>
+          <h4>Question</h4>
+          <div>{consult.question}</div>
+          <br />
+          <h4>Medical Conditions</h4>
+          {consult.medical_conditions.map((medicalCondition) => (
+            <ul>
+              <li key={medicalCondition.id} className='list-group-item'>
+                <strong>Common Name</strong>: {medicalCondition.common_name}
               </li>
-              <li key={medicalCondition.id} className="list-group-item">
-                Name: {medicalCondition.name}
+              <li key={medicalCondition.id} className='list-group-item'>
+                <strong>Name</strong>: {medicalCondition.name}
               </li>
-              <li key={medicalCondition.id} className="list-group-item">
-                Probability: {medicalCondition.probability}
+              <li key={medicalCondition.id} className='list-group-item'>
+                <strong>Probability</strong>: {medicalCondition.probability}
               </li>
-            </>
+            </ul>
           ))}
-        </ul>
-        <h4>Symptoms</h4>
-        <ul>
-          {consult.symptoms.map(symptomData => (
-            <>
-              <li key={symptomData.id} className="list-group-item">
-                Common Name: {symptomData.common_name}
+          <br />
+          <h4>Symptoms</h4>
+          {consult.symptoms.map((symptomData) => (
+            <ul>
+              <li key={symptomData.id} className='list-group-item'>
+                <strong>Common Name</strong>: {symptomData.common_name}
               </li>
-              <li key={symptomData.id} className="list-group-item">
-                Name: {symptomData.name}
+              <li key={symptomData.id} className='list-group-item'>
+                <strong>Name</strong>: {symptomData.name}
               </li>
-              <li key={symptomData.id} className="list-group-item">
-                Choice ID: {symptomData.choice_id}
+              <li key={symptomData.id} className='list-group-item'>
+                <strong>Choice ID</strong>: {symptomData.choice_id}
               </li>
-            </>
+            </ul>
           ))}
-        </ul>
+        </div> : null }
       </div>
     </div>
   );
@@ -110,7 +112,7 @@ export type MedicalConditionData = {
   id: string;
   name: string;
   probability: number;
-}
+};
 
 export type SymptomData = {
   choice_id: string;
@@ -118,8 +120,7 @@ export type SymptomData = {
   id: string;
   name: string;
   type: string;
-}
-
+};
 
 export type ConsultData = {
   consult_id: string;
