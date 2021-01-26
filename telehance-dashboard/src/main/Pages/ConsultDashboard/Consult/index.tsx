@@ -99,9 +99,10 @@ export default function Consult(props: any) {
 }
 
 export type UserData = {
+  user_id: string;
   given_name: string;
   family_name: string;
-  user_id: string;
+  picture?: string;
 };
 
 export type MedicalConditionData = {
