@@ -32,7 +32,6 @@ export default function Consult(props: any) {
     const newConsult = { ...consult, transcript_edited: transcript };
     setConsult(newConsult);
   }
-  console.log(consult);
 
   if (!consult) return <Spinner />;
 
