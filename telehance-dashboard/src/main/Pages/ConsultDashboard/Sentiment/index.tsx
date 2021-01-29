@@ -18,7 +18,6 @@ export default function Sentiment({
   sentiment,
   threshold = DefaultThreshold,
   showOnlyIssues,
-  showAll,
   className,
 }: SentimentProps) {
   const [displayAttributes, setDisplayAttributes] = useState<JSX.Element[]>();
@@ -31,7 +30,7 @@ export default function Sentiment({
       );
 
       for (const [attribute, value] of attributes) {
-        if (showAll || value >= threshold[attribute]) {
+        if (value >= threshold[attribute]) {
           elements.push(
             <Pill
               key={attribute}
@@ -63,7 +62,6 @@ type SentimentProps = {
   sentiment: any;
   threshold?: SentimentData;
   showOnlyIssues?: boolean;
-  showAll?: boolean;
   hideTooltip?: boolean;
   className?: string;
 };

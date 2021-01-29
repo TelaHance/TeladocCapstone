@@ -91,7 +91,7 @@ export default function Filter({ onFilter }: any) {
 
   useEffect(() => {
     onFilter(filterAttributes);
-  }, [filterAttributes]);
+  }, [onFilter, filterAttributes]);
 
   return (
     <DropdownButton
