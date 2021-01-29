@@ -6,8 +6,8 @@ import {
   RenderLeafProps,
 } from 'slate-react';
 import useCustomEditor from './useCustomEditor';
-import AudioPlayer from './AudioPlayer';
-import Controls from './Controls';
+import AudioPlayer from '../AudioPlayer';
+import Controls from '../Controls';
 import Message, { MessageData } from './Message';
 import Word from './Word';
 import { retimeAll, getStartTimes } from './retime';
