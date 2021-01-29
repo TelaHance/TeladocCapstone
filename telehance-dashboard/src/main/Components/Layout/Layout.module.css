@@ -9,32 +9,4 @@
 .content {
   width: 100%;
   height: calc(100% - 85px);
-  min-width: 300px;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin: 0 auto;
-}
-
-@media (min-width: 576px) {
-  .content {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .content {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 992px) {
-  .content {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .content {
-    max-width: 1140px;
-  }
 }
