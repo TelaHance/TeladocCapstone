@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
 import { WordData } from '../Word';
+import Sentiment from '../../../Sentiment';
 import classes from './Message.module.css';
 
 export default function Message({
@@ -15,6 +16,11 @@ export default function Message({
 
   return (
     <div className={classes.container}>
+      <Sentiment
+        sentiment={element.sentiment}
+        className={isSelf ? classes['badges-self'] : classes['badges-other']}
+        showOnlyIssues
+      />
       <div
         className={clsx(classes.message, {
           [classes.self]: isSelf,
@@ -39,4 +45,4 @@ export type MessageData = {
   speaker: string;
   sentiment: number;
   fullText: string;
-}
+};

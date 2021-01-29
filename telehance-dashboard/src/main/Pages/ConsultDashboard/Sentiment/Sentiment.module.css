@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.container > span {
+  display: inline-block;
+  margin: 0 0.25em 0.25em 0.25em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pink {
+  background-color: #e83e8c;
+}
+
+.orange {
+  background-color: #fd7e14;
+  color: #000000;
+}
+
+.purple {
+  background-color: #6f42c1;
+}
