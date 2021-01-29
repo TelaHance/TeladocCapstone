@@ -1,9 +1,12 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
+import { textFilter } from 'react-bootstrap-table2-filter';
 import Button from 'react-bootstrap/Button';
 import { ConsultData, UserData } from './Consult';
 import Sentiment from './Sentiment';
+import SentimentFilter, { filter } from './Sentiment/Filter';
+import classes from './ConsultDashboard.module.css';
 
 // FORMATTERS
 
@@ -35,7 +38,7 @@ const nameFormatter = (cell: UserData, row: ConsultData) => {
 
 const sentimentFormatter = (cell?: any, row?: ConsultData) => {
   if (typeof cell === 'number') return `${Math.round(cell * 100)}%`;
-  return <Sentiment sentiment={cell}/>;
+  return <Sentiment sentiment={cell} />;
 };
 
 const csvSentimentFormatter = (cell?: number, row?: ConsultData) => {
@@ -113,7 +116,14 @@ const sentiment = {
   formatter: sentimentFormatter,
   csvFormatter: csvSentimentFormatter,
   csvType: Number,
-  sort: true,
+  headerClasses: classes.issues,
+  filter: textFilter({
+    // @ts-ignore
+    onFilter: filter
+  }),
+  filterRenderer: (onFilter: any, column: any) => (
+    <SentimentFilter onFilter={onFilter} column={column} />
+  ),
 };
 
 function viewConsult(history: RouteComponentProps['history']) {

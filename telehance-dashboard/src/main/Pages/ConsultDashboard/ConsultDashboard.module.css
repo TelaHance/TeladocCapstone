@@ -7,3 +7,16 @@
 .controls > * {
   margin-left: 0.25em;
 }
+
+.issues {
+  min-width: 200px;
+  position: relative;
+}
+
+.issues > div {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  z-index: 1;
+}

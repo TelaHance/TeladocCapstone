@@ -9,6 +9,7 @@ import ToolkitProvider, {
   Search,
   CSVExport,
 } from 'react-bootstrap-table2-toolkit';
+import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import Spinner from '../../Components/Spinner';
 import getColumns from './getColumns';
@@ -75,7 +76,11 @@ function ConsultDashboard({ history }: RouteComponentProps) {
                 <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
               </div>
               <hr />
-              <BootstrapTable pagination={pagination} {...baseProps} />
+              <BootstrapTable
+                pagination={pagination}
+                filter={filterFactory()}
+                {...baseProps}
+              />
             </>
           )}
         </ToolkitProvider>
