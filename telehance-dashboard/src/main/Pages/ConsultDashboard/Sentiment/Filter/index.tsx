@@ -95,7 +95,7 @@ export default function Filter({ onFilter }: any) {
 
   return (
     <DropdownButton
-      id='dropdown'
+      id='issues-filter'
       title=''
       size='sm'
       menuAlign='right'
