@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import Pill from './Pill';
 import classes from './Sentiment.module.css';
-
-function getLabel(attribute: string) {
-  const lowercase = attribute.toLowerCase();
-  const capitalized = lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
-  return capitalized.replaceAll('_', ' ');
-}
-
-const attributeToProps: {
-  [key: string]: { variant: string; className?: string };
-} = {
-  FLIRTATION: { variant: 'secondary', className: classes.pink },
-  THREAT: { variant: 'danger', className: classes.red },
-  PROFANITY: { variant: 'secondary', className: classes.orange },
-  INSULT: { variant: 'warning', className: classes.yellow },
-  IDENTITY_ATTACK: { variant: 'primary', className: classes.blue },
-  TOXICITY: { variant: 'secondary', className: classes.purple },
-};
 
 const DefaultThreshold = {
   FLIRTATION: 0.75,
@@ -35,6 +18,7 @@ export default function Sentiment({
   sentiment,
   threshold = DefaultThreshold,
   showOnlyIssues,
+  showAll,
   className,
 }: SentimentProps) {
   const [displayAttributes, setDisplayAttributes] = useState<JSX.Element[]>();
@@ -47,18 +31,14 @@ export default function Sentiment({
       );
 
       for (const [attribute, value] of attributes) {
-        if (value >= threshold[attribute]) {
+        if (showAll || value >= threshold[attribute]) {
           elements.push(
-            <OverlayTrigger
-              placement='top'
-              overlay={
-                <Tooltip id={attribute}>{Math.round(value * 100)}%</Tooltip>
-              }
-            >
-              <Badge pill {...attributeToProps[attribute]}>
-                {getLabel(attribute)}
-              </Badge>
-            </OverlayTrigger>
+            <Pill
+              key={attribute}
+              attribute={attribute}
+              value={value}
+              showTooltip
+            />
           );
         }
       }
@@ -67,17 +47,14 @@ export default function Sentiment({
     }
   }, [sentiment, threshold]);
 
-  const noIssues = !showOnlyIssues ? (
-    <Badge pill variant='success' className={classes.green}>No Issues</Badge>
-  ) : null;
-
-  const unrated = !showOnlyIssues ? (
-    <Badge pill variant='secondary'>Unrated</Badge>
-  ) : null;
-
   return (
     <div className={clsx(classes.container, className)}>
-      {typeof sentiment === 'object' ? displayAttributes ?? noIssues : unrated}
+      {typeof sentiment !== 'object' ? (
+        <Pill attribute='UNRATED' />
+      ) : (
+        displayAttributes ??
+        (!showOnlyIssues ? <Pill attribute='NO_ISSUES' /> : null)
+      )}
     </div>
   );
 }
@@ -86,6 +63,8 @@ type SentimentProps = {
   sentiment: any;
   threshold?: SentimentData;
   showOnlyIssues?: boolean;
+  showAll?: boolean;
+  hideTooltip?: boolean;
   className?: string;
 };
 

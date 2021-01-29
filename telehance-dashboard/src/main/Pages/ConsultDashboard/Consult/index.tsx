@@ -3,6 +3,7 @@ import { fetchWithToken, putWithToken } from '../../../Util/fetch';
 import useSWR from 'swr';
 import Spinner from '../../../Components/Spinner';
 import Transcript, { TranscriptData } from './Transcript';
+import { SentimentData } from '../Sentiment';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -58,42 +59,42 @@ export default function Consult(props: any) {
           transcriptEdited={consult.transcript_edited}
           updateTranscript={updateTranscript}
         />
-        { consult.question && consult.medical_conditions && consult.symptoms ?
-
-        <div className={classes.infermedica}>
-          <h4>Question</h4>
-          <div>{consult.question}</div>
-          <br />
-          <h4>Medical Conditions</h4>
-          {consult.medical_conditions.map((medicalCondition) => (
-            <ul>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Common Name</strong>: {medicalCondition.common_name}
-              </li>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Name</strong>: {medicalCondition.name}
-              </li>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Probability</strong>: {medicalCondition.probability}
-              </li>
-            </ul>
-          ))}
-          <br />
-          <h4>Symptoms</h4>
-          {consult.symptoms.map((symptomData) => (
-            <ul>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Common Name</strong>: {symptomData.common_name}
-              </li>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Name</strong>: {symptomData.name}
-              </li>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Choice ID</strong>: {symptomData.choice_id}
-              </li>
-            </ul>
-          ))}
-        </div> : null }
+        {consult.question && consult.medical_conditions && consult.symptoms ? (
+          <div className={classes.infermedica}>
+            <h4>Question</h4>
+            <div>{consult.question}</div>
+            <br />
+            <h4>Medical Conditions</h4>
+            {consult.medical_conditions.map((medicalCondition) => (
+              <ul>
+                <li key={medicalCondition.id} className='list-group-item'>
+                  <strong>Common Name</strong>: {medicalCondition.common_name}
+                </li>
+                <li key={medicalCondition.id} className='list-group-item'>
+                  <strong>Name</strong>: {medicalCondition.name}
+                </li>
+                <li key={medicalCondition.id} className='list-group-item'>
+                  <strong>Probability</strong>: {medicalCondition.probability}
+                </li>
+              </ul>
+            ))}
+            <br />
+            <h4>Symptoms</h4>
+            {consult.symptoms.map((symptomData) => (
+              <ul>
+                <li key={symptomData.id} className='list-group-item'>
+                  <strong>Common Name</strong>: {symptomData.common_name}
+                </li>
+                <li key={symptomData.id} className='list-group-item'>
+                  <strong>Name</strong>: {symptomData.name}
+                </li>
+                <li key={symptomData.id} className='list-group-item'>
+                  <strong>Choice ID</strong>: {symptomData.choice_id}
+                </li>
+              </ul>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -125,7 +126,7 @@ export type ConsultData = {
   consult_id: string;
   doctor: UserData;
   patient: UserData;
-  sentiment?: number;
+  sentiment?: SentimentData;
   timestamp: number;
   transcript: TranscriptData;
   medical_conditions: MedicalConditionData[];
