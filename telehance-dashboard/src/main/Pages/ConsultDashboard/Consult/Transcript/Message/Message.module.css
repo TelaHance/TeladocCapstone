@@ -3,16 +3,29 @@
   display: flex;
   font-family: Effra, Arial, Sans-serif;
   font-size: 16px;
+  position: relative;
 }
 
 .message {
   border-radius: 20px;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin-top: 1.25em;
+  margin-bottom: 0.25em;
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.2);
   max-width: 75%;
   padding: 8px 15px;
   text-align: start;
+}
+
+.badges-self {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.badges-other {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .self {

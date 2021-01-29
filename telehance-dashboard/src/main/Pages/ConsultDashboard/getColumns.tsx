@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/Button';
 import { ConsultData, UserData } from './Consult';
+import Sentiment, { SentimentData } from './Sentiment';
 
 // FORMATTERS
 
@@ -32,9 +33,9 @@ const nameFormatter = (cell: UserData, row: ConsultData) => {
   return `${cell.family_name}, ${cell.given_name}`;
 };
 
-const sentimentFormatter = (cell?: number, row?: ConsultData) => {
-  if (cell) return `${Math.round(cell * 100)}%`;
-  return 'Unrated';
+const sentimentFormatter = (cell?: any, row?: ConsultData) => {
+  if (typeof cell === 'number') return `${Math.round(cell * 100)}%`;
+  return <Sentiment sentiment={cell}/>;
 };
 
 const csvSentimentFormatter = (cell?: number, row?: ConsultData) => {
@@ -130,8 +131,6 @@ export default function getColumns(
   history: RouteComponentProps['history'],
   role: string
 ): ColumnDescription[] {
-  console.log(role);
-
   let columns: ColumnDescription[] = [timestamp];
   if (role !== 'DOCTOR') {
     columns = columns.concat(doctor);
