@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/Button';
 import { ConsultData, UserData } from './Consult';
-import Sentiment, { SentimentData } from './Sentiment';
+import Sentiment from './Sentiment';
 
 // FORMATTERS
 
@@ -109,7 +109,7 @@ const patient: ColumnDescription[] = [
 
 const sentiment = {
   dataField: 'sentiment',
-  text: 'Problematic Consult Rating',
+  text: 'Issues',
   formatter: sentimentFormatter,
   csvFormatter: csvSentimentFormatter,
   csvType: Number,

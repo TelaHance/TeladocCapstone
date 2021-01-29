@@ -13,10 +13,10 @@ const attributeToProps: {
   [key: string]: { variant: string; className?: string };
 } = {
   FLIRTATION: { variant: 'secondary', className: classes.pink },
-  THREAT: { variant: 'danger' },
+  THREAT: { variant: 'danger', className: classes.red },
   PROFANITY: { variant: 'secondary', className: classes.orange },
-  INSULT: { variant: 'warning' },
-  IDENTITY_ATTACK: { variant: 'primary' },
+  INSULT: { variant: 'warning', className: classes.yellow },
+  IDENTITY_ATTACK: { variant: 'primary', className: classes.blue },
   TOXICITY: { variant: 'secondary', className: classes.purple },
 };
 
@@ -55,7 +55,7 @@ export default function Sentiment({
                 <Tooltip id={attribute}>{Math.round(value * 100)}%</Tooltip>
               }
             >
-              <Badge {...attributeToProps[attribute]}>
+              <Badge pill {...attributeToProps[attribute]}>
                 {getLabel(attribute)}
               </Badge>
             </OverlayTrigger>
@@ -68,11 +68,11 @@ export default function Sentiment({
   }, [sentiment, threshold]);
 
   const noIssues = !showOnlyIssues ? (
-    <Badge variant='success'>No Issues</Badge>
+    <Badge pill variant='success' className={classes.green}>No Issues</Badge>
   ) : null;
 
   const unrated = !showOnlyIssues ? (
-    <Badge variant='secondary'>Unrated</Badge>
+    <Badge pill variant='secondary'>Unrated</Badge>
   ) : null;
 
   return (
