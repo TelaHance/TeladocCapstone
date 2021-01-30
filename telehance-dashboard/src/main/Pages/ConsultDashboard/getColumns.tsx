@@ -61,7 +61,7 @@ const buttonFormatter = (
 // COLUMN DESCRIPTIONS
 
 const timestamp = {
-  dataField: 'timestamp',
+  dataField: 'start_time',
   text: 'Appointment Date',
   formatter: dateFormatter,
   csvFormatter: csvDateFormatter,
