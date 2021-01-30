@@ -59,7 +59,7 @@ export default function getColumns(
 ): ColumnDescription[] {
   return [
     {
-      dataField: 'timestamp',
+      dataField: 'start_time',
       text: 'Appointment Date',
       formatter: dateFormatter,
       csvFormatter: csvDateFormatter,
