@@ -21,3 +21,19 @@
 .infermedica ul {
   padding-inline-start: 0;
 }
+
+.main {
+  width: 60%;
+  padding: 2em;
+  border-radius: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+}
+
+.main div[data-slate-editor=true] {
+  flex: 1;
+  max-height: 75%;
+  overflow-y: scroll;
+}
