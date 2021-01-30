@@ -35,7 +35,6 @@ export default function Consult(props: any) {
   }
 
   if (!consult) return <Spinner />;
-
   return (
     <div className={classes.container}>
       <div>
@@ -53,12 +52,14 @@ export default function Consult(props: any) {
         </h2>
       </div>
       <div className={classes.content}>
-        <Transcript
-          audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
-          transcript={consult.transcript}
-          transcriptEdited={consult.transcript_edited}
-          updateTranscript={updateTranscript}
-        />
+        <div className={classes.main}>
+          <Transcript
+            audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
+            transcript={consult.transcript}
+            transcriptEdited={consult.transcript_edited}
+            updateTranscript={updateTranscript}
+          />
+        </div>
         {consult.question && consult.medical_conditions && consult.symptoms ? (
           <div className={classes.infermedica}>
             <h4>Question</h4>
