@@ -60,7 +60,7 @@ const buttonFormatter = (
 
 // COLUMN DESCRIPTIONS
 
-const timestamp = {
+const start_date = {
   dataField: 'start_time',
   text: 'Appointment Date',
   formatter: dateFormatter,
@@ -141,7 +141,9 @@ export default function getColumns(
   history: RouteComponentProps['history'],
   role: string
 ): ColumnDescription[] {
-  let columns: ColumnDescription[] = [timestamp];
+  console.log(role);
+
+  let columns: ColumnDescription[] = [start_date];
   if (role !== 'DOCTOR') {
     columns = columns.concat(doctor);
   }
