@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import { Image, Button, Col, Row} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { Device } from 'twilio-client';
-import fetch from "isomorphic-fetch"
+import fetch from "isomorphic-unfetch";
 import {useAuth0} from "@auth0/auth0-react";
 import phoneIcon from "../../assets/phoneIcon.png";
 import { useHistory } from "react-router-dom";

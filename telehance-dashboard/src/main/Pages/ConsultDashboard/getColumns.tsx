@@ -4,9 +4,10 @@ import { ColumnDescription } from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/Button';
 import { ConsultData, UserData } from './Consult';
 
+// FORMATTERS
+
 const dateFormatter = (cell: number, row: ConsultData) => {
-  if (typeof cell === 'string')
-    cell = parseInt(cell);
+  if (typeof cell === 'string') cell = parseInt(cell);
   return new Date(cell).toLocaleString('default', {
     month: 'long',
     day: '2-digit',
@@ -15,8 +16,7 @@ const dateFormatter = (cell: number, row: ConsultData) => {
 };
 
 const csvDateFormatter = (cell: number | string, row: ConsultData) => {
-  if (typeof cell === 'string')
-    cell = parseInt(cell);
+  if (typeof cell === 'string') cell = parseInt(cell);
   return new Date(cell).toISOString().split('T')[0]; // yyyy-mm-dd
 };
 
@@ -40,7 +40,7 @@ const sentimentFormatter = (cell?: number, row?: ConsultData) => {
 const csvSentimentFormatter = (cell?: number, row?: ConsultData) => {
   if (cell) return cell;
   return -1;
-}
+};
 
 const buttonFormatter = (
   cell: any,
@@ -54,66 +54,95 @@ const buttonFormatter = (
   );
 };
 
+// COLUMN DESCRIPTIONS
+
+const start_date = {
+  dataField: 'start_time',
+  text: 'Appointment Date',
+  formatter: dateFormatter,
+  csvFormatter: csvDateFormatter,
+  sort: true,
+};
+
+const doctor = [
+  {
+    dataField: 'doctor',
+    text: 'Doctor First Name',
+    hidden: true,
+    csvFormatter: firstNameFormatter,
+  },
+  {
+    dataField: 'doctor',
+    text: 'Doctor Last Name',
+    hidden: true,
+    csvFormatter: lastNameFormatter,
+  },
+  {
+    dataField: 'doctor',
+    text: 'Doctor Name',
+    formatter: nameFormatter,
+    csvExport: false,
+  },
+];
+
+const patient: ColumnDescription[] = [
+  {
+    dataField: 'patient',
+    text: 'Patient First Name',
+    hidden: true,
+    csvFormatter: firstNameFormatter,
+  },
+  {
+    dataField: 'patient',
+    text: 'Patient Last Name',
+    hidden: true,
+    csvFormatter: lastNameFormatter,
+  },
+  {
+    dataField: 'patient',
+    text: 'Patient Name',
+    formatter: nameFormatter,
+    csvExport: false,
+  },
+];
+
+const sentiment = {
+  dataField: 'sentiment',
+  text: 'Problematic Consult Rating',
+  formatter: sentimentFormatter,
+  csvFormatter: csvSentimentFormatter,
+  csvType: Number,
+  sort: true,
+};
+
+function viewConsult(history: RouteComponentProps['history']) {
+  return {
+    dataField: 'button',
+    text: 'Actions',
+    formatter: (cell: any, row: any) => buttonFormatter(cell, row, history),
+    csvExport: false,
+  };
+}
+
+// PRIMARY FUNCTION
+
 export default function getColumns(
-  history: RouteComponentProps['history']
+  history: RouteComponentProps['history'],
+  role: string
 ): ColumnDescription[] {
-  return [
-    {
-      dataField: 'start_time',
-      text: 'Appointment Date',
-      formatter: dateFormatter,
-      csvFormatter: csvDateFormatter,
-      sort: true,
-    },
-    {
-      dataField: 'doctor',
-      text: 'Doctor First Name',
-      hidden: true,
-      csvFormatter: firstNameFormatter,
-    },
-    {
-      dataField: 'doctor',
-      text: 'Doctor Last Name',
-      hidden: true,
-      csvFormatter: lastNameFormatter,
-    },
-    {
-      dataField: 'doctor',
-      text: 'Doctor Name',
-      formatter: nameFormatter,
-      csvExport: false,
-    },
-    {
-      dataField: 'patient',
-      text: 'Patient First Name',
-      hidden: true,
-      csvFormatter: firstNameFormatter,
-    },
-    {
-      dataField: 'patient',
-      text: 'Patient Last Name',
-      hidden: true,
-      csvFormatter: lastNameFormatter,
-    },
-    {
-      dataField: 'patient',
-      text: 'Patient Name',
-      formatter: nameFormatter,
-      csvExport: false,
-    },
-    {
-      dataField: 'sentiment',
-      text: 'Problematic Consult Rating',
-      formatter: sentimentFormatter,
-      csvFormatter: csvSentimentFormatter,
-      csvType: Number,
-      sort: true,
-    },
-    {
-      dataField: 'button',
-      text: 'Actions',
-      formatter: (cell, row) => buttonFormatter(cell, row, history),
-      csvExport: false,
-    },
-  ];
+  console.log(role);
+
+  let columns: ColumnDescription[] = [start_date];
+  if (role !== 'DOCTOR') {
+    columns = columns.concat(doctor);
+  }
+  if (role !== 'PATIENT') {
+    columns = columns.concat(patient);
+  }
+  if (role === 'ADMIN') {
+    columns = columns.concat(sentiment);
+  }
+  columns.push(viewConsult(history));
+
+  return columns;
 }
