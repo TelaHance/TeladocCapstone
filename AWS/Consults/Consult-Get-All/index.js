@@ -1,155 +1,86 @@
-const AWS = require("aws-sdk");
+const AWS = require('aws-sdk');
 var dynamoDb = new AWS.DynamoDB.DocumentClient();
-var lambda = new AWS.Lambda({
-  region: 'us-west-2'
-});
-'use strict';
 
-exports.handler = function(event, context, callback) {
+exports.handler = async (event) => {
+  const { user_id } = event.queryStringParameters;
 
-    // lambda.invoke({
-    //   FunctionName: 'getRole',
-    //   Payload: JSON.stringify(event, null, 2) // pass params
-    // }, function(error, data) {
-    //   if (error) {
-    //     console.error(error);
-    //     callback(null, {
-    //       statusCode: error.statusCode || 501,
-    //       headers: {
-    //         "Access-Control-Allow-Origin": "*",
-    //         "Content-Type": "text/plain" },
-    //       body: "Couldn\'t fetch the User",
-    //     });
-    //     return;
-    //   }
-    //   if(data.Payload){
-    //     context.succeed(data.Payload)
-    //   }
-    // });
-    console.log(event)
-    const role_params = {
-        TableName: "users",
-        Key: {
-            "user_id": event.queryStringParameters.user_id
-        }
-    };
+  const roleParams = {
+    TableName: 'users',
+    Key: {
+      user_id: user_id,
+    },
+    ExpressionAttributeNames: {
+      '#role': 'role'
+    },
+    ProjectionExpression: '#role'
+  };
 
-    dynamoDb.get(role_params, (error, result) => {
-        // handle potential errors
-        if (error) {
-          console.error(error);
-          callback(null, {
-            statusCode: error.statusCode || 501,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "text/plain" },
-            body: "Couldn\'t fetch the User",
-          });
-          return;
-        }
-        const role = result.Item.role;
-        console.log(role);
+  const roleResult = await dynamoDb.get(roleParams).promise();
+  const role = roleResult.Item.toUpperCase();
+  console.log(role);
+  
+  const queryParams = {
+    TableName: 'consults-dev',
+    ExpressionAttributeNames: {
+      '#timestamp': 'timestamp'
+    },
+    ExpressionAttributeValues = {
+      'user_id': user_id
+    }
+  }
 
-        if (role == 'Admin') {
-          const params = {
-            TableName: "consults-dev"
-          };
+  let queryResults;
 
-          dynamoDb.scan(params, (error, result) => {
-            // handle potential errors
-            if (error) {
-              console.error(error);
-              callback(null, {
-                statusCode: error.statusCode || 501,
-                headers: {
-                  "Access-Control-Allow-Origin": "*",
-                  "Content-Type": "text/plain" },
-                body: 'Couldn\'t fetch the consults.',
-              });
-              return;
-            }
+  if (role === 'ADMIN') {
+    const scanParams = {
+      TableName: 'consults-dev',
+      ExpressionAttributeNames: {
+        // TODO: Replace with 'start' and 'end'
+        '#timestamp': 'timestamp'
+      },
+      ProjectionExpression: 'consult_id, doctor_id, patient_id, #timestamp, sentiment'
+    }
+    queryResults = await dynamoDb.scan(scanParams).promise();
+  } else if (role === 'DOCTOR') {
+    queryParams.IndexName = 'doctor_id-start-index';
+    queryParams.KeyConditionExpression = 'doctor_id = :user_id';
+    queryParams.ProjectionExpression = 'consult_id, patient_id, #timestamp';
+    queryResults = await dynamoDb.query(queryParams).promise();
+  } else {
+    queryParams.IndexName = 'patient_id-start-index';
+    queryParams.KeyConditionExpression = 'patient_id = :user_id'
+    queryParams.ProjectionExpression = 'consult_id, doctor_id, #timestamp';
+    queryResults = await dynamoDb.query(queryParams).promise();
+  }
 
-            // create a response
-            const response = {
-              statusCode: 200,
-              headers: {
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,GET"
-              },
-              body: JSON.stringify(result.Items),
-            };
-            callback(null, response);
-          });
-        } else {
-          const user_params = {
-            TableName: "user-consults",
-            Key: {
-              "user_id": event.queryStringParameters.user_id
-            }
-          }
-          dynamoDb.get(user_params, (error, result) => {
-            // handle potential errors
-            if (error) {
-              console.error(error);
-              callback(null, {
-                statusCode: error.statusCode || 501,
-                headers: {
-                  "Access-Control-Allow-Origin": "*",
-                  "Content-Type": "text/plain" },
-                body: 'Couldn\'t fetch the consult list.',
-              });
-              return;
-            }
-            console.log(result);
-            const consult_list = result.Item.consults;
-            const consult_map = consult_list.map(item => {
-              return {"consult_id": item}
-            })
+  const consults = queryResults.Items;
+  console.log(consults);
+  const userIds = consults.map(consult => [consult.doctor_id, consult.patient_id]).flat();
+  const uniqueUserIds = [...new Set(userIds)].map(user_id => {return { 'user_id': user_id }});
 
-            console.log(consult_map);
-            const consult_params = {
-              "RequestItems": {
-                "consults-dev": {
-                  Keys: consult_map
-                }
-              }
-            }
-            console.log(consult_params);
+  console.log(uniqueUserIds);
 
-            dynamoDb.batchGet(consult_params, (error, result) => {
-              // handle potential errors
-              if (error) {
-                console.error(error);
-                callback(null, {
-                  statusCode: error.statusCode || 501,
-                  headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Content-Type": "text/plain" },
-                  body: 'Couldn\'t fetch the consults.',
-                });
-                return;
-              }
-              console.log(result.Responses['consults-dev'])
+  const getUsersParams = {
+    RequestItems: {
+      'users': {
+        Keys: uniqueUserIds,
+      }
+    },
+    ProjectionExpression: 'user_id, given_name, family_name, picture'
+  }
 
-              // create a response
-              const response = {
-                statusCode: 200,
-                headers: {
-                  "Access-Control-Allow-Headers": "Content-Type",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods": "OPTIONS,GET"
-                },
-                body: JSON.stringify(result.Responses["consults-dev"]),
-              };
-              callback(null, response);
-            });
-          });
+  const usersResult = await dynamoDb.batchGet(getUsersParams).promise();
+  const { users } = usersResult.Response;
 
-        }
-    });
+  consult.log(users);
 
-
-
-
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,GET"
+    },
+    body: JSON.stringify({consults, users})
+  }
 };
