@@ -3,9 +3,9 @@ import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import Button from 'react-bootstrap/Button';
-import { ConsultData, UserData } from './Consult';
-import Sentiment from './Sentiment';
-import SentimentFilter, { filter } from './Sentiment/Filter';
+import { ConsultData, UserData } from '../Consult';
+import Sentiment from '../../Components/Sentiment';
+import SentimentFilter, { filter } from '../../Components/Sentiment/Filter';
 import classes from './ConsultDashboard.module.css';
 
 // FORMATTERS
