@@ -3,7 +3,5 @@ const { alias, configPaths } = require('react-app-rewire-alias');
 
 module.exports = function override(config, env) {
   config = rewireReactHotLoader(config, env);
-  alias(configPaths('./tsconfig.paths.json')(config));
-
-  return config;
+  return alias(configPaths('./tsconfig.paths.json'))(config)
 };

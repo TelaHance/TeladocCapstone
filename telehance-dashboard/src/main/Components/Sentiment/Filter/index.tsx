@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { PillTypes, getLabel } from '../Pill';
-import { ConsultData } from '../../Consult';
+import { ConsultData } from 'Pages/Consult';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import classes from './Filter.module.css';

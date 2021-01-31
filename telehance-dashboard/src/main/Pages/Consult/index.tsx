@@ -1,9 +1,9 @@
 import React from 'react';
-import { fetchWithToken, putWithToken } from '../../../Util/fetch';
+import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useSWR from 'swr';
-import Spinner from '../../../Components/Spinner';
+import Spinner from 'Components/Spinner';
 import Transcript, { TranscriptData } from './Transcript';
-import { SentimentData } from '../Sentiment';
+import { SentimentData } from 'Components/Sentiment';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
