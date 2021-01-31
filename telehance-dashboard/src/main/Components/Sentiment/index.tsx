@@ -25,7 +25,7 @@ export default function Sentiment({
   useEffect(() => {
     const elements = [];
     if (typeof sentiment === 'object') {
-      const attributes = Object.entries(sentiment as SentimentData).sort(
+      const attributes = Object.entries(sentiment).sort(
         (a, b) => b[1] - a[1]
       );
 
@@ -48,7 +48,7 @@ export default function Sentiment({
 
   return (
     <div className={clsx(classes.container, className)}>
-      {typeof sentiment !== 'object' ? (
+      {!sentiment ? (
         <Pill attribute='UNRATED' />
       ) : (
         displayAttributes ??
@@ -59,7 +59,7 @@ export default function Sentiment({
 }
 
 type SentimentProps = {
-  sentiment: any;
+  sentiment: SentimentData;
   threshold?: SentimentData;
   showOnlyIssues?: boolean;
   hideTooltip?: boolean;

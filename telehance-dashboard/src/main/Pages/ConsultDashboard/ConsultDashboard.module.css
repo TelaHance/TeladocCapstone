@@ -1,3 +1,15 @@
+.container {
+  margin-bottom: 3rem;
+}
+
+.container > div {
+  text-align: center;
+}
+
+.container > div:last-child {
+  text-align: left;
+}
+
 .controls {
   display: flex;
   align-items: flex-start;
