@@ -56,8 +56,8 @@ const buttonFormatter = (
 
 // COLUMN DESCRIPTIONS
 
-const timestamp = {
-  dataField: 'timestamp',
+const start_date = {
+  dataField: 'start_time',
   text: 'Appointment Date',
   formatter: dateFormatter,
   csvFormatter: csvDateFormatter,
@@ -132,7 +132,7 @@ export default function getColumns(
 ): ColumnDescription[] {
   console.log(role);
 
-  let columns: ColumnDescription[] = [timestamp];
+  let columns: ColumnDescription[] = [start_date];
   if (role !== 'DOCTOR') {
     columns = columns.concat(doctor);
   }
