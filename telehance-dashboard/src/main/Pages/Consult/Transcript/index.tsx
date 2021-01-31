@@ -12,7 +12,6 @@ import Message, { MessageData } from './Message';
 import Word from './Word';
 import { retimeAll, getStartTimes } from 'Util/retime';
 import classes from './Transcript.module.css';
-import 'react-h5-audio-player/lib/styles.css';
 
 export default function Transcript({
   audioSrc,
