@@ -12,8 +12,6 @@
   background-color: #fff;
   background-clip: border-box;
   border-radius: .25rem;
-}
-.card-body {
   padding: 1.5rem;
   flex: 1 1 auto;
 }
@@ -142,10 +140,8 @@ select {
 
 @media only screen and (max-width: 575.98px) {
   .card {
-		margin-bottom: 0.9375rem;
-  }
-  .card-body {
-		padding: 1.25rem;
+    margin-bottom: 0.9375rem;
+    padding: 1.25rem;
   }
   .change-avatar .profile-img img {
 		height: 80px;
