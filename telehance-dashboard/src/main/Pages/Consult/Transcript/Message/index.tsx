@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
 import { WordData } from '../Word';
-import Sentiment from '../../../Sentiment';
+import Sentiment from '@Components/Sentiment';
 import classes from './Message.module.css';
 
 export default function Message({
