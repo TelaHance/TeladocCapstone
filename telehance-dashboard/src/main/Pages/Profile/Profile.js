@@ -3,21 +3,37 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Container, Col, Badge, Form, InputGroup, Button } from "react-bootstrap";
 import ReactJson from "react-json-view";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faUpload } from '@fortawesome/free-solid-svg-icons';
 import useSWR from "swr";
 import {fetchWithUser} from "../../Util/fetch";
 import BreadcrumbBar from "../../Components/BreadcrumbBar/BreadcrumbBar";
 import styles from "./Profile.module.css";
 import { render } from "react-dom";
 
+// function renderInput(label, type, defaultValue) {
+//   return (
+//     <div className="col-12 col-md-6">
+//       <div className={styles["form-group"]}>
+//         <label>{label}</label>
+//         <input type={type} className={styles["form-control"]} defaultValue={defaultValue} />
+//       </div>
+//     </div>
+//   )
+// }
+
 function renderInput(label, type, defaultValue) {
   return (
-    <div className="col-12 col-md-6">
-      <div className={styles["form-group"]}>
-        <label>{label}</label>
-        <input type={type} className={styles["form-control"]} defaultValue={defaultValue} />
-      </div>
-    </div>
+    <Form.Group as={Col} md="6" controlId="validationCustom01" className={styles["form-group"]}>
+      <Form.Label>{label}</Form.Label>
+        <Form.Control
+          className={styles['form-control']}
+          required
+          type={type}
+          placeholder={label}
+          defaultValue={defaultValue}
+        />
+      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+    </Form.Group>
   )
 }
 
@@ -33,6 +49,7 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
+    console.log(form)
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
@@ -42,78 +59,77 @@ const Profile = () => {
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Form.Row>
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>First name</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder="First name"
-            defaultValue="Mark"
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom02">
-          <Form.Label>Last name</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder="Last name"
-            defaultValue="Otto"
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-          <Form.Label>Username</Form.Label>
-          <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-            </InputGroup.Prepend>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              aria-describedby="inputGroupPrepend"
-              required
-            />
+    <div className={styles.card}>
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form.Row>
+          <div className={styles['change-avatar']}>
+            <div className={styles['profile-img']}>
+              <img src={picture} alt="User" />
+            </div>
+            <div className="upload-img">
+              <div className={styles["change-photo-btn"]}>
+                <span><i className="fa fa-upload"></i> Upload Photo</span>
+                <FontAwesomeIcon icon={faUpload} />
+                <input type="file" className={styles["upload"]} />
+              </div>
+              <small className="form-text text-muted">Allowed JPG or PNG. Max size of 2MB</small>
+            </div>
+          </div>
+        </Form.Row>
+        <Form.Row>
+          {renderInput("First Name", "text", "Mark")}
+          {renderInput("Last Name", "text", "Otto")}
+          <Form.Group as={Col} md="4" controlId="validationCustomUsername">
+            <Form.Label>Username</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                aria-describedby="inputGroupPrepend"
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Please choose a username.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} md="6" controlId="validationCustom03">
+            <Form.Label>City</Form.Label>
+            <Form.Control type="text" placeholder="City" required />
             <Form.Control.Feedback type="invalid">
-              Please choose a username.
+              Please provide a valid city.
             </Form.Control.Feedback>
-          </InputGroup>
+          </Form.Group>
+          <Form.Group as={Col} md="3" controlId="validationCustom04">
+            <Form.Label>State</Form.Label>
+            <Form.Control type="text" placeholder="State" required />
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid state.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="3" controlId="validationCustom05">
+            <Form.Label>Zip</Form.Label>
+            <Form.Control type="text" placeholder="Zip" required />
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid zip.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Group>
+          <Form.Check
+            required
+            label="Agree to terms and conditions"
+            feedback="You must agree before submitting."
+          />
         </Form.Group>
-      </Form.Row>
-      <Form.Row>
-        <Form.Group as={Col} md="6" controlId="validationCustom03">
-          <Form.Label>City</Form.Label>
-          <Form.Control type="text" placeholder="City" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid city.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="3" controlId="validationCustom04">
-          <Form.Label>State</Form.Label>
-          <Form.Control type="text" placeholder="State" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid state.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="3" controlId="validationCustom05">
-          <Form.Label>Zip</Form.Label>
-          <Form.Control type="text" placeholder="Zip" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid zip.
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Form.Row>
-      <Form.Group>
-        <Form.Check
-          required
-          label="Agree to terms and conditions"
-          feedback="You must agree before submitting."
-        />
-      </Form.Group>
-      <Button type="submit">Submit form</Button>
-    </Form>
+        <Button type="submit">Submit form</Button>
+      </Form>
+    </div>
   );
   // return (
   //   <div>
