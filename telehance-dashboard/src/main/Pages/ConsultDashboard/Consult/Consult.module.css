@@ -9,13 +9,3 @@
   flex-wrap: nowrap;
   height: calc(100% - 150px);
 }
-
-.infermedica {
-  padding: 40px;
-  overflow-y: scroll;
-  height: 100%;
-}
-
-.infermedica ul {
-  padding-inline-start: 0;
-}

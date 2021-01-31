@@ -3,6 +3,7 @@ import { fetchWithToken, putWithToken } from '../../../Util/fetch';
 import useSWR from 'swr';
 import Spinner from '../../../Components/Spinner';
 import Transcript, { TranscriptData } from './Transcript';
+import Diagnoses from './Diagnoses/Diagnoses';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -45,7 +46,7 @@ export default function Consult(props: any) {
           {consult.patient.family_name}
         </h1>
         <h2>
-          {new Date(Number(consult.timestamp)).toLocaleString('default', {
+          {new Date(consult.start_time).toLocaleString('default', {
             month: 'long',
             day: '2-digit',
             year: 'numeric',
@@ -60,41 +61,12 @@ export default function Consult(props: any) {
           updateTranscript={updateTranscript}
         />
         { consult.question && consult.medical_conditions && consult.symptoms ?
-
-        <div className={classes.infermedica}>
-          <h4>Question</h4>
-          <div>{consult.question}</div>
-          <br />
-          <h4>Medical Conditions</h4>
-          {consult.medical_conditions.map((medicalCondition) => (
-            <ul>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Common Name</strong>: {medicalCondition.common_name}
-              </li>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Name</strong>: {medicalCondition.name}
-              </li>
-              <li key={medicalCondition.id} className='list-group-item'>
-                <strong>Probability</strong>: {medicalCondition.probability}
-              </li>
-            </ul>
-          ))}
-          <br />
-          <h4>Symptoms</h4>
-          {consult.symptoms.map((symptomData) => (
-            <ul>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Common Name</strong>: {symptomData.common_name}
-              </li>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Name</strong>: {symptomData.name}
-              </li>
-              <li key={symptomData.id} className='list-group-item'>
-                <strong>Choice ID</strong>: {symptomData.choice_id}
-              </li>
-            </ul>
-          ))}
-        </div> : null }
+          <Diagnoses 
+            question={consult.question}
+            medicalConditions={consult.medical_conditions}
+            symptoms={consult.symptoms}
+          />
+         : null }
       </div>
     </div>
   );
@@ -127,7 +99,8 @@ export type ConsultData = {
   doctor: UserData;
   patient: UserData;
   sentiment?: number;
-  timestamp: number;
+  start_time: number;
+  end_time: number;
   transcript: TranscriptData;
   medical_conditions: MedicalConditionData[];
   question: string;

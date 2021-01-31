@@ -1,0 +1,50 @@
+.infermedica {
+  padding: 40px;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+
+
+.sidebar {
+  width: 1em;
+}
+
+.sidebar button {
+  width: 100%;
+  color: gray;
+  background-color: inherit;
+  border: none;
+  box-shadow: none;
+  font-size: 2em;
+}
+
+button:hover {
+  cursor: pointer;
+  color: #532197;
+}
+
+.active {
+  color: #532197 !important;
+}
+
+.name {
+  font-size: 18px;
+}
+
+.commonName {
+  font-size: 16px;
+}
+
+.item {
+  display: flex;
+  text-align: left;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125);
+}
+
+.icon {
+  margin-right: 1em;
+}
