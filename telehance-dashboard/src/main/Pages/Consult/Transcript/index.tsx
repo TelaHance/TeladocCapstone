@@ -5,12 +5,12 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import useCustomEditor from './useCustomEditor';
+import useCustomEditor from 'Hooks/useCustomEditor';
 import AudioPlayer from '../AudioPlayer';
 import Controls from '../Controls';
 import Message, { MessageData } from './Message';
 import Word from './Word';
-import { retimeAll, getStartTimes } from './retime';
+import { retimeAll, getStartTimes } from 'Util/retime';
 import classes from './Transcript.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 
