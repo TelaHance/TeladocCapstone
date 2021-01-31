@@ -24,14 +24,6 @@ const csvDateFormatter = (cell: number | string, row: ConsultData) => {
   return new Date(cell).toISOString().split('T')[0]; // yyyy-mm-dd
 };
 
-const firstNameFormatter = (cell: UserData, row: ConsultData) => {
-  return cell.given_name;
-};
-
-const lastNameFormatter = (cell: UserData, row: ConsultData) => {
-  return cell.family_name;
-};
-
 const nameFormatter = (cell: UserData, row: ConsultData) => {
   return `${cell.family_name}, ${cell.given_name}`;
 };
@@ -70,20 +62,18 @@ const start_date = {
 
 const doctor = [
   {
-    dataField: 'doctor',
+    dataField: 'doctor.given_name',
     text: 'Doctor First Name',
     hidden: true,
-    csvFormatter: firstNameFormatter,
   },
   {
-    dataField: 'doctor',
+    dataField: 'doctor.family_name',
     text: 'Doctor Last Name',
     hidden: true,
-    csvFormatter: lastNameFormatter,
   },
   {
     dataField: 'doctor',
-    text: 'Doctor Name',
+    text: 'Doctor',
     formatter: nameFormatter,
     csvExport: false,
   },
@@ -91,20 +81,18 @@ const doctor = [
 
 const patient: ColumnDescription[] = [
   {
-    dataField: 'patient',
+    dataField: 'patient.given_name',
     text: 'Patient First Name',
     hidden: true,
-    csvFormatter: firstNameFormatter,
   },
   {
-    dataField: 'patient',
+    dataField: 'patient.family_name',
     text: 'Patient Last Name',
     hidden: true,
-    csvFormatter: lastNameFormatter,
   },
   {
     dataField: 'patient',
-    text: 'Patient Name',
+    text: 'Patient',
     formatter: nameFormatter,
     csvExport: false,
   },

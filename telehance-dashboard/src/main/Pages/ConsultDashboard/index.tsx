@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchWithToken } from '../../Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Button, ButtonGroup, Container } from 'react-bootstrap';
-import BootstrapTable, { SizePerPageRendererOptions } from 'react-bootstrap-table-next';
+import { Container } from 'react-bootstrap';
+import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider, {
   Search,
   CSVExport,
@@ -16,44 +16,27 @@ import getColumns from './getColumns';
 import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import './react-bootstrap-table-overrides.css';
+// import './react-bootstrap-table-overrides.css';
 import styles from './ConsultDashboard.module.css';
 
 const { SearchBar, ClearSearchButton } = Search;
 const { ExportCSVButton } = CSVExport;
 
-const sizePerPageRenderer = ({
-  options,
-  currentSizePerPage,
-  onSizePerPageChange,
-}: SizePerPageRendererOptions) => (
-  <ButtonGroup>
-    {options.map((option) => {
-      // @ts-ignore
-      const isSelect = currentSizePerPage === option.page;
-      return (
-        <Button
-          key={ option.text }
-          variant={isSelect ? 'secondary' : 'warning'}
-          // @ts-ignore
-          onClick={ () => onSizePerPageChange(option.page) }
-        >
-          { option.text }
-        </Button>
-      );
-    })}
-  </ButtonGroup>
+const customTotal = (from: number, to: number, size: number) => (
+  <span className="react-bootstrap-table-pagination-total">
+    &nbsp; Showing Consults { from } to { to } of { size }
+  </span>
 );
 
 const pagination = paginationFactory({
+  firstPageText: '<<',
+  prePageText: '<',
+  nextPageText: '>',
   lastPageText: '>>',
   sizePerPage: 10,
-  firstPageText: '<<',
-  nextPageText: '>',
-  prePageText: '<',
   showTotal: true,
+  paginationTotalRenderer: customTotal,
   alwaysShowAllBtns: true,
-  sizePerPageRenderer
 });
 
 function getRole(consultList: any) {
@@ -80,7 +63,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
-      <Container className='mb-5 text-center'>
+      <Container className={styles.container}>
         <ToolkitProvider
           bootstrap4
           keyField='id'
