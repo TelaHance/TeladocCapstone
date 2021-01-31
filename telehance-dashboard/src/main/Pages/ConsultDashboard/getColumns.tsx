@@ -141,7 +141,6 @@ export default function getColumns(
   history: RouteComponentProps['history'],
   role: string
 ): ColumnDescription[] {
-  console.log(role);
 
   let columns: ColumnDescription[] = [start_date];
   if (role !== 'DOCTOR') {

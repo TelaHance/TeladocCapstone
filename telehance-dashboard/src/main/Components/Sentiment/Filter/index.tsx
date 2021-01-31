@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { PillTypes, getLabel } from '../Pill';
 import { ConsultData } from 'Pages/Consult';
@@ -87,11 +87,8 @@ export default function Filter({ onFilter }: any) {
       newFilterAttributes.delete(type);
     } else newFilterAttributes.add(type);
     setFilterAttributes(newFilterAttributes);
-  }
-
-  useEffect(() => {
     onFilter(filterAttributes);
-  }, [onFilter, filterAttributes]);
+  }
 
   return (
     <DropdownButton

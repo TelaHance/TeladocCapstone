@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchWithToken } from '../../Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import BootstrapTable from 'react-bootstrap-table-next';
+import { Button, ButtonGroup, Container } from 'react-bootstrap';
+import BootstrapTable, { SizePerPageRendererOptions } from 'react-bootstrap-table-next';
 import ToolkitProvider, {
   Search,
   CSVExport,
 } from 'react-bootstrap-table2-toolkit';
 import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import Spinner from '../../Components/Spinner';
+import Spinner from 'Components/Spinner';
 import getColumns from './getColumns';
 import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -21,6 +21,30 @@ import styles from './ConsultDashboard.module.css';
 
 const { SearchBar, ClearSearchButton } = Search;
 const { ExportCSVButton } = CSVExport;
+
+const sizePerPageRenderer = ({
+  options,
+  currentSizePerPage,
+  onSizePerPageChange,
+}: SizePerPageRendererOptions) => (
+  <ButtonGroup>
+    {options.map((option) => {
+      // @ts-ignore
+      const isSelect = currentSizePerPage === option.page;
+      return (
+        <Button
+          key={ option.text }
+          variant={isSelect ? 'secondary' : 'warning'}
+          // @ts-ignore
+          onClick={ () => onSizePerPageChange(option.page) }
+        >
+          { option.text }
+        </Button>
+      );
+    })}
+  </ButtonGroup>
+);
+
 const pagination = paginationFactory({
   lastPageText: '>>',
   sizePerPage: 10,
@@ -29,6 +53,7 @@ const pagination = paginationFactory({
   prePageText: '<',
   showTotal: true,
   alwaysShowAllBtns: true,
+  sizePerPageRenderer
 });
 
 function getRole(consultList: any) {
