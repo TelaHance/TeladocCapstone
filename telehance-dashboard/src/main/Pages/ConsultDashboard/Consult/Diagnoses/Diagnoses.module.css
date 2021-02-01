@@ -1,10 +1,25 @@
 .infermedica {
-  padding: 40px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: auto;
   height: 100%;
+  width: 0;
+  transition: all ease-in-out 0.7s;
+  text-align: left;
+}
+.infermedicaActive {
+  padding: 0 20px;
+  width: 50%!important;
 }
 
+button {
+  background-color: inherit;
+  border: none;
+  box-shadow: none;
+}
 
+button:hover {
+  cursor: pointer;
+}
 
 .sidebar {
   width: 1em;
@@ -13,18 +28,14 @@
 .sidebar button {
   width: 100%;
   color: gray;
-  background-color: inherit;
-  border: none;
-  box-shadow: none;
   font-size: 2em;
 }
 
-button:hover {
-  cursor: pointer;
+.sidebar button:hover {
   color: #532197;
 }
 
-.active {
+.sidebar .active {
   color: #532197 !important;
 }
 
@@ -41,10 +52,64 @@ button:hover {
   text-align: left;
   align-items: center;
   padding: 0.5rem;
-  background-color: #fff;
+  background-color: #fff!important;
   border: 1px solid rgba(0,0,0,.125);
+  box-shadow: 5px 5px 5px #888888;
+  
+}
+
+.condition > .item > .dropdownToggle {
+	background-color:inherit !important;
+	border:none !important;
+  box-shadow: none !important;
+  color: inherit!important;
+  width: 100%;
+  text-align: inherit !important;
+  display: inherit !important;
+  align-items: inherit !important;
+  padding: 0 !important;
+}
+
+.dropdownToggle::after {
+  display: none;
+}
+
+.dropdownToggle[aria-expanded='true']::after {
+  transform: rotate(-135deg);
 }
 
 .icon {
   margin-right: 1em;
+  font-size: 1.5em;
+  width: 1em!important;
 }
+
+.update {
+  margin-left: auto;
+  font-size: 1.5em;
+}
+
+/* .condition .item button {
+  border-top: 0;
+  border-left: 0;
+  border-bottom: 2px solid #757575;
+  border-right: 2px solid #757575;
+  content: '';
+  -webkit-transform-origin: 66% 66%;
+  -ms-transform-origin: 66% 66%;
+  transform-origin: 66% 66%;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  margin-left: auto;
+  height: 18px;
+} */
+
+.expand {
+  margin-left: auto !important;
+  font-size: 1em;
+  color: gray;
+}
+
