@@ -39,7 +39,7 @@ export default function Consult(props: any) {
 
   return (
     <div className={classes.container}>
-      <div>
+      {/* <div>
         <h1>
           Consult Between Doctor {consult.doctor.given_name}{' '}
           {consult.doctor.family_name} and Patient {consult.patient.given_name}{' '}
@@ -52,7 +52,7 @@ export default function Consult(props: any) {
             year: 'numeric',
           })}
         </h2>
-      </div>
+      </div> */}
       <div className={classes.content}>
         <Transcript
           audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}

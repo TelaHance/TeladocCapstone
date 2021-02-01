@@ -5,10 +5,24 @@
   width: 0;
   transition: all ease-in-out 0.7s;
   text-align: left;
+  
 }
 .infermedicaActive {
   padding: 0 20px;
   width: 50%!important;
+}
+
+.infermedica h4 {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.search {
+  margin-bottom: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 button {
@@ -22,13 +36,23 @@ button:hover {
 }
 
 .sidebar {
-  width: 1em;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -1px 0 2px #888888;
 }
 
 .sidebar button {
+  display: flex;
+  align-items: center;
   width: 100%;
   color: gray;
   font-size: 2em;
+  padding: 0.5rem;
+}
+
+.sidebar button div {
+  font-size: 1rem;
+  margin-left: 1em;
 }
 
 .sidebar button:hover {
@@ -47,6 +71,10 @@ button:hover {
   font-size: 16px;
 }
 
+.itemContainer {
+  box-shadow: 2px 2px 5px #888888;
+}
+
 .item {
   display: flex;
   text-align: left;
@@ -54,39 +82,39 @@ button:hover {
   padding: 0.5rem;
   background-color: #fff!important;
   border: 1px solid rgba(0,0,0,.125);
-  box-shadow: 5px 5px 5px #888888;
-  
-}
-
-.condition > .item > .dropdownToggle {
-	background-color:inherit !important;
-	border:none !important;
-  box-shadow: none !important;
-  color: inherit!important;
+  transition: all ease-in-out 0.1s;
   width: 100%;
-  text-align: inherit !important;
-  display: inherit !important;
-  align-items: inherit !important;
-  padding: 0 !important;
+  overflow: hidden;
+  transform-origin: top;
+  max-height: 300px;
 }
 
-.dropdownToggle::after {
-  display: none;
+.inactive {
+  padding-top: 0;
+  padding-bottom: 0;
+  border: none;
+  max-height: 0;
 }
 
-.dropdownToggle[aria-expanded='true']::after {
-  transform: rotate(-135deg);
-}
-
-.icon {
+.item .icon {
   margin-right: 1em;
   font-size: 1.5em;
   width: 1em!important;
 }
 
+.search .icon {
+  margin-left: 0.5em;
+  font-size: 1.5em;
+}
+
 .update {
   margin-left: auto;
   font-size: 1.5em;
+}
+
+.progressBar {
+  width: 8rem;
+  margin-right: 1rem;
 }
 
 /* .condition .item button {

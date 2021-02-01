@@ -7,5 +7,5 @@
 .content {
   display: flex;
   flex-wrap: nowrap;
-  height: calc(100% - 150px);
+  height: 100%;
 }
