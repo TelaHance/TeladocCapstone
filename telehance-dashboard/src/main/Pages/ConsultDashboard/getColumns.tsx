@@ -29,7 +29,12 @@ const lastNameFormatter = (cell: UserData, row: ConsultData) => {
 };
 
 const nameFormatter = (cell: UserData, row: ConsultData) => {
-  return `${cell.family_name}, ${cell.given_name}`;
+  return(
+    <div>
+      <img className="rounded-circle" src={cell.picture} width="31" alt=""></img>
+      <span> {cell.given_name} {cell.family_name} </span>
+    </div>
+  )
 };
 
 const sentimentFormatter = (cell?: number, row?: ConsultData) => {

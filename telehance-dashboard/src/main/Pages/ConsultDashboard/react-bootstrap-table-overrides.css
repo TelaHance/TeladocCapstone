@@ -18,3 +18,7 @@
 .react-bootstrap-table-pagination .react-bootstrap-table-pagination-list ul {
   margin-bottom: 0;
 }
+
+.rounded-circle {
+  border-radius: 50%!important;
+}
