@@ -1,0 +1,124 @@
+.infermedica {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  transition: all ease-in-out 0.5s;
+  text-align: left;
+  display: flex;
+  flex: 0;
+}
+.infermedicaActive {
+  flex: 50%;
+  padding: 0 20px;
+}
+
+.infermedica h4 {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.search {
+  margin-bottom: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  background-color: inherit;
+  border: none;
+  box-shadow: none;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(0,0,0,.125);
+}
+
+.sidebar button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: gray;
+  font-size: 2em;
+  padding: 0.5rem;
+}
+
+.sidebar button div {
+  font-size: 1rem;
+  margin-left: 1em;
+}
+
+.sidebar button:hover {
+  color: #532197;
+}
+
+.sidebar .active {
+  color: #532197 !important;
+}
+
+.name {
+  font-size: 18px;
+}
+
+.commonName {
+  font-size: 16px;
+}
+
+.itemContainer {
+  box-shadow: 2px 2px 5px #888888;
+  border-radius: calc(.25rem) calc(.25rem) calc(.25rem) calc(.25rem);
+  border: none;
+}
+
+.item {
+  background-color: #fff!important;
+  display: flex;
+  text-align: left;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid rgba(0,0,0,.125);
+  width: 100%;
+}
+
+.card {
+  border: none;
+}
+
+.card-header.item:hover {
+  cursor: pointer;
+}
+
+.item .icon {
+  margin-right: 1em;
+  font-size: 1.5em;
+  width: 1em!important;
+}
+
+.search .icon {
+  margin-left: 0.5em;
+  font-size: 1.5em;
+}
+
+.update {
+  margin-left: auto;
+  font-size: 1.5em;
+}
+
+.progressBar {
+  width: 8rem;
+  margin-right: 1rem;
+}
+
+.expand {
+  margin-left: auto !important;
+  font-size: 1em;
+  color: gray;
+}
+

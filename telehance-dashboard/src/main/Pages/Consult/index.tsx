@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import Spinner from 'Components/Spinner';
 import Transcript, { TranscriptData } from './Transcript';
 import { SentimentData } from 'Components/Sentiment';
+import Diagnoses from './Diagnoses/Diagnoses';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -37,7 +38,7 @@ export default function Consult(props: any) {
   if (!consult) return <Spinner />;
   return (
     <div className={classes.container}>
-      <div>
+      {/* <div>
         <h1>
           Consult Between Doctor {consult.doctor.given_name}{' '}
           {consult.doctor.family_name} and Patient {consult.patient.given_name}{' '}
@@ -50,52 +51,21 @@ export default function Consult(props: any) {
             year: 'numeric',
           })}
         </h2>
-      </div>
+      </div> */}
       <div className={classes.content}>
-        <div className={classes.main}>
-          <Transcript
-            audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
-            transcript={consult.transcript}
-            transcriptEdited={consult.transcript_edited}
-            updateTranscript={updateTranscript}
+        <Transcript
+          audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}  // TODO: REPLACE WITH consult.call_sid
+          transcript={consult.transcript}
+          transcriptEdited={consult.transcript_edited}
+          updateTranscript={updateTranscript}
+        />
+        { consult.question && consult.medical_conditions && consult.symptoms ?
+          <Diagnoses 
+            question={consult.question}
+            medicalConditions={consult.medical_conditions}
+            symptoms={consult.symptoms}
           />
-        </div>
-        {consult.question && consult.medical_conditions && consult.symptoms ? (
-          <div className={classes.infermedica}>
-            <h4>Question</h4>
-            <div>{consult.question}</div>
-            <br />
-            <h4>Medical Conditions</h4>
-            {consult.medical_conditions.map((medicalCondition) => (
-              <ul>
-                <li key={medicalCondition.id} className='list-group-item'>
-                  <strong>Common Name</strong>: {medicalCondition.common_name}
-                </li>
-                <li key={medicalCondition.id} className='list-group-item'>
-                  <strong>Name</strong>: {medicalCondition.name}
-                </li>
-                <li key={medicalCondition.id} className='list-group-item'>
-                  <strong>Probability</strong>: {medicalCondition.probability}
-                </li>
-              </ul>
-            ))}
-            <br />
-            <h4>Symptoms</h4>
-            {consult.symptoms.map((symptomData) => (
-              <ul>
-                <li key={symptomData.id} className='list-group-item'>
-                  <strong>Common Name</strong>: {symptomData.common_name}
-                </li>
-                <li key={symptomData.id} className='list-group-item'>
-                  <strong>Name</strong>: {symptomData.name}
-                </li>
-                <li key={symptomData.id} className='list-group-item'>
-                  <strong>Choice ID</strong>: {symptomData.choice_id}
-                </li>
-              </ul>
-            ))}
-          </div>
-        ) : null}
+         : null }
       </div>
     </div>
   );
