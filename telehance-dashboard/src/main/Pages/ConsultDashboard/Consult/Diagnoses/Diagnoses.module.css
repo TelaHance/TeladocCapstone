@@ -1,15 +1,15 @@
 .infermedica {
+  overflow-x: hidden;
   overflow-y: auto;
-  overflow-x: auto;
   height: 100%;
-  width: 0;
-  transition: all ease-in-out 0.7s;
+  transition: all ease-in-out 0.5s;
   text-align: left;
-  
+  display: flex;
+  flex: 0;
 }
 .infermedicaActive {
+  flex: 50%;
   padding: 0 20px;
-  width: 50%!important;
 }
 
 .infermedica h4 {
@@ -38,7 +38,7 @@ button:hover {
 .sidebar {
   display: flex;
   flex-direction: column;
-  box-shadow: -1px 0 2px #888888;
+  border-left: 1px solid rgba(0,0,0,.125);
 }
 
 .sidebar button {
@@ -73,27 +73,26 @@ button:hover {
 
 .itemContainer {
   box-shadow: 2px 2px 5px #888888;
+  border-radius: calc(.25rem) calc(.25rem) calc(.25rem) calc(.25rem);
+  border: none;
 }
 
 .item {
+  background-color: #fff!important;
   display: flex;
   text-align: left;
   align-items: center;
   padding: 0.5rem;
-  background-color: #fff!important;
   border: 1px solid rgba(0,0,0,.125);
-  transition: all ease-in-out 0.1s;
   width: 100%;
-  overflow: hidden;
-  transform-origin: top;
-  max-height: 300px;
 }
 
-.inactive {
-  padding-top: 0;
-  padding-bottom: 0;
+.card {
   border: none;
-  max-height: 0;
+}
+
+.card-header.item:hover {
+  cursor: pointer;
 }
 
 .item .icon {
@@ -116,24 +115,6 @@ button:hover {
   width: 8rem;
   margin-right: 1rem;
 }
-
-/* .condition .item button {
-  border-top: 0;
-  border-left: 0;
-  border-bottom: 2px solid #757575;
-  border-right: 2px solid #757575;
-  content: '';
-  -webkit-transform-origin: 66% 66%;
-  -ms-transform-origin: 66% 66%;
-  transform-origin: 66% 66%;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  -webkit-transition: all 0.15s ease-in-out;
-  transition: all 0.15s ease-in-out;
-  margin-left: auto;
-  height: 18px;
-} */
 
 .expand {
   margin-left: auto !important;
