@@ -25,7 +25,12 @@ const csvDateFormatter = (cell: number | string, row: ConsultData) => {
 };
 
 const nameFormatter = (cell: UserData, row: ConsultData) => {
-  return `${cell.family_name}, ${cell.given_name}`;
+  return(
+    <div>
+      <img className={classes['rounded-circle']} src={cell.picture} width="31" alt=""></img>
+      <span> {cell.given_name} {cell.family_name} </span>
+    </div>
+  )
 };
 
 const sentimentFormatter = (cell?: any, row?: ConsultData) => {

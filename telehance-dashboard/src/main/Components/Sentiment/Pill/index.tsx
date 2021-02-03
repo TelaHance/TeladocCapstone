@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import clsx from 'clsx';
-import { Badge, Overlay, Tooltip } from 'react-bootstrap';
+import { Badge, Overlay, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import classes from './Pill.module.css';
 
 export function getLabel(attribute: string) {
@@ -34,14 +34,50 @@ export const PillTypes = [
   'UNRATED',
 ];
 
+// export default function Pill({
+//   attribute,
+//   value,
+//   showTooltip = true,
+// }: PillProps) {
+//   const props = attributeToProps[attribute];
+//   const target = useRef(null);
+
+//   if (props === undefined)
+//     return (
+//       <Badge pill variant='secondary'>
+//         {attribute}
+//       </Badge>
+//     );
+
+//   const { variant, className } = props;
+
+//   return (
+//     <>
+//       <Badge
+//         pill
+//         variant={variant ?? 'secondary'}
+//         className={clsx(className, classes.badge)}
+//         ref={target}
+//       >
+//         {getLabel(attribute)}
+//       </Badge>
+//       {showTooltip ? (
+//         <Overlay target={target.current}>
+//           <Tooltip id={attribute}>
+//             {typeof value === 'number' ? `${Math.round(value * 100)}%` : value}
+//           </Tooltip>
+//         </Overlay>
+//       ) : null}
+//     </>
+//   );
+// }
+
 export default function Pill({
   attribute,
   value,
   showTooltip = false,
 }: PillProps) {
   const props = attributeToProps[attribute];
-  const target = useRef(null);
-
   if (props === undefined)
     return (
       <Badge pill variant='secondary'>
@@ -50,25 +86,29 @@ export default function Pill({
     );
 
   const { variant, className } = props;
+  const pill = (
+    <Badge
+      pill
+      variant={variant ?? 'secondary'}
+      className={clsx(className, classes.badge)}
+    >
+      {getLabel(attribute)}
+    </Badge>
+  );
+
+  if (!showTooltip) return pill;
 
   return (
-    <>
-      <Badge
-        pill
-        variant={variant ?? 'secondary'}
-        className={clsx(className, classes.badge)}
-        ref={target}
-      >
-        {getLabel(attribute)}
-      </Badge>
-      {showTooltip ? (
-        <Overlay target={target.current}>
-          <Tooltip id={attribute}>
-            {typeof value === 'number' ? `${Math.round(value * 100)}%` : value}
-          </Tooltip>
-        </Overlay>
-      ) : null}
-    </>
+    <OverlayTrigger
+      placement='top'
+      overlay={
+        <Tooltip id={attribute}>
+          {typeof value === 'number' ? `${Math.round(value * 100)}%` : value}
+        </Tooltip>
+      }
+    >
+      {pill}
+    </OverlayTrigger>
   );
 }
 
