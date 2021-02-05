@@ -20,7 +20,6 @@ const Diagnoses = ({
   const [expandedSide, setExpandedSide] = useState(false);
   const [expandedContent, setExpandedContent] = useState(false);
   const [isSymptomsChanged, setSymptomsChanged] = useState(false);
-  console.log(symptoms);
 
   function changeSymptom(symptomData) {
     let updatedSymptomData = {...symptomData};
