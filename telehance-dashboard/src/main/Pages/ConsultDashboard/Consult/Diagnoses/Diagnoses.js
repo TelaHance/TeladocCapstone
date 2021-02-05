@@ -2,26 +2,54 @@ import React, { useContext, useState } from "react";
 import classes from './Diagnoses.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowLeft, faArrowRight, faCheck, faCommentAlt, faMinusCircle, faPlusCircle, faSearch, faStethoscope, faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { Accordion, AccordionContext, Card, ProgressBar } from 'react-bootstrap';
+import { Accordion, AccordionContext, Button, Card, ProgressBar } from 'react-bootstrap';
+import { putWithToken } from '../../../../Util/fetch';
 
 
 
 const Diagnoses = ({
   question,
   medicalConditions,
-  symptoms
+  symptoms,
+  consultId,
+  startTime
 }) => {
+  const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
   const [active, setActive] = useState(null);
-  const [symptomsState, setSymptoms] = useState(symptoms);
+  const [symptomsState, setSymptoms] = useState([...symptoms]);
   const [expandedSide, setExpandedSide] = useState(false);
   const [expandedContent, setExpandedContent] = useState(false);
+  const [isSymptomsChanged, setSymptomsChanged] = useState(false);
+  console.log(symptoms);
 
   function changeSymptom(symptomData) {
-    let updatedSymptomData = symptomData;
+    let updatedSymptomData = {...symptomData};
     updatedSymptomData.choice_id = updatedSymptomData.choice_id === "present" ? "absent" : "present";
-    let tempSymptoms = symptomsState;
-    tempSymptoms[tempSymptoms.indexOf(symptomData)] = updatedSymptomData
+    let tempSymptoms = [...symptomsState];
+    tempSymptoms[tempSymptoms.indexOf(symptomData)] = updatedSymptomData;
     setSymptoms([...tempSymptoms]);
+    for (let i = 0; i < symptoms.length; i++) {
+      if (symptoms[i].choice_id !== tempSymptoms[i].choice_id) {
+        setSymptomsChanged(true);
+        return;
+      }
+    }
+    setSymptomsChanged(false);
+  }
+
+  function saveSymptoms() {
+    let isChanged = false;
+    for (let i = 0; i < symptoms.length; i++) {
+      if (symptoms[i].choice_id !== symptomsState[i].choice_id) {
+        isChanged = true;
+        break;
+      }
+    }
+    if (!isChanged) {
+      return;
+    }
+    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/updateSymptoms?consult_id=${consultId}&start_time=${startTime}`;
+    putWithToken(url, awsToken, symptomsState);
   }
 
   function toggleExpanded() {
@@ -42,7 +70,7 @@ const Diagnoses = ({
     return (
       <FontAwesomeIcon
         icon={isCurrentEventKey ? faAngleUp : faAngleDown}
-        style={{"margin-left": "auto", "width": "1em"}}
+        style={{"margin-left": "auto", "width": "3em"}}
       >
         {children}
       </FontAwesomeIcon>
@@ -132,6 +160,17 @@ const Diagnoses = ({
             </div>
           ))}
         </div>
+        {isSymptomsChanged && <div className={classes.actions}>
+          <Button onClick={() => {
+            setSymptoms([...symptoms]);
+            setSymptomsChanged(false);}}>
+            Cancel
+          </Button>
+          <Button onClick={() => saveSymptoms()}>
+            Submit
+          </Button>
+        </div>}
+          
         
       </div>
     )
@@ -161,7 +200,7 @@ const Diagnoses = ({
             Doctor's Notes
           </div>}
         </button>
-        <button onClick={() => toggleExpanded()} style={{"margin-top": "auto"}}>
+        <button onClick={() => toggleExpanded()} style={{"margin-top": "auto", "width": "1.5em"}}>
           <FontAwesomeIcon icon={expandedSide || expandedContent ? faArrowRight : faArrowLeft}/>
         </button>
       </div>
