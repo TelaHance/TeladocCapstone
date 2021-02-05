@@ -1,30 +1,34 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,700,900');
 
-.breadcrumb-bar {
-  background-color: #532197;
+.bar {
   padding: 10px 0;
   font-family: "Poppins",sans-serif;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 85px;
+  margin-bottom: 2em;
 }
-.breadcrumb-bar .breadcrumb-title {
+.bar .title {
   color: #fff;
   font-size: 24px;
   font-weight: 700;
   margin: 5px 0 0;
   text-align: left;
 }
-.page-breadcrumb ol {
+.page ol {
   background-color: transparent;
   font-size: 14px;
   margin-bottom: 0;
   padding: 0;
 }
-.page-breadcrumb ol li a {
+.page ol li a {
   color: #fff;
 }
-.page-breadcrumb ol li.active {
+.page ol li.active {
   color: #fff;
 }
-.page-breadcrumb .breadcrumb-item + .breadcrumb-item:before {
+.page .item + .item::before {
 	color: #fff;
   font-size: 10px;
   display: inline-block;
@@ -33,19 +37,19 @@
   padding-left: .5rem;
 }
 
-.container-fluid {
-  padding-left: 30px !important;
-  padding-right: 30px !important;
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+.container {
+  background-color: #532197;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  padding: 1em 2em;
 }
 
 @media only screen and (max-width: 767.98px) {
-  .breadcrumb-bar {
+  .bar {
     height: auto;
   }
-  .breadcrumb-bar .breadcrumb-title {
+  .bar .title {
     font-size: 18px;
 	}
 }
