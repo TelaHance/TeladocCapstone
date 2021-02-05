@@ -6,7 +6,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import {Link} from "react-router-dom";
 const Patient = () => {
     const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
-    const { data: patientList, mutate: mutatePatientList } = useSWR(
+    const { data: patientList } = useSWR(
         ['https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/patient-get-all', awsToken],
         fetchWithToken
     );

@@ -1,0 +1,9 @@
+.controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.controls > * {
+  margin-left: 0.25em;
+}
