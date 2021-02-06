@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, DropdownButton, Dropdown } from 'react-bootstrap';
-import { fetchWithToken } from '../../Util/fetch';
+import { fetchWithToken } from 'Util/fetch';
 import useSWR from 'swr';
 import Container from 'react-bootstrap/Container';
 import './Admin.module.css';
-import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
+import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 
 const Admin = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;

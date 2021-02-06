@@ -1,0 +1,27 @@
+.filter-item__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.filter-item__container > p {
+  margin: 0 auto 0 1em;
+}
+
+.filter-item__container > svg {
+  margin-left: 1em;
+}
+
+.filter-item__box {
+  width: 2em;
+  height: 2em;
+  border-radius: 0.25em;
+  background-color: #f00;
+}
+
+.filter-item__box::after {
+  content: '';
+  display: block;
+  padding-bottom: 100%;
+}

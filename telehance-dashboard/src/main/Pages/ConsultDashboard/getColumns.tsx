@@ -1,8 +1,12 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ColumnDescription } from 'react-bootstrap-table-next';
+import { textFilter } from 'react-bootstrap-table2-filter';
 import Button from 'react-bootstrap/Button';
-import { ConsultData, UserData } from './Consult';
+import { ConsultData, UserData } from '../Consult';
+import Sentiment from '../../Components/Sentiment';
+import SentimentFilter, { filter } from '../../Components/Sentiment/Filter';
+import classes from './ConsultDashboard.module.css';
 
 // FORMATTERS
 
@@ -20,21 +24,18 @@ const csvDateFormatter = (cell: number | string, row: ConsultData) => {
   return new Date(cell).toISOString().split('T')[0]; // yyyy-mm-dd
 };
 
-const firstNameFormatter = (cell: UserData, row: ConsultData) => {
-  return cell.given_name;
-};
-
-const lastNameFormatter = (cell: UserData, row: ConsultData) => {
-  return cell.family_name;
-};
-
 const nameFormatter = (cell: UserData, row: ConsultData) => {
-  return `${cell.family_name}, ${cell.given_name}`;
+  return(
+    <div>
+      <img className={classes['rounded-circle']} src={cell.picture} width="31" alt=""></img>
+      <span> {cell.given_name} {cell.family_name} </span>
+    </div>
+  )
 };
 
-const sentimentFormatter = (cell?: number, row?: ConsultData) => {
-  if (cell) return `${Math.round(cell * 100)}%`;
-  return 'Unrated';
+const sentimentFormatter = (cell?: any, row?: ConsultData) => {
+  if (typeof cell === 'number') return `${Math.round(cell * 100)}%`;
+  return <Sentiment sentiment={cell} />;
 };
 
 const csvSentimentFormatter = (cell?: number, row?: ConsultData) => {
@@ -66,20 +67,18 @@ const start_date = {
 
 const doctor = [
   {
-    dataField: 'doctor',
+    dataField: 'doctor.given_name',
     text: 'Doctor First Name',
     hidden: true,
-    csvFormatter: firstNameFormatter,
   },
   {
-    dataField: 'doctor',
+    dataField: 'doctor.family_name',
     text: 'Doctor Last Name',
     hidden: true,
-    csvFormatter: lastNameFormatter,
   },
   {
     dataField: 'doctor',
-    text: 'Doctor Name',
+    text: 'Doctor',
     formatter: nameFormatter,
     csvExport: false,
   },
@@ -87,20 +86,18 @@ const doctor = [
 
 const patient: ColumnDescription[] = [
   {
-    dataField: 'patient',
+    dataField: 'patient.given_name',
     text: 'Patient First Name',
     hidden: true,
-    csvFormatter: firstNameFormatter,
   },
   {
-    dataField: 'patient',
+    dataField: 'patient.family_name',
     text: 'Patient Last Name',
     hidden: true,
-    csvFormatter: lastNameFormatter,
   },
   {
     dataField: 'patient',
-    text: 'Patient Name',
+    text: 'Patient',
     formatter: nameFormatter,
     csvExport: false,
   },
@@ -108,11 +105,18 @@ const patient: ColumnDescription[] = [
 
 const sentiment = {
   dataField: 'sentiment',
-  text: 'Problematic Consult Rating',
+  text: 'Issues',
   formatter: sentimentFormatter,
   csvFormatter: csvSentimentFormatter,
   csvType: Number,
-  sort: true,
+  headerClasses: classes.issues,
+  filter: textFilter({
+    // @ts-ignore
+    onFilter: filter
+  }),
+  filterRenderer: (onFilter: any, column: any) => (
+    <SentimentFilter onFilter={onFilter} column={column} />
+  ),
 };
 
 function viewConsult(history: RouteComponentProps['history']) {
@@ -130,7 +134,6 @@ export default function getColumns(
   history: RouteComponentProps['history'],
   role: string
 ): ColumnDescription[] {
-  console.log(role);
 
   let columns: ColumnDescription[] = [start_date];
   if (role !== 'DOCTOR') {

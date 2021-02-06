@@ -3,7 +3,7 @@ import { createEditor, Editor, Text, Transforms } from 'slate';
 import { withReact } from 'slate-react';
 
 /**
- * When typing a space (' ') character, create a new node
+ * When typing a word after a space (' ') character, create a new node.
  * @param editor SlateJS Editor
  */
 function withNewNodeOnSpace(editor: Editor) {

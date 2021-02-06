@@ -1,32 +1,40 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
-import { fetchWithToken } from '../../Util/fetch';
+import { fetchWithToken } from 'Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
+import { Container } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider, {
   Search,
   CSVExport,
 } from 'react-bootstrap-table2-toolkit';
+import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import Spinner from '../../Components/Spinner';
+import Spinner from 'Components/Spinner';
 import getColumns from './getColumns';
-import BreadcrumbBar from 'src/main/Components/BreadcrumbBar/BreadcrumbBar';
+import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import './react-bootstrap-table-overrides.css';
 import styles from './ConsultDashboard.module.css';
 
 const { SearchBar, ClearSearchButton } = Search;
 const { ExportCSVButton } = CSVExport;
+
+const customTotal = (from: number, to: number, size: number) => (
+  <span className='react-bootstrap-table-pagination-total'>
+    &nbsp; Showing Consults {from} to {to} of {size}
+  </span>
+);
+
 const pagination = paginationFactory({
+  firstPageText: '<<',
+  prePageText: '<',
+  nextPageText: '>',
   lastPageText: '>>',
   sizePerPage: 10,
-  firstPageText: '<<',
-  nextPageText: '>',
-  prePageText: '<',
   showTotal: true,
+  paginationTotalRenderer: customTotal,
   alwaysShowAllBtns: true,
 });
 
@@ -40,7 +48,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consultList } = useSWR(
+  const { data: consultList, error } = useSWR(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
       awsToken,
@@ -48,13 +56,14 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     fetchWithToken
   );
 
+  if (error || (consultList && consultList.length === 0))
+    return <h1 style={{ textAlign: 'center' }}>No Consults</h1>;
   if (!consultList) return <Spinner />;
-  if (consultList.length === 0) return <h1>No Consults</h1>; // TODO: Replace with UI Component
 
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
-      <Container className='mb-5 text-center'>
+      <Container className={styles.container}>
         <ToolkitProvider
           bootstrap4
           keyField='id'
@@ -75,7 +84,11 @@ function ConsultDashboard({ history }: RouteComponentProps) {
                 <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
               </div>
               <hr />
-              <BootstrapTable pagination={pagination} {...baseProps} />
+              <BootstrapTable
+                pagination={pagination}
+                filter={filterFactory()}
+                {...baseProps}
+              />
             </>
           )}
         </ToolkitProvider>
