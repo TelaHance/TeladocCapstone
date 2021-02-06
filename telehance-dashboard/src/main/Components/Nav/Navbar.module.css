@@ -4,57 +4,8 @@ Template Name: Doccure - Bootstrap Template
 Version      : 1.3
 */
 
-/*============================
- [Table of CSS]
-
-1. General
-2. Table
-3. Bootstrap Classes
-4. Avatar
-5. Select2
-6. Nav Tabs
-7. Modal
-8. Components
-9. Slick Slider
-10. Focus Label
-11. Header
-12. Mobile Menu
-13. Footer
-14. Login
-15. Home
-16. Search
-17. Doctor Profile
-18. Booking
-19. Checkout
-20. Booking Success
-21. Invoice View
-22. Schedule Timings
-23. Doctor Dashboard
-24. Patient Profile
-25. Add Billing
-26. Chat
-27. Doctor Profile Settings
-28. Calendar
-29. Patient Dashboard
-30. Profile Settings
-31. Appoitment List
-32. Reviews
-33. Voice call
-34. Video Call
-35. Outgoing Call
-36. Incoming Call
-37. Terms and Conditions
-38. Blog
-39. Blog Details
-40. Blog Grid
-41. Map List & Grid
-42. Loader
-43. Responsive
-
-========================================*/
-
 /*-----------------
-	1. General
+	General
 -----------------------*/
 
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,700,900');
@@ -173,6 +124,10 @@ body {
 .header-navbar-rht .login {
   cursor: pointer;
 }
+.header-navbar-rht .login:hover {
+  transition: all ease-in-out .2s;
+  color: #0de0fe;
+}
 .header-navbar-rht li {
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -221,13 +176,8 @@ body {
 .header-navbar-rht li .dropdown-menu .dropdown-item:last-child {
   border-radius: 0 0 5px 5px;
 }
-.header-navbar-rht li a.header-login:hover {
-  background-color: #09e5ab;
-  border-color: #09e5ab;
-  color: #fff;
-}
 .header-navbar-rht li .dropdown-menu a:hover {
-  color: #34bccc;
+  color: #0de0fe;
   letter-spacing: 0.5px;
   padding-left: 20px;
   background-color: #fff;
@@ -286,7 +236,7 @@ body {
   padding: 10px 15px;
 }
 .header-navbar-rht .dropdown-menu .dropdown-item:hover {
-  color: #34bccc;
+  color: #0de0fe;
 }
 .user-header {
   display: -webkit-box;
@@ -314,7 +264,7 @@ body {
 }
 
 /*-----------------
-	12. Mobile Menu
+	Mobile Menu
 -----------------------*/
 .menuHeader {
   -webkit-box-align: center;
@@ -412,7 +362,7 @@ body {
 	}
 	.mainNav li a:after {
 		transition: all ease-in-out .2s;
-		background: none repeat scroll 0 0 #34BCCC;
+		background: none repeat scroll 0 0 #0de0fe;
 		content: "";
 		display: block;
 		height: 2px;
@@ -429,101 +379,6 @@ body {
 	.mainNav > li > a > i {
 		font-size: 12px;
 		margin-left: 3px;
-	}
-	.mainNav li > ul {
-		background-color: #fff;
-		border-radius: 5px;
-		box-shadow: 0 0 3px  rgba(0, 0, 0, 0.1);
-		display: block;
-		font-size: 14px;
-		left: 0;
-		margin: 0;
-		min-width: 200px;
-		opacity: 0;
-		padding: 0;
-		position: absolute;
-		-webkit-transition: all .2s ease;
-		transition: all .2s ease;
-		-webkit-transform: translateY(20px);
-		-ms-transform: translateY(20px);
-		transform: translateY(20px);
-		top: 100%;
-		visibility: hidden;
-		z-index: 1000;
-	}
-	.mainNav li .submenu::before {
-		border: 7px solid #fff;
-		border-color: transparent transparent #fff #fff;
-		box-shadow: -2px 2px 2px -1px rgba(0, 0, 0, 0.1);
-		content: "";
-		left: 45px;
-		position: absolute;
-		top: 2px;
-		-webkit-transform-origin: 0 0;
-		transform-origin: 0 0;
-		-webkit-transform: rotate(135deg);
-		transform: rotate(135deg);
-	}
-	.mainNav li.has-submenu:hover > .submenu {
-		visibility: visible;
-		opacity: 1;
-		margin-top: 0;
-		-webkit-transform: translateY(0);
-		-ms-transform: translateY(0);
-		transform: translateY(0);
-	}
-	.mainNav .has-submenu.active > a {
-		color: #34BCCC;
-	}
-	.mainNav .has-submenu.active .submenu li.active > a {
-		color: #34BCCC;
-	}
-	.mainNav > li .submenu li:first-child a {
-		border-top: 0;
-	}
-	.mainNav > li.has-submenu:hover > .submenu > li.has-submenu:hover > .submenu {
-		visibility: visible;
-		opacity: 1;
-		margin-top: -1px;
-		margin-right: 0;
-	}
-	.mainNav > li .submenu > li .submenu {
-		left: 100%;
-		top: 0;
-		margin-top: 10px;
-	}
-	.mainNav li .submenu a:hover {
-		color: #34BCCC;
-		letter-spacing: 0.5px;
-		padding-left: 20px;
-	}
-	.mainNav > .has-submenu > .submenu > .has-submenu > .submenu::before {
-		top: 20px;
-		margin-left: -35px;
-		box-shadow: 1px 1px 0 0 rgba(0,0,0,.15);
-		border-color: transparent #fff #fff transparent;
-	}
-	.header-navbar-rht li.show > .dropdown-menu {
-		visibility: visible;
-		opacity: 1;
-		margin-top: 0;
-		-webkit-transform: translateY(0);
-		-ms-transform: translateY(0);
-		transform: translateY(0);
-	}
-	.header-navbar-rht li .dropdown-menu {
-		border-radius: 5px;
-		padding: 0;
-		margin: 0;
-		min-width: 200px;
-		visibility: hidden;
-		opacity: 0;
-		-webkit-transition: all .2s ease;
-		transition: all .2s ease;
-		display: block;
-		-webkit-transform: translateY(20px);
-		-ms-transform: translateY(20px);
-		transform: translateY(20px);
 	}
 }
 
@@ -545,21 +400,20 @@ body {
 	}
 	.mainNav a {
 		color: white;
-	}
+  }
 	.mainNav ul {
-		background-color: #3474ac;
 		display: none;
 		list-style: none;
 		margin: 0;
 		padding-left: 0;
 	}
 	.mainNav > li {
-		border-bottom: 1px solid #34BCCC;
+		border-bottom: 1px solid white;
 		margin-left: 0;
 	}
 	.mainNav li:after {
 		transition: all ease-in-out .2s;
-		background: none repeat scroll 0 0 #34BCCC;
+		background: none repeat scroll 0 0 #0de0fe;
 		content: "";
 		display: block;
 		height: max-content;
@@ -585,23 +439,6 @@ body {
 		float: right;
 		margin-top: 5px;
 	}
-	.mainNav > li .submenu li a {
-		border-top: 0;
-		color: #fff;
-		padding: 10px 15px 10px 35px;
-	}
-	.mainNav > li .submenu ul li a {
-		padding: 10px 15px 10px 45px;
-	}
-	.mainNav > li .submenu > li.has-submenu > a::after {
-		content: "\f078";
-	}
-	.mainNav .has-submenu.active > a {
-		color: #34BCCC;
-	}
-	.mainNav .has-submenu.active .submenu li.active > a {
-		color: #34BCCC;
-	}
 	.mainMenuWrapper {
 		order: 3;
 		width: 260px;
@@ -613,12 +450,16 @@ body {
 		overflow-y: auto;
 		z-index: 1060;
 		transform: translateX(-260px);
-		transition: all 0.4s;
 		background-color: #532197;
 	}
 	.sidebarOpen {
-		transform: translateX(0px)!important;
-	}
+    transform: translateX(0px)!important;
+  }
+  /* TODO: implement transition */
+  .transition {
+    transition-property: transform;
+    transition-duration: 0.4s;
+  }
 	.menuHeader {
 		display: -webkit-box;
 		display: -ms-flexbox;
@@ -647,9 +488,6 @@ body {
 	.header-navbar-rht {
 		display: none;
 	}
-	.mainNav li.login-link {
-		display: block;
-	}
 	.navbarHeader {
 		width: 100%;
 	}
@@ -670,9 +508,6 @@ body {
 	}
 	
 }
-
-/*custom style*/
-/*header svg*/
 
 .user-drop button, .user-drop button:hover{
 	background-color:inherit !important;

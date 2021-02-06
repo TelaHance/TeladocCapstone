@@ -3,3 +3,9 @@
   flex-direction: column;
   height: 100%;
 }
+
+.content {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+}

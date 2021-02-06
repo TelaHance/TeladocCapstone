@@ -3,6 +3,7 @@ import { fetchWithToken, putWithToken } from '../../../Util/fetch';
 import useSWR from 'swr';
 import Spinner from '../../../Components/Spinner';
 import Transcript, { TranscriptData } from './Transcript';
+import Diagnoses from './Diagnoses/Diagnoses';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -37,26 +38,37 @@ export default function Consult(props: any) {
 
   return (
     <div className={classes.container}>
-      <div>
+      {/* <div>
         <h1>
           Consult Between Doctor {consult.doctor.given_name}{' '}
           {consult.doctor.family_name} and Patient {consult.patient.given_name}{' '}
           {consult.patient.family_name}
         </h1>
         <h2>
-          {new Date(Number(consult.timestamp)).toLocaleString('default', {
+          {new Date(consult.start_time).toLocaleString('default', {
             month: 'long',
             day: '2-digit',
             year: 'numeric',
           })}
         </h2>
+      </div> */}
+      <div className={classes.content}>
+        <Transcript
+          audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
+          transcript={consult.transcript}
+          transcriptEdited={consult.transcript_edited}
+          updateTranscript={updateTranscript}
+        />
+        { consult.question && consult.medical_conditions && consult.symptoms ?
+          <Diagnoses 
+            question={consult.question}
+            medicalConditions={consult.medical_conditions}
+            symptoms={consult.symptoms}
+            consultId={consult.consult_id}
+            startTime={consult.start_time}
+          />
+         : null }
       </div>
-      <Transcript
-        audioSrc={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`}
-        transcript={consult.transcript}
-        transcriptEdited={consult.transcript_edited}
-        updateTranscript={updateTranscript}
-      />
     </div>
   );
 }
@@ -68,12 +80,31 @@ export type UserData = {
   picture?: string;
 };
 
+export type MedicalConditionData = {
+  common_name: string;
+  id: string;
+  name: string;
+  probability: number;
+};
+
+export type SymptomData = {
+  choice_id: string;
+  common_name: string;
+  id: string;
+  name: string;
+  type: string;
+};
+
 export type ConsultData = {
   consult_id: string;
   doctor: UserData;
   patient: UserData;
   sentiment?: number;
-  timestamp: number;
+  start_time: number;
+  end_time: number;
   transcript: TranscriptData;
+  medical_conditions: MedicalConditionData[];
+  question: string;
+  symptoms: SymptomData[];
   transcript_edited?: TranscriptData;
 };
