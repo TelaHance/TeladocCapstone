@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import SpinnerSVG from '@assets/spinner.svg';
+import SpinnerSVG from 'assets/spinner.svg';
 import classes from './Spinner.module.css';
 
 export default function Spinner(props: React.ComponentProps<'div'>) {

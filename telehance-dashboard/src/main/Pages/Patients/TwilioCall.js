@@ -29,9 +29,7 @@ const TwilioCall = ({ match }) => {
 
     const params = {
       callTo: phoneNumber,
-      doctor_id: sub.split('|')[1],
-      patient_id: patientId,
-      timestamp: d.getTime(),
+      consult_id: 1,
     };
     Device.connect(params);
   }

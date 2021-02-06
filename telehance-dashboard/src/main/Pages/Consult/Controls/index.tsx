@@ -9,7 +9,6 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ConfirmModal from './ConfirmModal';
@@ -80,7 +79,7 @@ export default function Controls({
   );
 }
 
-type ControlsProps = {
+export type ControlsProps = {
   isEditing: boolean;
   onEdit: () => void;
   onSave: () => void;
