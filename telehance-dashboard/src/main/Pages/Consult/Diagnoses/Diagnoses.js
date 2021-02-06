@@ -1,27 +1,57 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import classes from './Diagnoses.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faArrowLeft, faArrowRight, faCheck, faCommentAlt, faMinusCircle, faPlusCircle, faSearch, faStethoscope, faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { Accordion, AccordionContext, Card, ProgressBar } from 'react-bootstrap';
+import { faArrowLeft, faArrowRight, faCheck, faCommentAlt, faMinusCircle, faPlusCircle, faSearch, faStethoscope, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button, ProgressBar } from 'react-bootstrap';
+import { putWithToken } from '../../../../Util/fetch';
 
 
 
 const Diagnoses = ({
   question,
   medicalConditions,
-  symptoms
+  symptoms,
+  consultId,
+  startTime
 }) => {
+  const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
   const [active, setActive] = useState(null);
-  const [symptomsState, setSymptoms] = useState(symptoms);
+  const [symptomsState, setSymptoms] = useState([...symptoms]);
+  const [lastSymptoms, setLastSymptoms] = useState([...symptoms]);
   const [expandedSide, setExpandedSide] = useState(false);
   const [expandedContent, setExpandedContent] = useState(false);
+  const [isSymptomsChanged, setSymptomsChanged] = useState(false);
 
   function changeSymptom(symptomData) {
-    let updatedSymptomData = symptomData;
+    let updatedSymptomData = {...symptomData};
     updatedSymptomData.choice_id = updatedSymptomData.choice_id === "present" ? "absent" : "present";
-    let tempSymptoms = symptomsState;
-    tempSymptoms[tempSymptoms.indexOf(symptomData)] = updatedSymptomData
+    let tempSymptoms = [...symptomsState];
+    tempSymptoms[tempSymptoms.indexOf(symptomData)] = updatedSymptomData;
     setSymptoms([...tempSymptoms]);
+    for (let i = 0; i < symptoms.length; i++) {
+      if (lastSymptoms[i].choice_id !== tempSymptoms[i].choice_id) {
+        setSymptomsChanged(true);
+        return;
+      }
+    }
+    setSymptomsChanged(false);
+  }
+
+  function saveSymptoms() {
+    let isChanged = false;
+    for (let i = 0; i < lastSymptoms.length; i++) {
+      if (lastSymptoms[i].choice_id !== symptomsState[i].choice_id) {
+        isChanged = true;
+        break;
+      }
+    }
+    if (!isChanged) {
+      return;
+    }
+    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/updateSymptoms?consult_id=${consultId}&start_time=${startTime}`;
+    putWithToken(url, awsToken, symptomsState);
+    setSymptomsChanged(false);
+    setLastSymptoms([...symptomsState]);
   }
 
   function toggleExpanded() {
@@ -34,31 +64,15 @@ const Diagnoses = ({
     }
   }
 
-  function ContextAwareArrow( { children, eventKey, callback }) {
-    const currentEventKey = useContext(AccordionContext);
-
-    const isCurrentEventKey = currentEventKey === eventKey;
-
-    return (
-      <FontAwesomeIcon
-        icon={isCurrentEventKey ? faAngleUp : faAngleDown}
-        style={{"margin-left": "auto", "width": "1em"}}
-      >
-        {children}
-      </FontAwesomeIcon>
-    );
-  }
-
   function renderConditions() {
     return (
       <div className={classes.condition}>
-      <h4>Diagnoses</h4>
-      <h5>Suggested Question</h5>
-      <div style={{"margin-bottom": "1rem"}}>{question}</div>
-      <Accordion className={classes.itemContainer}>
-        {medicalConditions.map((condition) => (
-          <Card className={classes.card}>
-            <Accordion.Toggle as={Card.Header} eventKey={condition.id} className={classes.item + ' ' + classes['card-header']}>
+        <h4>Diagnoses</h4>
+        <h5>Suggested Question</h5>
+        <div style={{"margin-bottom": "1rem"}}>{question}</div>
+        <div className={classes.itemContainer}>
+          {medicalConditions.map((condition) => (
+            <div className={classes.item}>
               <div>
                 <ProgressBar 
                   now={Math.round(condition.probability * 100)} 
@@ -76,17 +90,10 @@ const Diagnoses = ({
                   {condition.common_name}
                 </div>
               </div>
-              <ContextAwareArrow eventKey={condition.id} />
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={condition.id}>
-              <Card.Body className={classes.item}>
-                Test
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-          
-        ))}
-      </Accordion>
+            </div>
+            
+          ))}
+        </div>
       </div>
     );
   }
@@ -132,6 +139,17 @@ const Diagnoses = ({
             </div>
           ))}
         </div>
+        {isSymptomsChanged && <div className={classes.actions}>
+          <Button onClick={() => {
+            setSymptoms([...lastSymptoms]);
+            setSymptomsChanged(false);}}>
+            Cancel
+          </Button>
+          <Button onClick={() => saveSymptoms()}>
+            Submit
+          </Button>
+        </div>}
+          
         
       </div>
     )
@@ -161,7 +179,7 @@ const Diagnoses = ({
             Doctor's Notes
           </div>}
         </button>
-        <button onClick={() => toggleExpanded()} style={{"margin-top": "auto"}}>
+        <button onClick={() => toggleExpanded()} style={{"margin-top": "auto", "width": "1.5em"}}>
           <FontAwesomeIcon icon={expandedSide || expandedContent ? faArrowRight : faArrowLeft}/>
         </button>
       </div>

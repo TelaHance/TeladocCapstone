@@ -450,12 +450,16 @@ body {
 		overflow-y: auto;
 		z-index: 1060;
 		transform: translateX(-260px);
-		transition: all 0.4s;
 		background-color: #532197;
 	}
 	.sidebarOpen {
-		transform: translateX(0px)!important;
-	}
+    transform: translateX(0px)!important;
+  }
+  /* TODO: implement transition */
+  .transition {
+    transition-property: transform;
+    transition-duration: 0.4s;
+  }
 	.menuHeader {
 		display: -webkit-box;
 		display: -ms-flexbox;
