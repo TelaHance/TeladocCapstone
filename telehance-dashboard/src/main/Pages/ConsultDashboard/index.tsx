@@ -23,8 +23,8 @@ const { SearchBar, ClearSearchButton } = Search;
 const { ExportCSVButton } = CSVExport;
 
 const customTotal = (from: number, to: number, size: number) => (
-  <span className="react-bootstrap-table-pagination-total">
-    &nbsp; Showing Consults { from } to { to } of { size }
+  <span className='react-bootstrap-table-pagination-total'>
+    &nbsp; Showing Consults {from} to {to} of {size}
   </span>
 );
 
@@ -57,7 +57,8 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     fetchWithToken
   );
 
-  if (error || (consultList && consultList.length === 0)) return <h1>No Consults</h1>;
+  if (error || (consultList && consultList.length === 0))
+    return <h1 style={{ textAlign: 'center' }}>No Consults</h1>;
   if (!consultList) return <Spinner />;
 
   return (
