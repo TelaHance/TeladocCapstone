@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Container, Col, Badge, Form, InputGroup, Button } from "react-bootstrap";
+import { Row, Container, Col, Badge, Form, InputGroup, Button, Jumbotron } from "react-bootstrap";
 import ReactJson from "react-json-view";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faUpload } from '@fortawesome/free-solid-svg-icons';
 import useSWR from "swr";
-import {fetchWithUser} from "../../Util/fetch";
+import {fetchWithToken, fetchWithUser} from "../../Util/fetch";
 import BreadcrumbBar from "../../Components/BreadcrumbBar/BreadcrumbBar";
 import styles from "./Profile.module.css";
 import { render } from "react-dom";
@@ -21,9 +21,9 @@ import { render } from "react-dom";
 //   )
 // }
 
-function renderInput(label, type, defaultValue) {
+function renderInput(label, type, defaultValue, handleChange=null) {
   return (
-    <Form.Group as={Col} md="6" controlId="validationCustom01" className={styles["form-group"]}>
+    <Form.Group as={Col} md="6" controlId={label.replace(/\s/g, '')} className={styles["form-group"]}>
       <Form.Label>{label}</Form.Label>
         <Form.Control
           className={styles['form-control']}
@@ -31,6 +31,7 @@ function renderInput(label, type, defaultValue) {
           type={type}
           placeholder={label}
           defaultValue={defaultValue}
+          onChange={(e) => handleChange(e.target.value)}
         />
       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
     </Form.Group>
@@ -40,23 +41,69 @@ function renderInput(label, type, defaultValue) {
 const Profile = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const { user } = useAuth0();
-  const { name, picture, email, sub} = user;
-  const { data: roleInfo} = useSWR(
-    ["https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id", awsToken, 'POST', sub.split('|')[1]],
-    fetchWithUser);
-  
+  console.log(user);
+  const { given_name, family_name, email, sub} = user;
+  const user_id = sub ? sub.split('|')[1] : 'NULL';
+  const [picture, setPicture] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [phone, setPhone] = useState();
   const [validated, setValidated] = useState(false);
+  const { data, error, mutate: mutateUser } = useSWR(
+    [
+      `https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id?user_id=${user_id}`,
+      awsToken,
+    ],
+    fetchWithToken
+  );
+  if (error) {
+    console.error(error);
+    return (
+      <Jumbotron>
+        Error
+      </Jumbotron>
+    );
+  }
+  const userData = data ? JSON.parse(data.body) : null;
+  console.log(userData);
+  
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    console.log(form)
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+  const handleSubmit = async (event) => {
+    // const form = event.currentTarget;
+    event.preventDefault();
+    // console.log(form)
+    // if (form.checkValidity() === false) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    // }
+    try {
+      await fetchWithToken(
+        'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/update-phone',
+        awsToken,
+        {
+          method: 'PATCH',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user_id,
+            phone: phone,
+          }),
+        }
+      );
+    } catch (e) {
+      console.log(e);
     }
 
     setValidated(true);
+    console.log(phone);
   };
+
+  const changeHandler = (event) => {
+    setPicture(event.target.files[0]);
+    console.log(event.target.files[0]);
+		setIsFilePicked(true);
+  };
+
 
   return (
     <div className={styles.card}>
@@ -64,70 +111,27 @@ const Profile = () => {
         <Form.Row>
           <div className={styles['change-avatar']}>
             <div className={styles['profile-img']}>
-              <img src={picture} alt="User" />
+              <img src={isFilePicked ? URL.createObjectURL(picture) : userData?.picture} alt="User" />
             </div>
-            <div className="upload-img">
-              <div className={styles["change-photo-btn"]}>
-                <span><i className="fa fa-upload"></i> Upload Photo</span>
-                <FontAwesomeIcon icon={faUpload} />
-                <input type="file" className={styles["upload"]} />
-              </div>
+            <div>
+              <Button className={styles["change-photo-btn"]}>
+                Upload Photo
+                <FontAwesomeIcon icon={faUpload} style={{"marginLeft": "5px"}} />
+                <input type="file" className={styles["upload"]} onChange={changeHandler} />
+              </Button>
               <small className="form-text text-muted">Allowed JPG or PNG. Max size of 2MB</small>
             </div>
           </div>
         </Form.Row>
         <Form.Row>
-          {renderInput("First Name", "text", "Mark")}
-          {renderInput("Last Name", "text", "Otto")}
-          <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-            <Form.Label>Username</Form.Label>
-            <InputGroup>
-              <InputGroup.Prepend>
-                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-              </InputGroup.Prepend>
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                aria-describedby="inputGroupPrepend"
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                Please choose a username.
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
+          {renderInput("First Name", "text", given_name)}
+          {renderInput("Last Name", "text", family_name)}
         </Form.Row>
         <Form.Row>
-          <Form.Group as={Col} md="6" controlId="validationCustom03">
-            <Form.Label>City</Form.Label>
-            <Form.Control type="text" placeholder="City" required />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid city.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="3" controlId="validationCustom04">
-            <Form.Label>State</Form.Label>
-            <Form.Control type="text" placeholder="State" required />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid state.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="3" controlId="validationCustom05">
-            <Form.Label>Zip</Form.Label>
-            <Form.Control type="text" placeholder="Zip" required />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid zip.
-            </Form.Control.Feedback>
-          </Form.Group>
+          {renderInput("Email", "text", email)}
+          {renderInput("Phone Number", "text", phone ? phone : userData?.phone, setPhone)}
         </Form.Row>
-        <Form.Group>
-          <Form.Check
-            required
-            label="Agree to terms and conditions"
-            feedback="You must agree before submitting."
-          />
-        </Form.Group>
-        <Button type="submit">Submit form</Button>
+        <Button type="submit" className={styles['change-photo-btn']}>Submit Changes</Button>
       </Form>
     </div>
   );
