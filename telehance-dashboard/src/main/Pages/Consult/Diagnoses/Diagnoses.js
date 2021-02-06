@@ -3,7 +3,7 @@ import classes from './Diagnoses.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faCommentAlt, faMinusCircle, faPlusCircle, faSearch, faStethoscope, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ProgressBar } from 'react-bootstrap';
-import { putWithToken } from '../../../../Util/fetch';
+import { putWithToken } from 'Util/fetch';
 
 
 
