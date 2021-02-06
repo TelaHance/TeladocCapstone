@@ -76,7 +76,7 @@ export default function AudioPlayer({
   );
 }
 
-type AudioPlayerProps = {
+export type AudioPlayerProps = {
   src?: string;
   startFrom: number;
   startTimes: number[];

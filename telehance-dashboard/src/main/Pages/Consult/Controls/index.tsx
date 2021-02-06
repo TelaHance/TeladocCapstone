@@ -79,7 +79,7 @@ export default function Controls({
   );
 }
 
-type ControlsProps = {
+export type ControlsProps = {
   isEditing: boolean;
   onEdit: () => void;
   onSave: () => void;

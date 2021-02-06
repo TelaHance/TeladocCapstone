@@ -1,5 +1,5 @@
-import { WordData } from '../Pages/Consult/Transcript/Word';
-import { MessageData } from '../Pages/Consult/Transcript/Message';
+import { WordData } from 'Components/Transcript/Word';
+import { MessageData } from 'Components/Transcript/Message';
 
 function getWordsBetweenTimes(words: WordData[], start: number, end: number) {
   return words.filter((word) => start <= word.start && word.end <= end);

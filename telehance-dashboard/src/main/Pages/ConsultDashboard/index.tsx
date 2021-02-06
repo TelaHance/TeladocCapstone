@@ -49,7 +49,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consultList } = useSWR(
+  const { data: consultList, error } = useSWR(
     [
       `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
       awsToken,
@@ -57,8 +57,8 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     fetchWithToken
   );
 
+  if (error || (consultList && consultList.length === 0)) return <h1>No Consults</h1>;
   if (!consultList) return <Spinner />;
-  if (consultList.length === 0) return <h1>No Consults</h1>; // TODO: Replace with UI Component
 
   return (
     <>
