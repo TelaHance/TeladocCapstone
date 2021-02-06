@@ -104,14 +104,6 @@ button:hover {
   border: 1px solid rgba(0,0,0,.125);
 }
 
-.card {
-  border: none;
-}
-
-.card-header.item:hover {
-  cursor: pointer;
-}
-
 .item .icon {
   margin-right: 1em;
   font-size: 1.5em;
