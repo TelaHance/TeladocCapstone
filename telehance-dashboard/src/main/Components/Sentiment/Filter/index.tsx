@@ -87,7 +87,7 @@ export default function Filter({ onFilter }: any) {
       newFilterAttributes.delete(type);
     } else newFilterAttributes.add(type);
     setFilterAttributes(newFilterAttributes);
-    onFilter(filterAttributes);
+    onFilter(newFilterAttributes);
   }
 
   return (
