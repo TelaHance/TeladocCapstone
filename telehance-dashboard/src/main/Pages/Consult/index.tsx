@@ -63,6 +63,8 @@ export default function Consult(props: any) {
             question={consult.question}
             medicalConditions={consult.medical_conditions}
             symptoms={consult.symptoms}
+            consultId={consult.consult_id}
+            startTime={consult.start_time}
           />
         ) : null}
       </div>
