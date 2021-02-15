@@ -62,7 +62,7 @@ export default function Navbar() {
               <img src={logo} className='img-fluid' alt='Logo' />
             </Link>
             <button id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)} />
-              
+
           </div>
           <ul className={styles.mainNav}>
             <li>
@@ -107,6 +107,17 @@ export default function Navbar() {
                   Patients
                 </NavLink>
               </li>
+            )}
+            {!isAdmin && (
+                <li>
+                  <NavLink
+                      to='/appointments'
+                      activeClassName={styles.active}
+                      onClick={() => setActive(false)}
+                  >
+                    Appointments
+                  </NavLink>
+                </li>
             )}
           </ul>
         </div>
