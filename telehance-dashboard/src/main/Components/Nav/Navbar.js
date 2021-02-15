@@ -97,17 +97,6 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {isDoctor && (
-              <li>
-                <NavLink
-                  to='/patients'
-                  activeClassName={styles.active}
-                  onClick={() => setActive(false)}
-                >
-                  Patients
-                </NavLink>
-              </li>
-            )}
             {!isAdmin && (
                 <li>
                   <NavLink
