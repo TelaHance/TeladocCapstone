@@ -36,3 +36,17 @@
 .rounded-circle {
   border-radius: 50%!important;
 }
+
+.wrapped-purpose {
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 20px;
+  margin: 4px 0.75rem;
+}
+
+.date {
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 40px;
+  margin: 4px 0.5rem;
+}

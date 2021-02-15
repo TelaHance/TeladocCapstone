@@ -6,11 +6,11 @@
     position:absolute!important;
 }
 
-.wrapped-purpose div {
-    overflow-wrap: break-word !important;
-    white-space: normal !important;
-    line-height: 20px !important;
-    margin: 4px 0.5rem !important;
+.wrapped-purpose {
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 20px;
+    margin: 4px 0.5rem;
 }
 
 .container > div {
