@@ -31,7 +31,7 @@ export default function Navbar() {
     ? 'doctor' === JSON.parse(roleInfo.body).role.toLowerCase()
     : null;
   return (
-    
+
     <header className={styles.header}>
       <nav className={styles.navbar + ' ' + styles.headerNav}>
         <div className={styles.navbarHeader}>
