@@ -9,8 +9,6 @@ import Consult from './Pages/Consult';
 import Spinner from 'Components/Spinner';
 import Admin from './Pages/Admin/Admin';
 import AuthorizedRoute from './Components/Auth/AuthorizedRoute';
-import TwilioCall from './Pages/Patients/TwilioCall';
-import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
 import Layout from './Components/Layout';
 import classes from './App.module.css';
@@ -42,19 +40,9 @@ function App() {
           component={Admin}
           authorizedRoles={['admin']}
         />
-        <AuthorizedRoute
-          path='/TwilioCall/:patientId&:phoneNumber'
-          component={TwilioCall}
-          authorizedRoles={['doctor']}
-        />
         <PrivateRoute
           path='/consults/:consultId'
           component={(props) => <Consult {...props} />}
-        />
-        <AuthorizedRoute
-          path='/patients'
-          component={Patient}
-          authorizedRoles={['doctor']}
         />
         <AuthorizedRoute
             path='/appointments'

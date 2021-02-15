@@ -1,26 +1,49 @@
 import React, {useState} from "react";
-import Button from "react-bootstrap/Button";
+import { Button } from "react-rainbow-components";
 import AppointmentModal from "Pages/AppointmentDashboard/AppointmentModal/AppointmentModal";
 import classes from './AppointmentModal.module.css'
 import styles from "./AppointmentModal.module.css";
 import "react-datepicker/dist/react-datepicker.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faBriefcaseMedical, faTrash
+} from '@fortawesome/free-solid-svg-icons';
+import {putWithToken} from "Util/fetch";
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function ScheduleAppointment() {
     const [showAppointmentModal, setShowAppointmentModal] = useState(false);
-    const onBook = (date: Date) =>{
-        console.log(date);
-    }
+    const awsToken = process.env.REACT_APP_APPOINTMENT_API_KEY;
+    const { user } = useAuth0();
+    const sub = user ? user.sub.split('|')[1] : 'NULL';
+    const onBook = (date: Date, chosenDoc: any, purpose: string) => {
+        try {
+            putWithToken('https://klnb89q4vj.execute-api.us-west-2.amazonaws.com/dev/addappt',
+                awsToken,
+                {
+                        'start_time': date.valueOf(),
+                        'end_time': date.valueOf() + (3600000),
+                        'purpose': purpose,
+                        'doctor_id': chosenDoc.user_id,
+                        'patient_id': sub
+                });
+        }catch(error){
+            console.log(error);
+        }
+    };
     return (
         <div className={classes.container}>
-            <Button variant="primary" onClick={() => setShowAppointmentModal(true)}>
-                Schedule Appointment
+            <Button className="buttonStyle" onClick={() => setShowAppointmentModal(true)}>
+                <FontAwesomeIcon icon={faBriefcaseMedical} />&nbsp;&nbsp;Schedule Appointment
             </Button>
             <AppointmentModal show={showAppointmentModal}
-                              onConfirm={(date: Date) => {
-                                  onBook(date);
+                              onConfirm={(date: Date, chosenDoc: any, purpose:string) => {
+                                  onBook(date, chosenDoc, purpose);
                                   setShowAppointmentModal(false);
                               }}
-                              onCancel={() => setShowAppointmentModal(false)}/>
+                              onClose={() => {
+                                  setShowAppointmentModal(false)
+                              }}/>
         </div>
     );
 }

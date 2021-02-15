@@ -4,15 +4,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {fetchWithToken, fetchWithUser} from 'Util/fetch';
 import Spinner from 'Components/Spinner';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
-import BootstrapTable from 'react-bootstrap-table-next';
 import styles from "./AppointmentDashboard.module.css";
 import { Container } from "react-bootstrap";
-import filterFactory from "react-bootstrap-table2-filter";
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-import getColumns from './getColumns';
+import {buttonFormatter, dateFormatter, nameFormatter, purposeFormatter} from './getColumns';
 import paginationFactory from "react-bootstrap-table2-paginator";
 import {RouteComponentProps} from "react-router-dom";
 import ScheduleAppointment from "Pages/AppointmentDashboard/AppointmentModal";
+import {Column, TableWithBrowserPagination} from "react-rainbow-components";
 
 function getRole(appointmentList: any) {
     if (appointmentList[0].patient) return 'DOCTOR';
@@ -67,22 +65,17 @@ function AppointmentDashboard({ history }: RouteComponentProps) {
             <Container className={styles.container}>
                 {(getRole(appointmentList) ===  'PATIENT')
                 && <ScheduleAppointment/>}
-                <ToolkitProvider
-                    bootstrap4
-                    keyField='id'
-                    data={appointmentList}
-                    columns={getColumns(history, getRole(appointmentList))}
-                >
-                    {({ baseProps }) => (
-                        <>
-                            <BootstrapTable
-                                pagination={pagination}
-                                filter={filterFactory()}
-                                {...baseProps}
-                            />
-                        </>
-                    )}
-                </ToolkitProvider>
+                <TableWithBrowserPagination pageSize={5} data={appointmentList} keyField="id">
+                    {(getRole(appointmentList) === 'PATIENT') &&
+                        <Column header="Doctor" width={230} field="doctor" component={nameFormatter}/>
+                    }
+                    {(getRole(appointmentList) === 'DOCTOR') &&
+                        <Column header="Patient" width={230} field="patient" component={nameFormatter} />
+                    }
+                    <Column header="Appointment Date" width={180} field="start_time" component={dateFormatter}/>
+                    <Column header="Purpose" width={570} field="purpose" component={purposeFormatter}/>
+                    <Column header="" width={130} field="user_id" component={buttonFormatter}/>
+                </TableWithBrowserPagination>
             </Container>
         </>
     );

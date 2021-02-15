@@ -2,6 +2,17 @@
     margin-bottom: 3rem;
 }
 
+.buttonStyle {
+    position:absolute!important;
+}
+
+.wrapped-purpose div {
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    line-height: 20px !important;
+    margin: 4px 0.5rem !important;
+}
+
 .container > div {
     text-align: left;
 }
@@ -36,4 +47,8 @@
     border: 1px solid #ced4da;
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.rounded-circle {
+    border-radius: 50%!important;
 }
