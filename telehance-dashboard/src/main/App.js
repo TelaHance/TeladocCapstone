@@ -14,6 +14,7 @@ import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
 import Layout from './Components/Layout';
 import classes from './App.module.css';
+import AppointmentDashboard from "Pages/AppointmentDashboard";
 
 function App() {
   const { isLoading } = useAuth0();
@@ -54,6 +55,11 @@ function App() {
           path='/patients'
           component={Patient}
           authorizedRoles={['doctor']}
+        />
+        <AuthorizedRoute
+            path='/appointments'
+            component={AppointmentDashboard}
+            authorizedRoles={['patient','doctor']}
         />
       </Switch>
     </Layout>
