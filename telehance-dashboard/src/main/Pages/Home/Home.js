@@ -3,6 +3,7 @@ import classes from './Home.module.css';
 
 export default function Home() {
   return (
+    <div className={classes.container}>
     <div className={classes.hero}>
       <h1 className={classes['hero-title']}>
         Whole-Person
@@ -22,6 +23,7 @@ export default function Home() {
           alt='Whole-person virtual care for all'
         />
       </div>
+    </div>
     </div>
   );
 }
