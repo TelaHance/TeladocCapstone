@@ -6,8 +6,9 @@ import {
   RenderLeafProps,
 } from 'slate-react';
 import useCustomEditor from 'Hooks/useCustomEditor';
-import Message, { MessageData } from './Message';
+import Message from './Message';
 import Word from './Word';
+import { TranscriptData } from 'Models';
 
 export default function Transcript({
   transcript,
@@ -67,5 +68,3 @@ export type TranscriptProps = {
   currWordStartTime?: number;
   setStartFrom?: (value: number) => void;
 };
-
-export type TranscriptData = MessageData[];

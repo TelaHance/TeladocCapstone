@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
-import { WordData } from '../Word';
-import Sentiment, { SentimentData } from 'Components/Sentiment';
+import { SentimentData } from 'Models';
+import Sentiment from 'Components/Sentiment';
 import classes from './Message.module.css';
 
 export default function Message({
@@ -36,13 +36,4 @@ export default function Message({
 
 export type MessageProps = {
   userSpeakerLabel: string;
-};
-
-export type MessageData = {
-  type: 'message';
-  children: WordData[];
-  start: number;
-  speaker: string;
-  sentiment: number;
-  fullText: string;
 };

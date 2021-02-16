@@ -3,11 +3,11 @@ import useSWR from 'swr';
 import Spinner from 'Components/Spinner';
 import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
-import Transcript, { TranscriptData } from 'Components/Transcript';
-import { SentimentData } from 'Components/Sentiment';
+import Transcript from 'Components/Transcript';
 import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
+import { ConsultData, TranscriptData } from 'Models';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -72,39 +72,3 @@ export default function Consult(props: any) {
     </div>
   );
 }
-
-export type UserData = {
-  user_id: string;
-  given_name: string;
-  family_name: string;
-  picture?: string;
-};
-
-export type MedicalConditionData = {
-  common_name: string;
-  id: string;
-  name: string;
-  probability: number;
-};
-
-export type SymptomData = {
-  choice_id: string;
-  common_name: string;
-  id: string;
-  name: string;
-  type: string;
-};
-
-export type ConsultData = {
-  consult_id: string;
-  doctor: UserData;
-  patient: UserData;
-  sentiment?: SentimentData;
-  start_time: number;
-  end_time: number;
-  transcript: TranscriptData;
-  medical_conditions: MedicalConditionData[];
-  question: string;
-  symptoms: SymptomData[];
-  transcript_edited?: TranscriptData;
-};
