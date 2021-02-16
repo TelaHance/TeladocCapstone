@@ -18,7 +18,7 @@ const Patient = () => {
       <Link
         className='btn btn-primary'
         to={{
-          pathname: `/TwilioCall/${row.user_id}&${row.phone}`,
+          pathname: `/appointments/${row.phone}`,
         }}
       >
         Call Patient

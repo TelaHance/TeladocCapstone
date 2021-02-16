@@ -11,10 +11,10 @@ import Word from './Word';
 
 export default function Transcript({
   transcript,
-  onChange,
-  isEditing,
-  currWordStartTime,
-  setStartFrom,
+  onChange = () => {},
+  isEditing = false,
+  currWordStartTime = 0,
+  setStartFrom = () => {},
 }: TranscriptProps) {
   const editor = useCustomEditor();
 
@@ -32,9 +32,9 @@ export default function Transcript({
       () => (
         <Word
           isEditing={isEditing}
-          isCurrent={leaf.start === currWordStartTime}
+          isCurrent={leaf.start === currWordStartTime ?? false}
           onClick={setStartFrom}
-          startTime={leaf.start as number}
+          startTime={leaf.start as number ?? -1}
           attributes={attributes}
         >
           {children}
@@ -62,8 +62,8 @@ export default function Transcript({
 
 export type TranscriptProps = {
   transcript?: TranscriptData;
-  onChange: (value: TranscriptData) => void;
-  isEditing: boolean;
+  onChange?: (value: TranscriptData) => void;
+  isEditing?: boolean;
   currWordStartTime?: number;
   setStartFrom?: (value: number) => void;
 };
