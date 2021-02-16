@@ -4,17 +4,16 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
+import Appointment from 'Pages/Appointment';
+import AppointmentDashboard from "Pages/AppointmentDashboard";
 import ConsultDashboard from './Pages/ConsultDashboard';
 import Consult from './Pages/Consult';
 import Spinner from 'Components/Spinner';
 import Admin from './Pages/Admin/Admin';
 import AuthorizedRoute from './Components/Auth/AuthorizedRoute';
-import TwilioCall from './Pages/Patients/TwilioCall';
-import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
 import Layout from './Components/Layout';
 import classes from './App.module.css';
-import Appointment from './Pages/Appointment';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -42,19 +41,18 @@ function App() {
           component={Admin}
           authorizedRoles={['admin']}
         />
-        <AuthorizedRoute
-          // path='/appointments/:consultId&:patientId'
-          path='/appointments/:phoneNumber' // TODO: Replace with above after testing
-          component={Appointment}
-          authorizedRoles={['doctor']}
-        />
         <PrivateRoute
           path='/consults/:consultId'
           component={(props) => <Consult {...props} />}
         />
         <AuthorizedRoute
-          path='/patients'
-          component={Patient}
+            path='/appointments'
+            component={AppointmentDashboard}
+            authorizedRoles={['patient','doctor']}
+        />
+        <AuthorizedRoute
+          path='/appointments/:consultId'
+          component={Appointment}
           authorizedRoles={['doctor']}
         />
       </Switch>
