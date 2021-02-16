@@ -14,6 +14,7 @@ import Patient from './Pages/Patients/Patients';
 import PrivateRoute from './Components/Auth/PrivateRoute';
 import Layout from './Components/Layout';
 import classes from './App.module.css';
+import Appointment from './Pages/Appointment';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -42,8 +43,9 @@ function App() {
           authorizedRoles={['admin']}
         />
         <AuthorizedRoute
-          path='/TwilioCall/:patientId&:phoneNumber'
-          component={TwilioCall}
+          // path='/appointments/:consultId&:patientId'
+          path='/appointments/:phoneNumber' // TODO: Replace with above after testing
+          component={Appointment}
           authorizedRoles={['doctor']}
         />
         <PrivateRoute

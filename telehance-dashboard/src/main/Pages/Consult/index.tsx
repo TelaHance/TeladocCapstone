@@ -5,7 +5,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript, { TranscriptData } from 'Components/Transcript';
 import { SentimentData } from 'Components/Sentiment';
-import Diagnoses from './Diagnoses/Diagnoses';
+import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
 import classes from './Consult.module.css';
@@ -51,6 +51,7 @@ export default function Consult(props: any) {
     <div className={classes.container}>
       <div className={classes.content}>
         <section className={classes.main}>
+          {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
