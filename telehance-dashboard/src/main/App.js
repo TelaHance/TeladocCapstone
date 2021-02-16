@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
 import Appointment from 'Pages/Appointment';
-import AppointmentDashboard from "Pages/AppointmentDashboard";
+import AppointmentDashboard from 'Pages/AppointmentDashboard';
 import ConsultDashboard from './Pages/ConsultDashboard';
 import Consult from './Pages/Consult';
 import Spinner from 'Components/Spinner';
@@ -46,12 +46,13 @@ function App() {
           component={(props) => <Consult {...props} />}
         />
         <AuthorizedRoute
-            path='/appointments'
-            component={AppointmentDashboard}
-            authorizedRoles={['patient','doctor']}
+          exact
+          path='/appointments'
+          component={AppointmentDashboard}
+          authorizedRoles={['patient', 'doctor']}
         />
         <AuthorizedRoute
-          path='/appointments/:consultId'
+          path='/appointment/:consultId'
           component={Appointment}
           authorizedRoles={['doctor']}
         />

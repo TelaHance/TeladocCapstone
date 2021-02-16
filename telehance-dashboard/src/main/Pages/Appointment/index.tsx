@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Device } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
-import { useHistory } from 'react-router-dom';
+import { useHistory, RouteComponentProps } from 'react-router-dom';
 import Spinner from 'Components/Spinner';
-import Transcript, { TranscriptData } from 'Components/Transcript';
-import { SentimentData } from 'Components/Sentiment';
+import Transcript from 'Components/Transcript';
+import { AppointmentData, TranscriptData } from 'Models';
 // import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import classes from './Appointment.module.css';
 import CallControls from './CallControls';
 
-const device = new Device();
+export default function Appointment(route: RouteComponentProps) {
+  const device = useMemo(() => new Device(), []);
 
-export default function Appointment(props: any) {
-  const {
-    // params: { consultId, patientId },
-    params: { phoneNumber }, // TODO: Replace with above after testing
-  } = props.match;
+  const { appointment } = route.location.state as {
+    appointment: Omit<AppointmentData, 'doctor'>;
+  };
 
   const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
@@ -35,7 +34,7 @@ export default function Appointment(props: any) {
 
   function call() {
     const params = {
-      callTo: phoneNumber,
+      callTo: `${appointment.patient.phone}`,
       consult_id: 'test-live-consult',
     };
     device.connect(params);
@@ -45,7 +44,7 @@ export default function Appointment(props: any) {
   function hangup() {
     setIsCalling(false);
     device.disconnectAll();
-    history.push('/consults');
+    history.push(`/consult/${appointment.consult_id}`);
   }
 
   const { lastMessage } = useWebSocket(
@@ -62,7 +61,7 @@ export default function Appointment(props: any) {
         <section className={classes.main}>
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           {transcript ? <Transcript transcript={transcript} /> : null}
-          <CallControls isCalling={isCalling} call={call} hangup={hangup}/>
+          <CallControls isCalling={isCalling} call={call} hangup={hangup} />
         </section>
         {/* {consult.question && consult.medical_conditions && consult.symptoms ? (
           <Diagnoses

@@ -40,11 +40,3 @@ export type WordProps = {
   }
   children: any,
 };
-
-export type WordData = {
-  start: number;
-  end: number;
-  text: string;
-  confidence: number;
-  splitIdx?: number;
-}

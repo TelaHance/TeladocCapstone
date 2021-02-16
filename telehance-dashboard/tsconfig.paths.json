@@ -8,7 +8,8 @@
       "Components/*": ["src/main/Components/*"],
       "Pages/*": ["src/main/Pages/*"],
       "Util/*": ["src/main/Util/*"],
-      "Hooks/*": ["src/main/Util/Hooks/*"]
+      "Hooks/*": ["src/main/Util/Hooks/*"],
+      "Models": ["src/main/Models/index.d.ts"]
     }
   }
 }

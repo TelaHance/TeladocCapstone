@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import Pill from './Pill';
+import { SentimentData } from 'Models';
 import classes from './Sentiment.module.css';
 
 const DefaultThreshold = {
@@ -64,8 +65,4 @@ type SentimentProps = {
   showOnlyIssues?: boolean;
   hideTooltip?: boolean;
   className?: string;
-};
-
-export type SentimentData = {
-  [key: string]: number;
 };
