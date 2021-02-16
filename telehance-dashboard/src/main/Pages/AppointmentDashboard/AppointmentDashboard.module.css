@@ -1,0 +1,52 @@
+.container {
+  margin-bottom: 3rem;
+}
+
+.container > div {
+  text-align: center;
+}
+
+.container > div:last-child {
+  text-align: left;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.controls > * {
+  margin-left: 0.25em;
+}
+
+.issues {
+  min-width: 200px;
+  position: relative;
+}
+
+.issues > div {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.rounded-circle {
+  border-radius: 50%!important;
+}
+
+.wrapped-purpose {
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 20px;
+  margin: 4px 0.75rem;
+}
+
+.date {
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 40px;
+  margin: 4px 0.5rem;
+}
