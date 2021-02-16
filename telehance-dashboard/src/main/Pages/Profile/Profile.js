@@ -134,8 +134,8 @@ const Profile = () => {
                 onChange={set('sex')}
               >
                 <option></option>
-                <option>M</option>
-                <option>F</option>
+                <option>Male</option>
+                <option>Female</option>
               </Form.Control>
             <Form.Control.Feedback></Form.Control.Feedback>
           </Form.Group>
