@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./BreadcrumbBar.module.css";
+import { Link } from "react-router-dom";
 
 const BreadcrumbBar = (props) => {
   return (
@@ -10,7 +11,7 @@ const BreadcrumbBar = (props) => {
             <nav aria-label="breadcrumb" className={styles.page}>
               <ol className="breadcrumb">
                 <li className={styles.item}>
-                  <a href="/">Home</a>
+                  <Link to="/">Home</Link>
                 </li>
                 <li className={styles.item + " " +  styles.active} aria-current="page">
                   {props.page}
