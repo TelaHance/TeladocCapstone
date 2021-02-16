@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,700,900');
 
 .card {
-  border: 1px solid #f0f0f0;
   margin-bottom: 1.875rem;
   font-family: "Poppins",sans-serif;
   position: relative;
@@ -9,7 +8,6 @@
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #fff;
   background-clip: border-box;
   border-radius: .25rem;
   padding: 1.5rem;
