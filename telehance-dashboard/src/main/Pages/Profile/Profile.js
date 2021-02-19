@@ -1,147 +1,188 @@
-import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Container, Col, Badge } from "react-bootstrap";
-import ReactJson from "react-json-view";
+import React, { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Col, Form, Button, Jumbotron } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import useSWR from "swr";
-import {fetchWithUser} from "../../Util/fetch";
-import BreadcrumbBar from "../../Components/BreadcrumbBar/BreadcrumbBar";
-import styles from "./Profile.module.css";
-import { render } from "react-dom";
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import useSWR from 'swr';
+import { fetchWithToken } from '../../Util/fetch';
+import BreadcrumbBar from '../../Components/BreadcrumbBar/BreadcrumbBar';
+import styles from './Profile.module.css';
 
-function renderInput(label, type, defaultValue) {
+function renderInput(
+  label,
+  type,
+  defaultValue,
+  readOnly = false,
+  handleChange = null
+) {
   return (
-    <div className="col-12 col-md-6">
-      <div className={styles["form-group"]}>
-        <label>{label}</label>
-        <input type={type} className={styles["form-control"]} defaultValue={defaultValue} />
-      </div>
-    </div>
-  )
+    <Form.Group
+      as={Col}
+      md='6'
+      controlId={label.replace(/\s/g, '')}
+      className={styles['form-group']}
+    >
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
+        readOnly={readOnly}
+        className={styles['form-control']}
+        required
+        type={type}
+        placeholder={label}
+        defaultValue={defaultValue}
+        onChange={handleChange}
+      />
+      <Form.Control.Feedback />
+    </Form.Group>
+  );
 }
 
 const Profile = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const { user } = useAuth0();
-  const { name, picture, email, sub} = user;
-  const { data: roleInfo} = useSWR(
-    ["https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id", awsToken, 'POST', sub.split('|')[1]],
-    fetchWithUser);
+  const { given_name, family_name, email, sub } = user;
+  const user_id = sub ? sub.split('|')[1] : 'NULL';
+  const [picture, setPicture] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [values, setValues] = useState({
+    phone: '',
+    sex: '',
+    age: '',
+  });
+  const [validated, setValidated] = useState(false);
+  const { data, error, mutate: mutateUser } = useSWR(
+    [
+      `https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id?user_id=${user_id}`,
+      awsToken,
+    ],
+    fetchWithToken,
+    {
+      onSuccess: function (data, key, config) {
+        setValues({ phone: data.phone, sex: data.sex, age: data.age });
+      },
+    }
+  );
+  if (error) {
+    console.error(error);
+    return <Jumbotron>Error</Jumbotron>;
+  }
+  const set = (name) => {
+    return ({ target: { value } }) => {
+      setValues((oldValues) => ({ ...oldValues, [name]: value }));
+    };
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (event.target.checkValidity()) {
+      try {
+        await fetchWithToken(
+          'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/update-phone',
+          awsToken,
+          {
+            method: 'PATCH',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: user_id,
+              phone: values.phone,
+              age: values.age,
+              sex: values.sex,
+            }),
+          }
+        );
+      } catch (e) {
+        alert(`Submission failed! ${e.message}`);
+      }
+    }
+    setValidated(true);
+  };
+
+  const changeHandler = (event) => {
+    setPicture(event.target.files[0]);
+    console.log(event.target.files[0]);
+    setIsFilePicked(true);
+  };
+
   return (
-    <div>
-      <BreadcrumbBar page="Profile" />
-      <div className={styles["card"]}>
-        <div className={styles["card-body"]}>
-          <form>
-            <div className="row form-row">
-              <div className="col-12 col-md-12">
-                <div className={styles["form-group"]}>
-                  <div className={styles["change-avatar"]}>
-                    <div className={styles["profile-img"]}>
-                      <img src={picture} alt="User" />
-                    </div>
-                    <div className="upload-img">
-                      <div className={styles["change-photo-btn"]}>
-                          <span><i className="fa fa-upload"></i> Upload Photo</span>
-                          <input type="file" className={styles["upload"]} />
-                      </div>
-                      <small className="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
-                    </div>
-                  </div>
-                </div>
+    <>
+      <BreadcrumbBar page='Profile' />
+      <div className={styles.card}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form.Row>
+            <div className={styles['change-avatar']}>
+              <div className={styles['profile-img']}>
+                <img
+                  src={
+                    isFilePicked ? URL.createObjectURL(picture) : data?.picture
+                  }
+                  alt='User'
+                />
               </div>
-              {renderInput("First Name", "text", "Richard")}
-              {renderInput("Last Name", "text", "Wilson")}
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Date of Birth</label>
-                  <div className={styles["cal-icon"]}>
-                    <input type="date" className={styles["form-control"] + " " + "datetimepicker"} defaultValue="24-07-1983" />
-                    <FontAwesomeIcon icon={faCalendarAlt} size="lg"/>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
-                  <label>Blood Group</label>
-                  <select className={styles["form-control"]}>
-                    <option>A-</option>
-                    <option>A+</option>
-                    <option>B-</option>
-                    <option>B+</option>
-                    <option>AB-</option>
-                    <option>AB+</option>
-                    <option>O-</option>
-                    <option>O+</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Age</label>
-                  <input type="age" className={styles["form-control"]} defaultValue="37"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"] + " " + styles["select-wrapper"]}>
-                  <label>Sex</label>
-                  <select className={styles["form-control"] + " " + "select"}>
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Email ID</label>
-                  <input type="email" className={styles["form-control"]} defaultValue="richard@example.com"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Mobile</label>
-                  <input type="text" defaultValue="+1 202-555-0125" className={styles["form-control"]}/>
-                </div>
-              </div>
-              <div className="col-12">
-                <div className={styles["form-group"]}>
-                <label>Address</label>
-                <input type="text" className={styles["form-control"]} defaultValue="806 Twin Willow Lane"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>City</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Old Forge"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>State</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="Newyork"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Zip Code</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="13420"/>
-                </div>
-              </div>
-              <div className="col-12 col-md-6">
-                <div className={styles["form-group"]}>
-                  <label>Country</label>
-                  <input type="text" className={styles["form-control"]} defaultValue="United States"/>
-                </div>
+              <div>
+                <Button className={styles['change-photo-btn']}>
+                  Upload Photo
+                  <FontAwesomeIcon
+                    icon={faUpload}
+                    style={{ marginLeft: '5px' }}
+                  />
+                  <input
+                    type='file'
+                    className={styles['upload']}
+                    onChange={changeHandler}
+                  />
+                </Button>
+                <small className='form-text text-muted'>
+                  Allowed JPG or PNG. Max size of 2MB
+                </small>
               </div>
             </div>
-            <div className="submit-section">
-                <button type="submit" className="btn btn-primary submit-btn">Save Changes</button>
-            </div>
-          </form>
-        </div>
+          </Form.Row>
+          <Form.Row>
+            {renderInput('First Name', 'text', given_name, true)}
+            {renderInput('Last Name', 'text', family_name, true)}
+          </Form.Row>
+          <Form.Row>
+            {renderInput('Email', 'email', email, true)}
+            {renderInput(
+              'Phone Number',
+              'phone',
+              values.phone,
+              false,
+              set('phone')
+            )}
+          </Form.Row>
+          <Form.Row>
+            <Form.Group
+              as={Col}
+              md='6'
+              controlId={'Sex'}
+              className={styles['form-group']}
+            >
+              <Form.Label>Sex</Form.Label>
+              <Form.Control
+                className={styles['form-control']}
+                required
+                as='select'
+                placeholder='Sex'
+                defaultValue={values.sex}
+                onChange={set('sex')}
+              >
+                <option></option>
+                <option>Male</option>
+                <option>Female</option>
+              </Form.Control>
+              <Form.Control.Feedback></Form.Control.Feedback>
+            </Form.Group>
+            {renderInput('Age', 'text', values.age, false, set('age'))}
+          </Form.Row>
+          <Button type='submit' className={styles['change-photo-btn']}>
+            Submit Changes
+          </Button>
+        </Form>
       </div>
-    </div>
+    </>
   );
 };
 
