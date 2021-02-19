@@ -24,7 +24,7 @@ export default function Appointment(route: RouteComponentProps) {
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
 
-  const { lastMessage, readyState } = useWebSocket(socketURL);
+  const { lastMessage, readyState, getWebSocket } = useWebSocket(socketURL);
   const history = useHistory();
 
   useEffect(() => {
@@ -34,6 +34,9 @@ export default function Appointment(route: RouteComponentProps) {
       device.setup(token, { closeProtection: true });
     })();
     device.on('disconnect', hangup);
+    return () => {
+      getWebSocket()?.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -52,11 +55,12 @@ export default function Appointment(route: RouteComponentProps) {
   }, [lastMessage]);
 
   function call() {
-    const params = {
-      callTo: `${appointment.patient.phone}`,
-      consult_id: 'test-live-consult',
-    };
-    setConnection(device.connect(params));
+    setConnection(
+      device.connect({
+        callTo: `${appointment.patient.phone}`,
+        consult_id: appointment.consult_id,
+      })
+    );
     setIsCalling(true);
   }
 
@@ -78,10 +82,11 @@ export default function Appointment(route: RouteComponentProps) {
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           {transcript ? <Transcript transcript={transcript} /> : null}
           <CallControls
-            ready={readyState}
+            callState={readyState}
             isCalling={isCalling}
             call={call}
             hangup={hangup}
+            mute={mute}
           />
         </section>
         {/* {consult.question && consult.medical_conditions && consult.symptoms ? (

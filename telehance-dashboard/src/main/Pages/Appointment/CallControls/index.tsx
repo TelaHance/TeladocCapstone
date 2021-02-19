@@ -1,40 +1,83 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'react-bootstrap';
+import {
+  faPhoneAlt,
+  faMicrophone,
+  faMicrophoneSlash,
+} from '@fortawesome/free-solid-svg-icons';
+import { ButtonIcon } from 'react-rainbow-components';
 import { ReadyState } from 'react-use-websocket';
 import classes from './CallControls.module.css';
 
 export default function CallControls({
-  ready,
+  callState,
   isCalling,
   call,
   hangup,
+  mute,
 }: CallControlsProps) {
-  let callButton;
-  if (ready === ReadyState.CONNECTING) {
-    callButton = (
-      <Button disabled size='lg' variant='secondary'>
-        <FontAwesomeIcon icon={faPhoneAlt} />
-      </Button>
-    );
-  } else {
-    callButton = isCalling ? (
-      <Button variant='danger' size='lg' onClick={hangup}>
-        <FontAwesomeIcon icon={faPhoneAlt} className={classes.hangup} />
-      </Button>
-    ) : (
-      <Button variant='success' size='lg' onClick={call}>
-        <FontAwesomeIcon icon={faPhoneAlt} />
-      </Button>
-    );
-  }
-  return <div className={classes.container}>{callButton}</div>;
+  const [callsDisabled, setCallsDisabled] = useState(
+    callState === ReadyState.CONNECTING
+  );
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    setCallsDisabled(callState === ReadyState.CONNECTING);
+  }, [callState]);
+
+  useEffect(() => {
+    mute(isMuted);
+  }, [isMuted]);
+
+  return (
+    <div className={classes.container}>
+      {isCalling ? (
+        <ButtonIcon
+          // @ts-ignore
+          variant='destructive'
+          size='large'
+          disabled={callsDisabled}
+          onClick={hangup}
+          icon={
+            <FontAwesomeIcon icon={faPhoneAlt} className={classes.hangup} />
+          }
+        />
+      ) : (
+        <ButtonIcon
+          variant='success'
+          size='large'
+          disabled={callsDisabled}
+          onClick={call}
+          icon={<FontAwesomeIcon icon={faPhoneAlt} />}
+        />
+      )}
+      {isMuted ? (
+        <ButtonIcon
+          // @ts-ignore
+          variant='destructive'
+          size='large'
+          disabled={callsDisabled}
+          onClick={() => setIsMuted(false)}
+          icon={<FontAwesomeIcon icon={faMicrophoneSlash} />}
+        />
+      ) : (
+        <ButtonIcon
+          variant='border-filled'
+          size='large'
+          shaded
+          disabled={callsDisabled}
+          onClick={() => setIsMuted(true)}
+          icon={<FontAwesomeIcon icon={faMicrophone} />}
+        />
+      )}
+    </div>
+  );
 }
 
 type CallControlsProps = {
-  ready: number;
+  callState: number;
   isCalling: boolean;
   call: () => void;
   hangup: () => void;
+  mute: (shouldMute?: boolean) => void;
 };
