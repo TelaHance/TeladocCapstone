@@ -2,24 +2,32 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-width: 50%;
   margin: 0 auto;
 }
 
 .content {
   display: flex;
+  justify-content: center;
   flex-wrap: nowrap;
   height: 100%;
+  width: 100%;
+  position: relative;
 }
 
 .main {
-  width: 60%;
+  max-width: calc(60% - 46px);
   padding: 2em;
   border-radius: 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   min-width: 400px;
+  transform: translateX(40%);
+  transition: all ease 0.6s;
+}
+
+.infermedicaActive {
+  transform: translateX(0);
 }
 
 .main div[data-slate-editor='true'] {
