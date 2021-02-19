@@ -22,7 +22,7 @@ export default function Transcript({
   const useMessage = useCallback((props: RenderElementProps) => {
     switch (props.element.type) {
       case 'message':
-        return <Message {...props} userSpeakerLabel='ch_0' />;
+        return <Message {...props} />;
       default:
         return <p {...props}>{props.children}</p>;
     }
