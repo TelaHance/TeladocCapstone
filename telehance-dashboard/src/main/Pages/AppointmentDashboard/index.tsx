@@ -7,7 +7,7 @@ import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import styles from './AppointmentDashboard.module.css';
 import { Container } from 'react-bootstrap';
 import {
-  buttonFormatter,
+  ButtonFormatter,
   dateFormatter,
   nameFormatter,
   purposeFormatter,
@@ -106,7 +106,7 @@ function AppointmentDashboard({ history }: RouteComponentProps) {
             header=''
             width={130}
             field='user_id'
-            component={buttonFormatter}
+            component={ButtonFormatter}
           />
         </TableWithBrowserPagination>
       </Container>

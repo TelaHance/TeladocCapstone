@@ -53,10 +53,48 @@ export type WordData = {
 export type TranscriptData = MessageData[];
 
 export type ConsultData = AppointmentData & {
+  call_sid: string;
   sentiment?: SentimentData;
   transcript: TranscriptData;
   medical_conditions: MedicalConditionData[];
   question: string;
   symptoms: SymptomData[];
   transcript_edited?: TranscriptData;
+};
+
+export type SymptomData = {
+  id: string;
+  name: string;
+  common_name: string;
+  sex_filter: string;
+  category: string;
+  seriousness: string;
+  extras: {
+    [key: string]: any;
+  };
+  children: {
+    id: string;
+    parent_relation: string;
+  }[];
+  image_url: string | null;
+  image_source: string | null;
+  parent_id: string | null;
+  parent_relation: string | null;
+};
+
+export type ConditionData = {
+  id: string;
+  name: string;
+  common_name: string;
+  sex_filter: string;
+  categories: string[];
+  prevalence: string;
+  acuteness: string;
+  severity: string;
+  extras: {
+    icd10_code: string;
+    hint: string;
+  };
+  triage_level: string;
+  recommended_channel: string;
 };

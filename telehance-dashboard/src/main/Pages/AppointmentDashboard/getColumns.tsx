@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-rainbow-components';
 import { useHistory } from 'react-router-dom';
+import { AppointmentData } from 'Models';
 import classes from './AppointmentDashboard.module.css';
 
 export function purposeFormatter(value: any) {
@@ -46,12 +47,13 @@ export function dateFormatter(value: any) {
   );
 }
 
-export function buttonFormatter(value: any) {
+export function ButtonFormatter(value: any) {
   const history = useHistory();
-  const appointment = value.row;
+  const appointment = value.row as AppointmentData;
 
   return (
     <Button
+      label='Start'
       variant='brand'
       onClick={() =>
         history.push({
@@ -61,8 +63,6 @@ export function buttonFormatter(value: any) {
           },
         })
       }
-    >
-      Start
-    </Button>
+    />
   );
 }

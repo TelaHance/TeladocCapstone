@@ -1,59 +1,75 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Device } from 'twilio-client';
+import React, { useState, useEffect } from 'react';
+import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 import Spinner from 'Components/Spinner';
 import Transcript from 'Components/Transcript';
-import { AppointmentData, TranscriptData } from 'Models';
+import { AppointmentData, TranscriptData, SymptomData } from 'Models';
 // import Diagnoses from 'Components/Diagnoses/Diagnoses';
-import { fetchWithToken, putWithToken } from 'Util/fetch';
 import classes from './Appointment.module.css';
 import CallControls from './CallControls';
 
-export default function Appointment(route: RouteComponentProps) {
-  const device = useMemo(() => new Device(), []);
+const device = new Device();
+const tokenURL =
+  'https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token';
+const socketURL = 'wss://f26oedtlj3.execute-api.us-west-2.amazonaws.com/dev/';
 
+export default function Appointment(route: RouteComponentProps) {
   const { appointment } = route.location.state as {
     appointment: Omit<AppointmentData, 'doctor'>;
   };
 
+  const [connection, setConnection] = useState<Connection>();
   const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
+  const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
 
+  const { lastMessage, readyState } = useWebSocket(socketURL);
   const history = useHistory();
+
   useEffect(() => {
-    fetch(
-      'https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token'
-    )
-      .then((r) => r.json())
-      .then((data) => {
-        device.setup(JSON.parse(data).token, { closeProtection: true });
-      })
-      .catch((err) => console.log(err));
-  });
+    (async () => {
+      const data = await (await fetch(tokenURL)).json();
+      const { token } = JSON.parse(data);
+      device.setup(token, { closeProtection: true });
+    })();
+    device.on('disconnect', hangup);
+  }, []);
+
+  useEffect(() => {
+    if (lastMessage) {
+      const { idx, block, symptoms } = JSON.parse(lastMessage.data);
+      setTranscript((prevTranscript) => {
+        const newTranscript = [...prevTranscript];
+        newTranscript[idx] = block;
+        return newTranscript;
+      });
+      if (symptoms.length !== 0) {
+        setNewSymptoms(symptoms);
+      }
+    }
+    console.log(lastMessage);
+  }, [lastMessage]);
 
   function call() {
     const params = {
       callTo: `${appointment.patient.phone}`,
       consult_id: 'test-live-consult',
     };
-    device.connect(params);
+    setConnection(device.connect(params));
     setIsCalling(true);
   }
 
   function hangup() {
     setIsCalling(false);
-    device.disconnectAll();
-    history.push(`/consult/${appointment.consult_id}`);
+    connection?.disconnect();
+    device.destroy();
+    // history.push(`/consult/${appointment.consult_id}`);
   }
 
-  const { lastMessage } = useWebSocket(
-    'wss://f26oedtlj3.execute-api.us-west-2.amazonaws.com/dev/'
-  );
-
-  useEffect(() => {
-    console.log(lastMessage);
-  }, [lastMessage]);
+  function mute(shouldMute?: boolean) {
+    connection?.mute(shouldMute);
+  }
 
   return (
     <div className={classes.container}>
@@ -61,7 +77,12 @@ export default function Appointment(route: RouteComponentProps) {
         <section className={classes.main}>
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           {transcript ? <Transcript transcript={transcript} /> : null}
-          <CallControls isCalling={isCalling} call={call} hangup={hangup} />
+          <CallControls
+            ready={readyState}
+            isCalling={isCalling}
+            call={call}
+            hangup={hangup}
+          />
         </section>
         {/* {consult.question && consult.medical_conditions && consult.symptoms ? (
           <Diagnoses
@@ -76,5 +97,3 @@ export default function Appointment(route: RouteComponentProps) {
     </div>
   );
 }
-
-export type CallStatus = 'connect' | 'disconnect';
