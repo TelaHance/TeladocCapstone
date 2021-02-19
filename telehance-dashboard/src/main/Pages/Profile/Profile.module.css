@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,700,900');
 
 .card {
-  border: 1px solid #f0f0f0;
   margin-bottom: 1.875rem;
   font-family: "Poppins",sans-serif;
   position: relative;
@@ -9,11 +8,8 @@
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #fff;
   background-clip: border-box;
   border-radius: .25rem;
-}
-.card-body {
   padding: 1.5rem;
   flex: 1 1 auto;
 }
@@ -23,7 +19,8 @@
 	align-items: center;
 	display: -webkit-box;
 	display: -ms-flexbox;
-	display: flex;
+  display: flex;
+  margin-bottom: 2em;
 }
 .change-avatar::after, .change-avatar::before {
   box-sizing: border-box;
@@ -36,10 +33,6 @@
     height: 100px;
     width: 100px;
     object-fit: cover;
-}
-.change-avatar .change-photo-btn {
-    margin: 0 0 10px;
-    width: 150px;
 }
 .form-group {
   margin-bottom: 1.25rem;
@@ -90,23 +83,10 @@ select {
   right: 20px;
   pointer-events: none;
 }
-.cal-icon {
-	display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-}
-.cal-icon > input {
-  border: none;
-}
-.cal-icon > svg {
-	display: block;
-  margin-right: 15px;
-}
+
 .change-photo-btn {
-  background-color: #20c0f3;
+  background-color: #532197;
+  border-color: #532197;
   border-radius: 50px;
   color: #fff;
   cursor: pointer;
@@ -118,12 +98,15 @@ select {
   position: relative;
   transition: .3s;
   text-align: center;
-  width: 220px;
+  /* width: 220px; */
+}
+.change-photo-btn:hover {
+  background-color: #0de0fe;
+  border-color: #0de0fe;
 }
 .change-photo-btn input.upload {
   bottom: 0;
   cursor: pointer;
-  filter: alpha(opacity=0);
   left: 0;
   margin: 0;
   opacity: 0;
@@ -131,7 +114,7 @@ select {
   position: absolute;
   right: 0;
   top: 0;
-  width: 220px;
+  width: 100%;
 }
 
 @media only screen and (max-width: 767.98px) {
@@ -142,10 +125,8 @@ select {
 
 @media only screen and (max-width: 575.98px) {
   .card {
-		margin-bottom: 0.9375rem;
-  }
-  .card-body {
-		padding: 1.25rem;
+    margin-bottom: 0.9375rem;
+    padding: 1.25rem;
   }
   .change-avatar .profile-img img {
 		height: 80px;
