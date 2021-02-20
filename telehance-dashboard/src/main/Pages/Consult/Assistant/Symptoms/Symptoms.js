@@ -43,7 +43,6 @@ const Symptoms = ({
         choice_id: 'present',
       })
     })
-  console.log(symptomDatabase);
 
   function filter(query, options) {
     if (query) {
