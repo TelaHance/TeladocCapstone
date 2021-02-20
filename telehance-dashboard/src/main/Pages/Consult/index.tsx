@@ -5,7 +5,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript, { TranscriptData } from 'Components/Transcript';
 import { SentimentData } from 'Components/Sentiment';
-import Diagnoses from './Diagnoses/Diagnoses';
+import Assistant from './Assistant/Assistant';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
 import classes from './Consult.module.css';
@@ -59,12 +59,8 @@ export default function Consult(props: any) {
             {...audioPlayerProps}
           />
         </section>
-        <Diagnoses
-          question={consult.question}
-          medicalConditions={consult.medical_conditions}
-          symptoms={consult.symptoms}
-          consultId={consult.consult_id}
-          startTime={consult.start_time}
+        <Assistant
+          consult={consult}
           isLive={false}
           action={setInfermedicaActive}
         />
