@@ -55,7 +55,7 @@ export default function Consult(props: any) {
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
-            src={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.consult_id}.mp3`} // TODO: REPLACE WITH consult.call_sid and API gateway request
+            src={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.call_sid}.mp3`}
             {...audioPlayerProps}
           />
         </section>
@@ -93,6 +93,7 @@ export type SymptomData = {
 
 export type ConsultData = {
   consult_id: string;
+  call_sid: string;
   doctor: UserData;
   patient: UserData;
   sentiment?: SentimentData;
