@@ -65,10 +65,7 @@ export default function Consult(props: any) {
             {...audioPlayerProps}
           />
         </section>
-        <Assistant
-          consult={consult}
-          action={setInfermedicaActive}
-        />
+        <Assistant consult={consult} action={setInfermedicaActive} />
       </div>
     </div>
   );

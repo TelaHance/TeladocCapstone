@@ -25,6 +25,10 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+} 
+
+.lookup {
+  width: 70%;
 }
 
 .lookup > div > div > ul {

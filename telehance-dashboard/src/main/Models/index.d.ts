@@ -78,11 +78,14 @@ export type SymptomListData = {
  *  USER-DEFINED TYPES
  */
 
-export type AppointmentData = {
+export type ConsultKeyData = {
   consult_id: string;
+  start_time: number;
+};
+
+export type AppointmentData = ConsultKeyData & {
   doctor: UserData;
   patient: UserData;
-  start_time: number;
   end_time: number;
 };
 
@@ -94,7 +97,7 @@ export type ConsultData = AppointmentData &
     transcript_edited?: TranscriptData;
   };
 
-export type LiveConsultData = AppointmentData & Partial<InfermedicaData>;
+export type LiveConsultData = ConsultKeyData & Partial<InfermedicaData>;
 
 export type InfermedicaData = {
   medical_conditions: MedicalConditionData[];
