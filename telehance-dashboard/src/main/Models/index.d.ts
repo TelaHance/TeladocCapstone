@@ -1,3 +1,6 @@
+/**
+ *  AUTH0 API DATA
+ */
 export type UserData = {
   user_id: string;
   given_name: string;
@@ -6,23 +9,40 @@ export type UserData = {
   picture?: string;
 };
 
-export type AppointmentData = {
-  consult_id: string;
-  doctor: UserData;
-  patient: UserData;
-  start_time: number;
-  end_time: number;
-};
+/**
+ *  PERSPECTIVE API DATA
+ */
 
 export type SentimentData = {
   [key: string]: number;
 };
 
-export type MedicalConditionData = {
+/**
+ *  INFERMEDICA API DATA
+ */
+
+export type ConditionData = {
   common_name: string;
   id: string;
   name: string;
   probability: number;
+};
+
+export type ConditionListData = {
+  id: string;
+  name: string;
+  common_name: string;
+  sex_filter: string;
+  categories: string[];
+  prevalence: string;
+  acuteness: string;
+  severity: string;
+  extras: {
+    icd10_code: string;
+    hint: string;
+  };
+  triage_level: string;
+  recommended_channel: string;
 };
 
 export type SymptomData = {
@@ -33,36 +53,7 @@ export type SymptomData = {
   type: string;
 };
 
-export type MessageData = {
-  type: 'message';
-  children: WordData[];
-  start: number;
-  speaker: string;
-  sentiment: number;
-  fullText: string;
-};
-
-export type WordData = {
-  start: number;
-  end: number;
-  text: string;
-  confidence: number;
-  splitIdx?: number;
-};
-
-export type TranscriptData = MessageData[];
-
-export type ConsultData = AppointmentData & {
-  call_sid: string;
-  sentiment?: SentimentData;
-  transcript: TranscriptData;
-  medical_conditions: MedicalConditionData[];
-  question: string;
-  symptoms: SymptomData[];
-  transcript_edited?: TranscriptData;
-};
-
-export type SymptomData = {
+export type SymptomListData = {
   id: string;
   name: string;
   common_name: string;
@@ -82,19 +73,50 @@ export type SymptomData = {
   parent_relation: string | null;
 };
 
-export type ConditionData = {
-  id: string;
-  name: string;
-  common_name: string;
-  sex_filter: string;
-  categories: string[];
-  prevalence: string;
-  acuteness: string;
-  severity: string;
-  extras: {
-    icd10_code: string;
-    hint: string;
+/**
+ *  DYNAMODB DATA STRUCTURES /
+ *  USER-DEFINED TYPES
+ */
+
+export type AppointmentData = {
+  consult_id: string;
+  doctor: UserData;
+  patient: UserData;
+  start_time: number;
+  end_time: number;
+};
+
+export type ConsultData = AppointmentData &
+  InfermedicaData & {
+    call_sid: string;
+    sentiment?: SentimentData;
+    transcript: TranscriptData;
+    transcript_edited?: TranscriptData;
   };
-  triage_level: string;
-  recommended_channel: string;
+
+export type LiveConsultData = AppointmentData & Partial<InfermedicaData>;
+
+export type InfermedicaData = {
+  medical_conditions: MedicalConditionData[];
+  question: string;
+  symptoms: SymptomData[];
+};
+
+export type TranscriptData = MessageData[];
+
+export type MessageData = {
+  type: 'message';
+  children: WordData[];
+  start: number;
+  speaker: string;
+  sentiment: number;
+  fullText: string;
+};
+
+export type WordData = {
+  start: number;
+  end: number;
+  text: string;
+  confidence: number;
+  splitIdx?: number;
 };
