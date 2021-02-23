@@ -5,7 +5,7 @@ import Spinner from 'Components/Spinner';
 import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript from 'Components/Transcript';
-import Assistant from './Assistant/Assistant';
+import Assistant from 'Components/Assistant/Assistant';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
 import { ConsultData, TranscriptData } from 'Models';

@@ -4,6 +4,7 @@ import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 import Spinner from 'Components/Spinner';
 import Transcript from 'Components/Transcript';
+import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, SymptomData } from 'Models';
 // import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import classes from './Appointment.module.css';
