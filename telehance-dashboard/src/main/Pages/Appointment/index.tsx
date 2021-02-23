@@ -50,7 +50,7 @@ export default function Appointment(route: RouteComponentProps) {
         newTranscript[idx] = block;
         return newTranscript;
       });
-      if (symptoms.length !== 0) {
+      if (symptoms && symptoms.length !== 0) {
         setNewSymptoms(symptoms);
       }
     }
@@ -87,7 +87,7 @@ export default function Appointment(route: RouteComponentProps) {
           })}
         >
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
-          {transcript ? <Transcript transcript={transcript} /> : null}
+          <Transcript transcript={transcript} />
           <CallControls
             callState={readyState}
             isCalling={isCalling}

@@ -1,6 +1,6 @@
-.container {
-  display: flex;
-  justify-content: space-around;
+.container > button {
+  margin: 0 1em;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .hangup {
