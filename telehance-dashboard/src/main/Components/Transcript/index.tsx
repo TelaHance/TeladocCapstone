@@ -6,9 +6,10 @@ import {
   RenderLeafProps,
 } from 'slate-react';
 import useCustomEditor from 'Hooks/useCustomEditor';
+import { TranscriptData } from 'Models';
 import Message from './Message';
 import Word from './Word';
-import { TranscriptData } from 'Models';
+import classes from './Transcript.module.css';
 
 export default function Transcript({
   transcript,
@@ -35,7 +36,7 @@ export default function Transcript({
           isEditing={isEditing}
           isCurrent={leaf.start === currWordStartTime ?? false}
           onClick={setStartFrom}
-          startTime={leaf.start as number ?? -1}
+          startTime={(leaf.start as number) ?? -1}
           attributes={attributes}
         >
           {children}
@@ -47,17 +48,19 @@ export default function Transcript({
   if (!transcript) return <h1>Unable to load transcript.</h1>;
 
   return (
-    <Slate
-      editor={editor}
-      value={transcript}
-      onChange={(value) => onChange(value as TranscriptData)}
-    >
-      <Editable
-        readOnly={!isEditing}
-        renderElement={useMessage}
-        renderLeaf={useWord}
-      />
-    </Slate>
+    <div className={classes.container}>
+      <Slate
+        editor={editor}
+        value={transcript}
+        onChange={(value) => onChange(value as TranscriptData)}
+      >
+        <Editable
+          readOnly={!isEditing}
+          renderElement={useMessage}
+          renderLeaf={useWord}
+        />
+      </Slate>
+    </div>
   );
 }
 

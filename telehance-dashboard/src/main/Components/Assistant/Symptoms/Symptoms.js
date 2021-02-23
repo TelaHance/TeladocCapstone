@@ -29,7 +29,7 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
     if (isLive) {
       setSymptoms((symptomsState) => {
         let newSymptoms = [];
-        symptoms.forEach((newSymptom) => {
+        symptoms?.forEach((newSymptom) => {
           if (symptomsState.every((symptom) => symptom.id !== newSymptom.id)) {
             newSymptoms.push(newSymptom);
           }
