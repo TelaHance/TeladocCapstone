@@ -89,15 +89,11 @@ export default function Appointment(route: RouteComponentProps) {
             mute={mute}
           />
         </section>
-        {/* {consult.question && consult.medical_conditions && consult.symptoms ? (
-          <Diagnoses
-            question={consult.question}
-            medicalConditions={consult.medical_conditions}
-            symptoms={consult.symptoms}
-            consultId={consult.consult_id}
-            startTime={consult.start_time}
-          />
-        ) : null} */}
+        <Assistant
+          consult={consult}
+          isLive
+          action={setInfermedicaActive}
+        />
       </div>
     </div>
   );
