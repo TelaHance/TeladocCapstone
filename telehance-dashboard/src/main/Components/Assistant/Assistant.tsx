@@ -89,11 +89,9 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
   return (
     <>
       <div
-        className={
-          expandedContent
-            ? classes.infermedica + ' ' + classes.infermedicaActive
-            : classes.infermedica
-        }
+        className={clsx(classes.infermedica, {
+          [classes.infermedicaActive]: expandedContent,
+        })}
       >
         {active === 'notes' ? <Notes /> : null}
         {active === 'conditions' ? (

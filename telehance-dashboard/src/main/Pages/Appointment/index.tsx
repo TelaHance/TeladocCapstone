@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
@@ -24,6 +25,7 @@ export default function Appointment(route: RouteComponentProps) {
   const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
+  const [infermedicaActive, setInfermedicaActive] = useState(false);
 
   const { lastMessage, readyState, getWebSocket } = useWebSocket(socketURL);
   const history = useHistory();
@@ -79,7 +81,11 @@ export default function Appointment(route: RouteComponentProps) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>
-        <section className={classes.main}>
+        <section
+          className={clsx(classes.main, {
+            [classes.infermedicaActive]: infermedicaActive,
+          })}
+        >
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           {transcript ? <Transcript transcript={transcript} /> : null}
           <CallControls
@@ -91,9 +97,9 @@ export default function Appointment(route: RouteComponentProps) {
           />
         </section>
         <Assistant
-          consult={consult}
-          isLive
+          consult={{ symptoms: newSymptoms, ...appointment }}
           action={setInfermedicaActive}
+          isLive
         />
       </div>
     </div>
