@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowLeft,
@@ -7,13 +8,14 @@ import {
   faSearch,
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
+import { LiveConsultData } from 'Models';
 import Symptoms from './Symptoms/Symptoms';
 import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
 import classes from './Assistant.module.css';
 
-const Assistant = ({ consult, isLive, action }) => {
-  const [active, setActive] = useState(null);
+export default function Assistant({ consult, isLive, action }: AssistantProps) {
+  const [active, setActive] = useState<string>();
   const [expandedSide, setExpandedSide] = useState(false);
   const [expandedContent, setExpandedContent] = useState(false);
 
@@ -37,9 +39,9 @@ const Assistant = ({ consult, isLive, action }) => {
             setExpandedContent(true);
             action(true);
           }}
-          className={
-            expandedContent && active === 'symptoms' ? classes.active : null
-          }
+          className={clsx({
+            [classes.active]: expandedContent && active === 'symptoms',
+          })}
         >
           <FontAwesomeIcon icon={faSearch} />
           {expandedSide && <div>Symptoms</div>}
@@ -51,9 +53,9 @@ const Assistant = ({ consult, isLive, action }) => {
             setExpandedContent(true);
             action(true);
           }}
-          className={
-            expandedContent && active === 'conditions' ? classes.active : null
-          }
+          className={clsx({
+            [classes.active]: expandedContent && active === 'conditions',
+          })}
         >
           <FontAwesomeIcon icon={faStethoscope} />
           {expandedSide && <div>Diagnoses</div>}
@@ -65,9 +67,9 @@ const Assistant = ({ consult, isLive, action }) => {
             setExpandedContent(true);
             action(true);
           }}
-          className={
-            expandedContent && active === 'notes' ? classes.active : null
-          }
+          className={clsx({
+            [classes.active]: expandedContent && active === 'notes',
+          })}
         >
           <FontAwesomeIcon icon={faCommentAlt} />
           {expandedSide && <div>Doctor's Notes</div>}
@@ -112,6 +114,10 @@ const Assistant = ({ consult, isLive, action }) => {
       {renderSidebar()}
     </>
   );
-};
+}
 
-export default Assistant;
+type AssistantProps = {
+  consult: LiveConsultData;
+  isLive?: boolean;
+  action: (bool: boolean) => void;
+};
