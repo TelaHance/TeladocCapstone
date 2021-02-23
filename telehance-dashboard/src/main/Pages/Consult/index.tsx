@@ -67,7 +67,6 @@ export default function Consult(props: any) {
         </section>
         <Assistant
           consult={consult}
-          isLive={false}
           action={setInfermedicaActive}
         />
       </div>
