@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useSWR from 'swr';
 import Spinner from 'Components/Spinner';
 import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript, { TranscriptData } from 'Components/Transcript';
 import { SentimentData } from 'Components/Sentiment';
-import Diagnoses from './Diagnoses/Diagnoses';
+import Assistant from './Assistant/Assistant';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
 import classes from './Consult.module.css';
@@ -15,6 +15,7 @@ export default function Consult(props: any) {
     params: { consultId },
   } = props.match;
 
+  const [infermedicaActive, setInfermedicaActive] = useState(false);
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
   const BASE_URL =
     'https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id';
@@ -50,7 +51,7 @@ export default function Consult(props: any) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>
-        <section className={classes.main}>
+        <section className={infermedicaActive ? classes.main + ' ' + classes.infermedicaActive : classes.main}>
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
@@ -58,15 +59,11 @@ export default function Consult(props: any) {
             {...audioPlayerProps}
           />
         </section>
-        {consult.question && consult.medical_conditions && consult.symptoms ? (
-          <Diagnoses
-            question={consult.question}
-            medicalConditions={consult.medical_conditions}
-            symptoms={consult.symptoms}
-            consultId={consult.consult_id}
-            startTime={consult.start_time}
-          />
-        ) : null}
+        <Assistant
+          consult={consult}
+          isLive={false}
+          action={setInfermedicaActive}
+        />
       </div>
     </div>
   );
