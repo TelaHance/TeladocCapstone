@@ -13,7 +13,7 @@ import {
   purposeFormatter,
 } from './getColumns';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import ScheduleAppointment from 'Pages/AppointmentDashboard/AppointmentModal';
 import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
 
