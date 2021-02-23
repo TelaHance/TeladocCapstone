@@ -31,7 +31,7 @@ const Symptoms = ({
   }, [symptoms, isLive]);
 
   const containerStyles = {
-    width: '70%',
+    width: '100%',
   };
 
   const symptomDatabase =
@@ -126,7 +126,7 @@ const Symptoms = ({
         <Lookup
           id="lookup-3"
           placeholder="Add Symptoms"
-          size="small"
+          size="medium"
           options={searchState.options}
           value={searchState.option}
           onChange={option => setSearchState({ option })}
