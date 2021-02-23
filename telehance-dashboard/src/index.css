@@ -11,3 +11,43 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.brand {
+  color: #01b6f5;
+}
+
+.success {
+  color: #1DE9B6;
+}
+
+.error {
+  color: #FE4849;
+}
+
+.warning {
+  color: #FC0;
+}
+
+.mainBackground {
+  color: #FFF;
+}
+
+.brand-bg {
+  background-color: #01b6f5;
+}
+
+.success-bg {
+  background-color: #1DE9B6;
+}
+
+.error-bg {
+  background-color: #FE4849;
+}
+
+.warning-bg {
+  background-color: #FC0;
+}
+
+.mainBackground-bg {
+  background-color: #FFF;
+}
