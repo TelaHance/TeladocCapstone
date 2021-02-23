@@ -17,6 +17,7 @@
 .infermedica h4 {
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
+  font-weight: bold;
 }
 
 .search {
@@ -29,6 +30,15 @@
 
 .lookup > div > div > ul {
   padding-left: 0;
+  
+}
+
+.lookup > div > div > ul > li > div > span {
+  font-size: 1rem;
+}
+
+.lookup > div > div > ul > li > div > span > span {
+  font-size: 0.8rem;
 }
 
 button {
@@ -122,8 +132,8 @@ button:hover {
 }
 
 .search .icon {
-  margin-left: 0.5em;
   font-size: 1.5em;
+  display: flex;
 }
 
 .update {
@@ -134,5 +144,16 @@ button:hover {
 .progressBar {
   width: 8rem!important;
   margin-right: 1rem;
+}
+
+.patient {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+.patient > h5 {
+  margin-left: 1em;
 }
 
