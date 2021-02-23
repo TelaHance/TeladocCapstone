@@ -101,8 +101,7 @@ const Profile = () => {
 
   const changeHandler = (event) => {
     setPicture(event.target.files[0]);
-    console.log(event.target.files[0]);
-    setIsFilePicked(true);
+		setIsFilePicked(true);
   };
 
   return (
