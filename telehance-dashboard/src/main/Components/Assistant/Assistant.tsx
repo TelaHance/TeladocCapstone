@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import {
-  FontAwesomeIcon,
-  FontAwesomeIconProps,
-} from '@fortawesome/react-fontawesome';
-import {
   faCommentAlt,
   faSearch,
   faStethoscope,
@@ -13,6 +9,7 @@ import { LiveConsultData } from 'Models';
 import Symptoms from './Symptoms/Symptoms';
 import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
+import Sidebar, { Tools } from './Sidebar';
 import classes from './Assistant.module.css';
 
 const tools = {
@@ -32,44 +29,6 @@ const tools = {
     component: Notes,
   },
 } as Tools;
-
-const options = Object.entries(tools);
-
-function SidebarOption({
-  active,
-  onClick,
-  icon,
-  children,
-}: SidebarOptionProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={clsx({
-        [classes.active]: active,
-      })}
-    >
-      <FontAwesomeIcon icon={icon} />
-      <span>{children}</span>
-    </button>
-  );
-}
-
-function Sidebar({ currentTool, onClick }: SidebarProps) {
-  return (
-    <div className={classes.sidebar}>
-      {options.map(([id, { icon, label }]) => (
-        <SidebarOption
-          key={id}
-          onClick={() => onClick(id)}
-          active={currentTool === id}
-          icon={icon}
-        >
-          {label}
-        </SidebarOption>
-      ))}
-    </div>
-  );
-}
 
 export default function Assistant({ consult, isLive, action }: AssistantProps) {
   const {
@@ -114,7 +73,7 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
           isLive={isLive}
         />
       </div>
-      <Sidebar currentTool={currentTool} onClick={changeTool} />
+      <Sidebar currentTool={currentTool} onClick={changeTool} tools={tools} />
     </>
   );
 }
@@ -123,24 +82,4 @@ type AssistantProps = {
   consult: LiveConsultData;
   isLive?: boolean;
   action: (bool: boolean) => void;
-};
-
-type SidebarProps = {
-  currentTool?: string;
-  onClick: (id: string) => void;
-};
-
-type SidebarOptionProps = {
-  active?: boolean;
-  onClick: () => void;
-  icon: FontAwesomeIconProps['icon'];
-  children: string;
-};
-
-type Tools = {
-  [key: string]: {
-    icon: FontAwesomeIconProps['icon'];
-    label: string;
-    component: (props: any) => React.ReactElement;
-  };
 };
