@@ -4,30 +4,24 @@ import { useHistory } from 'react-router-dom';
 import { AppointmentData } from 'Models';
 import classes from './AppointmentDashboard.module.css';
 
-export function purposeFormatter(value: any) {
-  return <div className={classes['wrapped-purpose']}>{value.value}</div>;
+export function purposeFormatter({ value }: any) {
+  return <p className={classes.purpose}>{value}</p>;
 }
 
-export function nameFormatter(value: any) {
+export function nameFormatter({ value }: any) {
   return (
-    <div>
-      <img
-        className={classes['rounded-circle']}
-        src={value.value.picture}
-        width='35'
-        alt=''
-      />
-      <span>
-        {' '}
-        {value.value.given_name} {value.value.family_name}{' '}
+    <>
+      <img className={classes.avatar} src={value.picture} width='35' alt='' />
+      <span className={classes.name}>
+        {value.given_name} {value.family_name}
       </span>
-    </div>
+    </>
   );
 }
 
-export function dateFormatter(value: any) {
-  if (typeof value.value === 'string') value.value = parseInt(value.value);
-  const start = new Date(value.value);
+export function dateFormatter({ value }: any) {
+  if (typeof value === 'string') value = parseInt(value);
+  const start = new Date(value);
   const date = start.toLocaleString('default', {
     month: 'long',
     day: '2-digit',
@@ -39,10 +33,9 @@ export function dateFormatter(value: any) {
     hour12: true,
   });
   return (
-    <div className={classes['date']}>
-      <span> {date} </span>
-      <br />
-      <span> {time} </span>
+    <div className={classes.date}>
+      <p> {date} </p>
+      <p> {time} </p>
     </div>
   );
 }

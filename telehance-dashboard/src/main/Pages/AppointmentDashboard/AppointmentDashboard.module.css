@@ -1,5 +1,5 @@
 .container {
-  margin-bottom: 3rem;
+  margin: 0 2em 2em 2em;
 }
 
 .container > div {
@@ -8,6 +8,11 @@
 
 .container > div:last-child {
   text-align: left;
+}
+
+/* Prevent scroll on table */
+.container > section > div > div > div > div {
+  overflow-y: hidden!important;
 }
 
 .controls {
@@ -33,20 +38,43 @@
   z-index: 1;
 }
 
-.rounded-circle {
+.avatar {
   border-radius: 50% !important;
+  margin-right: 9px;
 }
 
-.wrapped-purpose {
+.name {
+  word-wrap: break-word;
+}
+
+.purpose {
   overflow-wrap: break-word;
   white-space: normal;
-  line-height: 20px;
+  line-height: 1.5em;
+  height: 4.5em;
+  overflow: hidden;
   margin: 4px 0.75rem;
+}
+
+@media (max-width: 768px) {
+  th[aria-label = "Purpose"] {
+    width: 0;
+    display: none;
+  }
+  td[data-label = "Purpose"] {
+    width: 0;
+    display: none;
+  }
 }
 
 .date {
   overflow-wrap: break-word;
   white-space: normal;
-  line-height: 40px;
   margin: 4px 0.5rem;
+  overflow: hidden;
+}
+
+.date > p {
+  margin: 0;
+  line-height: 2em;
 }
