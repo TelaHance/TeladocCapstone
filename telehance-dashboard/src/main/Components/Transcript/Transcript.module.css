@@ -1,12 +1,16 @@
 .container {
   height: 100%;
+  padding: 2em 2em 0 2em;
+  margin-bottom: 2em;
+  border-radius: 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .container div[data-slate-editor='true'] {
   flex: 1;
   max-height: 100%;
   overflow-y: scroll;
-  white-space: normal!important;
+  white-space: normal !important;
   padding-left: 20px;
 }
 
