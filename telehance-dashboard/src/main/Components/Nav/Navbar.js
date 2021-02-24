@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchWithUser } from 'Util/fetch';
-import logo from 'assets/Teladoc.svg';
+import logo from 'assets/TelaHance2.svg';
 import AuthNav from './AuthNav';
 import styles from './Navbar.module.css';
 

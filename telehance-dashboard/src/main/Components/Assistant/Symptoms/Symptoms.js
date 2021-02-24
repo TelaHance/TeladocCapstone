@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { putWithToken } from 'Util/fetch';
 import symptomsJson from 'assets/symptoms';
-import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
@@ -9,7 +8,8 @@ import {
   faPlusCircle,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import { Lookup } from 'react-rainbow-components';
+import { Button, Lookup } from 'react-rainbow-components';
+import classes from '../Assistant.module.css';
 
 const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
 const symptomDatabase = symptomsJson.map((symptom) => {
@@ -122,10 +122,15 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
     putWithToken(url, awsToken, tempSymptoms);
   }
 
+  function diagnose() {
+    
+  }
+
   return (
     <div className={classes.content}>
       <h4>Symptoms Analysis</h4>
       <div className={classes.search}>
+        <Button variant='brand' label='Diagnose' size='small' onClick={diagnose}/>
         <Lookup
           id='symptom-lookup'
           placeholder='Add Symptoms'
@@ -145,11 +150,7 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
             setSearchState({ option: null });
           }}
         >
-          <FontAwesomeIcon
-            icon={faPlusCircle}
-            style={{ color: 'green' }}
-            className={classes.icon}
-          />
+          <FontAwesomeIcon icon={faPlusCircle} size='2x'/>
         </button>
       </div>
       {symptomsState && (

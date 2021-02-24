@@ -119,7 +119,7 @@ body {
 .logo {
   display: inline-block;
   margin-right: 30px;
-  width: 160px;
+  width: 200px;
 }
 .header-navbar-rht {
   margin: 0;
@@ -458,20 +458,24 @@ body {
   .navbarHeader {
     width: 100%;
   }
-  #mobile_btn {
+  .hamburgerMenu {
     left: 0;
     margin-right: 0;
     padding: 0 15px;
     position: absolute;
     z-index: 99;
   }
-  .navbarBrand.logo {
-    width: 100%;
+  .logo {
+    width: 50%;
+    max-height: 85px;
     text-align: center;
-    margin-right: 0;
+    margin: 0 auto;
   }
-  .navbarBrand.logo img {
-    height: 40px;
+}
+
+@media only screen and (max-width: 250px) {
+  .logo {
+    display: none;
   }
 }
 
