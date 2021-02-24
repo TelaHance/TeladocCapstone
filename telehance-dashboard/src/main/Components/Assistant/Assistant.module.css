@@ -58,11 +58,15 @@ button:hover {
   padding: 2em;
 }
 
+.content h4 {
+  font-weight: 700;
+  color: #532197;
+}
+
 .actions {
   margin: 0.5em; 
   display: flex;
   justify-content: center;
-  
 }
 
 .actions button {
