@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
+import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
 import Spinner from 'Components/Spinner';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
@@ -12,9 +13,6 @@ import classes from './Appointment.module.css';
 import CallControls from './CallControls';
 
 const device = new Device();
-const tokenURL =
-  'https://59wncxd6oi.execute-api.us-west-2.amazonaws.com/dev/get-token';
-const socketURL = 'wss://f26oedtlj3.execute-api.us-west-2.amazonaws.com/dev/';
 
 export default function Appointment(route: RouteComponentProps) {
   const { appointment } = route.location.state as {
@@ -25,14 +23,16 @@ export default function Appointment(route: RouteComponentProps) {
   const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
-  const [infermedicaActive, setInfermedicaActive] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  const { lastMessage, readyState, getWebSocket } = useWebSocket(socketURL);
+  const { lastMessage, readyState, getWebSocket } = useWebSocket(
+    consultWebsocketUrl
+  );
   const history = useHistory();
 
   useEffect(() => {
     (async () => {
-      const data = await (await fetch(tokenURL)).json();
+      const data = await (await fetch(getTwilioTokenUrl)).json();
       const { token } = JSON.parse(data);
       device.setup(token, { closeProtection: true });
     })();
@@ -83,7 +83,7 @@ export default function Appointment(route: RouteComponentProps) {
       <div className={classes.content}>
         <section
           className={clsx(classes.main, {
-            [classes.infermedicaActive]: infermedicaActive,
+            [classes.sidebarExpanded]: sidebarExpanded,
           })}
         >
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
@@ -98,7 +98,7 @@ export default function Appointment(route: RouteComponentProps) {
         </section>
         <Assistant
           consult={{ symptoms: newSymptoms, ...appointment }}
-          action={setInfermedicaActive}
+          action={setSidebarExpanded}
           isLive
         />
       </div>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, DropdownButton, Dropdown } from 'react-bootstrap';
-import { fetchWithToken } from 'Util/fetch';
 import useSWR from 'swr';
+import { Table, DropdownButton, Dropdown } from 'react-bootstrap';
+import { getAllUsersUrl } from 'Api';
+import { fetchWithToken } from 'Util/fetch';
 import Container from 'react-bootstrap/Container';
 import './Admin.module.css';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
@@ -9,29 +10,22 @@ import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 const Admin = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const { data: users, mutate: mutateUsers } = useSWR(
-    [
-      'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-get-all',
-      awsToken,
-    ],
+    [getAllUsersUrl, awsToken],
     fetchWithToken
   );
 
   const changeRole = async (id, role) => {
     try {
-      await fetchWithToken(
-        'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id',
-        awsToken,
-        {
-          method: 'PATCH',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: id,
-            role: role,
-          }),
-        }
-      );
+      await fetchWithToken(getAllUsersUrl, awsToken, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: id,
+          role: role,
+        }),
+      });
     } catch (e) {
       console.log(e);
     }

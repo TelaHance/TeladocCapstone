@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import useSWR from 'swr';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { getUserUrl } from 'Api';
 import { fetchWithUser } from 'Util/fetch';
 import logo from 'assets/TelaHance2.svg';
 import AuthNav from './AuthNav';
@@ -16,12 +17,7 @@ export default function Navbar() {
   const { user } = useAuth0();
   const sub = user ? user.sub.split('|')[1] : 'NULL';
   const { data: userData } = useSWR(
-    [
-      'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id',
-      awsToken,
-      'POST',
-      sub,
-    ],
+    [getUserUrl, awsToken, 'POST', sub],
     fetchWithUser
   );
 

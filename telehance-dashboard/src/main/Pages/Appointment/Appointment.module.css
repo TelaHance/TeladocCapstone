@@ -26,6 +26,6 @@
   transition: all ease 0.6s;
 }
 
-.infermedicaActive {
+.sidebarExpanded {
   transform: translateX(0);
 }

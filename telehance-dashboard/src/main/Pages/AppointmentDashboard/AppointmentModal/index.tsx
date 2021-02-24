@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Button } from 'react-rainbow-components';
 import AppointmentModal from 'Pages/AppointmentDashboard/AppointmentModal/AppointmentModal';
-import classes from './AppointmentModal.module.css';
-import styles from './AppointmentModal.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcaseMedical, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { addApptUrl } from 'Api';
 import { putWithToken } from 'Util/fetch';
 import { useAuth0 } from '@auth0/auth0-react';
+import classes from './AppointmentModal.module.css';
 
 export default function ScheduleAppointment() {
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
@@ -16,17 +16,13 @@ export default function ScheduleAppointment() {
   const sub = user ? user.sub.split('|')[1] : 'NULL';
   const onBook = (date: Date, chosenDoc: any, purpose: string) => {
     try {
-      putWithToken(
-        'https://klnb89q4vj.execute-api.us-west-2.amazonaws.com/dev/addappt',
-        awsToken,
-        {
-          start_time: date.valueOf(),
-          end_time: date.valueOf() + 3600000,
-          purpose: purpose,
-          doctor_id: chosenDoc.user_id,
-          patient_id: sub,
-        }
-      );
+      putWithToken(addApptUrl, awsToken, {
+        start_time: date.valueOf(),
+        end_time: date.valueOf() + 3600000,
+        purpose: purpose,
+        doctor_id: chosenDoc.user_id,
+        patient_id: sub,
+      });
     } catch (error) {
       console.log(error);
     }
