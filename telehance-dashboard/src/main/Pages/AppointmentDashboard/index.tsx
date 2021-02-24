@@ -73,7 +73,7 @@ function AppointmentDashboard() {
           <Column
             header='Appointment Date'
             field='start_time'
-            width={200}
+            defaultWidth={200}
             component={dateFormatter}
           />
           <Column
