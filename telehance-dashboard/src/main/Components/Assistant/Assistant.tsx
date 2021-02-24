@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowLeft,
-  faArrowRight,
+  FontAwesomeIcon,
+  FontAwesomeIconProps,
+} from '@fortawesome/react-fontawesome';
+import {
   faCommentAlt,
   faSearch,
   faStethoscope,
@@ -14,102 +15,106 @@ import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
 import classes from './Assistant.module.css';
 
+const tools = {
+  symptom: {
+    icon: faSearch,
+    label: 'Symptoms',
+    component: Symptoms,
+  },
+  conditions: {
+    icon: faStethoscope,
+    label: 'Diagnoses',
+    component: Conditions,
+  },
+  notes: {
+    icon: faCommentAlt,
+    label: 'Notes',
+    component: Notes,
+  },
+} as Tools;
+
+const options = Object.entries(tools);
+
+function SidebarOption({
+  active,
+  onClick,
+  icon,
+  children,
+}: SidebarOptionProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={clsx({
+        [classes.active]: active,
+      })}
+    >
+      <FontAwesomeIcon icon={icon} />
+      <span>{children}</span>
+    </button>
+  );
+}
+
+function Sidebar({ currentTool, onClick }: SidebarProps) {
+  return (
+    <div className={classes.sidebar}>
+      {options.map(([id, { icon, label }]) => (
+        <SidebarOption
+          key={id}
+          onClick={() => onClick(id)}
+          active={currentTool === id}
+          icon={icon}
+        >
+          {label}
+        </SidebarOption>
+      ))}
+    </div>
+  );
+}
+
 export default function Assistant({ consult, isLive, action }: AssistantProps) {
-  const [active, setActive] = useState<string>();
-  const [expandedSide, setExpandedSide] = useState(false);
-  const [expandedContent, setExpandedContent] = useState(false);
+  const {
+    consult_id,
+    start_time,
+    symptoms,
+    medical_conditions,
+    question,
+  } = consult;
 
-  function toggleExpanded() {
-    if (expandedSide || expandedContent) {
-      setExpandedSide(false);
-      setExpandedContent(false);
-      action(false);
-    } else {
-      setExpandedSide(true);
-    }
+  const [currentTool, setCurrentTool] = useState<string>();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  function changeTool(option: string) {
+    setCurrentTool((oldTool) => (oldTool !== option ? option : undefined));
   }
 
-  function renderSidebar() {
-    return (
-      <div className={classes.sidebar}>
-        <button
-          onClick={() => {
-            setActive('symptoms');
-            setExpandedSide(false);
-            setExpandedContent(true);
-            action(true);
-          }}
-          className={clsx({
-            [classes.active]: expandedContent && active === 'symptoms',
-          })}
-        >
-          <FontAwesomeIcon icon={faSearch} />
-          {expandedSide && <div>Symptoms</div>}
-        </button>
-        <button
-          onClick={() => {
-            setActive('conditions');
-            setExpandedSide(false);
-            setExpandedContent(true);
-            action(true);
-          }}
-          className={clsx({
-            [classes.active]: expandedContent && active === 'conditions',
-          })}
-        >
-          <FontAwesomeIcon icon={faStethoscope} />
-          {expandedSide && <div>Diagnoses</div>}
-        </button>
-        <button
-          onClick={() => {
-            setActive('notes');
-            setExpandedSide(false);
-            setExpandedContent(true);
-            action(true);
-          }}
-          className={clsx({
-            [classes.active]: expandedContent && active === 'notes',
-          })}
-        >
-          <FontAwesomeIcon icon={faCommentAlt} />
-          {expandedSide && <div>Doctor's Notes</div>}
-        </button>
-        <button
-          onClick={() => toggleExpanded()}
-          style={{ marginTop: 'auto', width: '1.5em' }}
-        >
-          <FontAwesomeIcon
-            icon={expandedSide || expandedContent ? faArrowRight : faArrowLeft}
-          />
-        </button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    setIsExpanded(!!currentTool);
+    action(!!currentTool);
+  }, [currentTool]);
+
+  const Tool = currentTool
+    ? tools[currentTool].component
+    : () => {
+        return <></>;
+      };
 
   return (
     <>
       <div
         className={clsx(classes.infermedica, {
-          [classes.infermedicaActive]: expandedContent,
+          [classes.infermedicaActive]: isExpanded,
         })}
       >
-        {active === 'notes' ? <Notes /> : null}
-        {active === 'conditions' ? (
-          <Conditions
-            medicalConditions={consult.medical_conditions}
-            question={consult.question}
-          />
-        ) : null}
-        {active === 'symptoms' ? (
-          <Symptoms
-            symptoms={consult.symptoms}
-            consultId={consult.consult_id}
-            startTime={consult.start_time}
-            isLive={isLive}
-          />
-        ) : null}
+        <Tool
+          consultId={consult_id}
+          startTime={start_time}
+          symptoms={symptoms}
+          medicalConditions={medical_conditions}
+          question={question}
+          isLive={isLive}
+        />
       </div>
-      {renderSidebar()}
+      <Sidebar currentTool={currentTool} onClick={changeTool} />
     </>
   );
 }
@@ -118,4 +123,24 @@ type AssistantProps = {
   consult: LiveConsultData;
   isLive?: boolean;
   action: (bool: boolean) => void;
+};
+
+type SidebarProps = {
+  currentTool?: string;
+  onClick: (id: string) => void;
+};
+
+type SidebarOptionProps = {
+  active?: boolean;
+  onClick: () => void;
+  icon: FontAwesomeIconProps['icon'];
+  children: string;
+};
+
+type Tools = {
+  [key: string]: {
+    icon: FontAwesomeIconProps['icon'];
+    label: string;
+    component: (props: any) => React.ReactElement;
+  };
 };
