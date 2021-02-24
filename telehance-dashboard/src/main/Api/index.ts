@@ -30,7 +30,7 @@ export function getUrl(api: Api, route: string, query?: ApiQuery) {
 
 export const addApptUrl = getUrl('appointment', '/addappt');
 export const getApptsUrl = (role: string, query: GetUserQuery) =>
-  getUrl('appointment', `by${role}`, query);
+  getUrl('appointment', `/by${role}`, query);
 
 // Consult Api
 
