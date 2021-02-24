@@ -12,6 +12,7 @@
 
 /* Prevent scroll on table */
 .container > section > div > div > div > div {
+  overflow-x: scroll;
   overflow-y: hidden!important;
 }
 
@@ -52,16 +53,16 @@
   white-space: normal;
   line-height: 1.5em;
   height: 4.5em;
-  overflow: hidden;
+  overflow-y: hidden;
   margin: 4px 0.75rem;
 }
 
 @media (max-width: 768px) {
-  th[aria-label = "Purpose"] {
+  th[aria-label = "Purpose"] > div > div > span {
     width: 0;
     display: none;
   }
-  td[data-label = "Purpose"] {
+  td[data-label = "Purpose"] > div > p {
     width: 0;
     display: none;
   }
@@ -71,7 +72,7 @@
   overflow-wrap: break-word;
   white-space: normal;
   margin: 4px 0.5rem;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .date > p {

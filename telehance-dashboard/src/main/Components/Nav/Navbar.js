@@ -1,18 +1,21 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import logo from "../../assets/logo.png";
-import { useAuth0 } from "@auth0/auth0-react";
-import useSWR from "swr";
-import { fetchWithUser } from "../../Util/fetch";
-import AuthNav from "./AuthNav";
-import styles from "./Navbar.module.css";
+import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
+import useSWR from 'swr';
+import { Link, NavLink } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import { fetchWithUser } from 'Util/fetch';
+import logo from 'assets/Teladoc.svg';
+import AuthNav from './AuthNav';
+import styles from './Navbar.module.css';
+
+const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
 
 export default function Navbar() {
   const [active, setActive] = useState(false);
-  const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
+  const [role, setRole] = useState();
   const { user } = useAuth0();
   const sub = user ? user.sub.split('|')[1] : 'NULL';
-  const { data: roleInfo } = useSWR(
+  const { data: userData } = useSWR(
     [
       'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id',
       awsToken,
@@ -21,37 +24,34 @@ export default function Navbar() {
     ],
     fetchWithUser
   );
-  const isLoggedIn = roleInfo?.body
-    ? JSON.parse(roleInfo.body).role.toLowerCase()
-    : null;
-  const isAdmin = roleInfo?.body
-    ? 'admin' === JSON.parse(roleInfo.body).role.toLowerCase()
-    : null;
-  const isDoctor = roleInfo?.body
-    ? 'doctor' === JSON.parse(roleInfo.body).role.toLowerCase()
-    : null;
-  return (
 
+  useEffect(() => {
+    if (userData?.body) {
+      setRole(JSON.parse(userData.body).role.toLowerCase());
+    }
+  }, [userData]);
+
+  const menuButton = (
+    <button className={styles.hamburgerMenu} onClick={() => setActive(true)}>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  );
+
+  return (
     <header className={styles.header}>
-      <nav className={styles.navbar + ' ' + styles.headerNav}>
+      <nav className={styles.headerNav}>
         <div className={styles.navbarHeader}>
-          <button id={styles.mobile_btn} onClick={()=>setActive(true)}>
-            <span className={styles.barIcon}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
-          </button>
-          <Link to="/" className={styles.navbarBrand + ' ' + styles.logo}>
-            <img src={logo} className="img-fluid" alt="Logo" />
+          {menuButton}
+          <Link to='/' className={clsx(styles.navbarBrand, styles.logo)}>
+            <img src={logo} alt='Logo' />
           </Link>
         </div>
         <div
-          className={
-            active
-              ? styles.mainMenuWrapper + ' ' + styles.sidebarOpen
-              : styles.mainMenuWrapper
-          }
+          className={clsx(styles.mainMenuWrapper, {
+            [styles.sidebarOpen]: active,
+          })}
         >
           <div className={styles.menuHeader}>
             <Link
@@ -59,10 +59,13 @@ export default function Navbar() {
               className={styles.menuLogo}
               onClick={() => setActive(false)}
             >
-              <img src={logo} className='img-fluid' alt='Logo' />
+              <img src={logo} alt='Logo' />
             </Link>
-            <button id="menu_close" className={styles.close + ' ' + styles.menuClose} onClick={()=>setActive(false)} />
-
+            <button
+              id='menu_close'
+              className={clsx(styles.close, styles.menuClose)}
+              onClick={() => setActive(false)}
+            />
           </div>
           <ul className={styles.mainNav}>
             <li>
@@ -72,10 +75,10 @@ export default function Navbar() {
                 activeClassName={styles.active}
                 onClick={() => setActive(false)}
               >
-                TelaHance Dashboard
+                Home
               </NavLink>
             </li>
-            {isLoggedIn && (
+            {role && (
               <li>
                 <NavLink
                   to='/consults'
@@ -86,7 +89,7 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {isAdmin && (
+            {role === 'admin' && (
               <li>
                 <NavLink
                   to='/admin'
@@ -97,21 +100,21 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {!isAdmin && (
-                <li>
-                  <NavLink
-                      to='/appointments'
-                      activeClassName={styles.active}
-                      onClick={() => setActive(false)}
-                  >
-                    Appointments
-                  </NavLink>
-                </li>
+            {role !== 'admin' && (
+              <li>
+                <NavLink
+                  to='/appointments'
+                  activeClassName={styles.active}
+                  onClick={() => setActive(false)}
+                >
+                  Appointments
+                </NavLink>
+              </li>
             )}
           </ul>
         </div>
-        <ul className={styles['nav'] + ' ' + styles['header-navbar-rht']}>
-          <AuthNav role={(roleInfo?.body) ? JSON.parse(roleInfo.body).role : null}/>
+        <ul className={clsx(styles.nav, styles['header-navbar-rht'])}>
+          <AuthNav role={role} />
         </ul>
       </nav>
     </header>

@@ -88,11 +88,17 @@ body {
   padding: 0;
 }
 
-.mainNav li a {
+.mainNav > li > a {
   display: block;
-  font-size: 18px;
+  font-size: 1em;
   font-weight: 500;
-  line-height: 40px;
+  color: rgb(117, 117, 117);
+  padding: 1em 1.5em;
+}
+
+.sidebarOpen .mainNav > li > a:hover
+.sidebarOpen .mainNav > li > a:active {
+  color: #000;
 }
 
 .fa,
@@ -271,7 +277,7 @@ body {
   -ms-flex-align: center;
   align-items: center;
   background-color: #fff;
-  height: 60px;
+  height: 85px;
   padding: 0 20px;
   justify-content: space-between;
   -webkit-justify-content: space-between;
@@ -315,26 +321,8 @@ body {
 .close:after {
   transform: rotate(-45deg);
 }
-.barIcon {
-  display: inline-block;
-  width: 31px;
-}
-.barIcon span {
-  background-color: #0de0fe;
-  display: block;
-  float: left;
-  height: 3px;
-  margin-bottom: 7px;
-  width: 31px;
-  border-radius: 2px;
-}
-.barIcon span:nth-child(2) {
-  width: 16px;
-}
-.barIcon span:nth-child(3) {
-  margin-bottom: 0;
-}
-#mobile_btn {
+
+.hamburgerMenu {
   display: none;
   margin-right: 30px;
   background-color: transparent;
@@ -357,7 +345,6 @@ body {
     position: relative;
   }
   .mainNav > li > a {
-    /* line-height: 40px; */
     padding: 0 !important;
   }
   .mainNav li a:after {
@@ -369,13 +356,11 @@ body {
     width: 0;
   }
 
-  .mainNav li a:hover:after {
+  .mainNav > li > a:hover:after,
+  .mainNav > li > a.active:after {
     width: 100%;
   }
 
-  .mainNav li a.active:after {
-    width: 100% !important;
-  }
   .mainNav > li > a > i {
     font-size: 12px;
     margin-left: 3px;
@@ -388,82 +373,49 @@ body {
     padding-right: 20px;
   }
 }
+
+/* Collapse into Side Drawer */
 @media only screen and (max-width: 991.98px) {
   .mainNav {
-    padding: 0;
     -ms-flex-direction: column;
     flex-direction: column;
     padding-left: 0;
     margin-bottom: 0;
-    list-style: none;
-  }
-  .mainNav a {
-    color: white;
-  }
-  .mainNav ul {
-    display: none;
-    list-style: none;
-    margin: 0;
-    padding-left: 0;
   }
   .mainNav > li {
-    border-bottom: 1px solid white;
     margin-left: 0;
   }
-  .mainNav li:after {
-    transition: all ease-in-out 0.2s;
-    background: none repeat scroll 0 0 #0de0fe;
-    content: '';
-    display: block;
-    height: max-content;
-    width: 0;
-  }
-  .mainNav li:hover:after {
-    width: 100%;
+  .mainNav li a:hover,
+  .mainNav li a.active {
+    color: white;
+    background-color: #5b2f91;
   }
 
-  .mainNav li.active:after {
-    width: 100% !important;
-  }
-  .mainNav li + li {
-    margin-left: 0;
-  }
-  .mainNav > li > a {
-    line-height: 1.5;
-    padding: 15px 20px !important;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .mainNav > li > a > i {
-    float: right;
-    margin-top: 5px;
-  }
   .mainMenuWrapper {
     order: 3;
     width: 260px;
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 0;
+    left: -260px;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1060;
-    transform: translateX(-260px);
-    background-color: #532197;
+    transition: transform 0.5s;
+    background-color: #fff;
   }
+
   .sidebarOpen {
-    transform: translateX(0px) !important;
+    transform: translateX(260px);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
-  /* TODO: implement transition */
-  .transition {
-    transition-property: transform;
-    transition-duration: 0.4s;
-  }
+
   .menuHeader {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
   }
+
   .navbarHeader {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -472,9 +424,26 @@ body {
     display: -ms-inline-flexbox;
     display: inline-flex;
   }
-  #mobile_btn {
+
+  .hamburgerMenu {
     display: inline-block;
     cursor: pointer;
+    width: 31px;
+  }
+  .hamburgerMenu span {
+    background-color: #5b2f91;
+    display: block;
+    float: left;
+    height: 3px;
+    margin-bottom: 7px;
+    width: 31px;
+    border-radius: 2px;
+  }
+  .hamburgerMenu span:nth-child(2) {
+    width: 16px;
+  }
+  .hamburgerMenu span:nth-child(3) {
+    margin-bottom: 0;
   }
 }
 
