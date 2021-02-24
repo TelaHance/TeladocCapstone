@@ -8,9 +8,10 @@ import {
   Picklist,
   Option,
 } from 'react-rainbow-components';
-import classes from './AppointmentModal.module.css';
 import useSWR from 'swr';
+import { getAllDoctorsUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
+import classes from './AppointmentModal.module.css';
 
 const AppointmentModal = ({
   show,
@@ -22,11 +23,8 @@ const AppointmentModal = ({
   const [pickListVal, setPickListVal] = useState(undefined);
   const [purpose, setPurpose] = useState('');
   const userToken = process.env.REACT_APP_USER_API_KEY;
-  const { data: doctorList, error } = useSWR<doctor_info[]>(
-    [
-      'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/doctor-get-all',
-      userToken,
-    ],
+  const { data: doctorList } = useSWR<doctor_info[]>(
+    [getAllDoctorsUrl, userToken],
     fetchWithToken
   );
 

@@ -4,8 +4,9 @@ import { Col, Form, Button, Jumbotron } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../Util/fetch';
-import BreadcrumbBar from '../../Components/BreadcrumbBar/BreadcrumbBar';
+import { getUserUrl, updateUserUrl } from 'Api';
+import { fetchWithToken } from 'Util/fetch';
+import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import styles from './Profile.module.css';
 
 function renderInput(
@@ -50,14 +51,11 @@ const Profile = () => {
     age: '',
   });
   const [validated, setValidated] = useState(false);
-  const { data, error, mutate: mutateUser } = useSWR(
-    [
-      `https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id?user_id=${user_id}`,
-      awsToken,
-    ],
+  const { data, error } = useSWR(
+    [getUserUrl({ user_id }), awsToken],
     fetchWithToken,
     {
-      onSuccess: function (data, key, config) {
+      onSuccess: function (data) {
         setValues({ phone: data.phone, sex: data.sex, age: data.age });
       },
     }
@@ -76,22 +74,18 @@ const Profile = () => {
     event.preventDefault();
     if (event.target.checkValidity()) {
       try {
-        await fetchWithToken(
-          'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/update-phone',
-          awsToken,
-          {
-            method: 'PATCH',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-              user_id: user_id,
-              phone: values.phone,
-              age: values.age,
-              sex: values.sex,
-            }),
-          }
-        );
+        await fetchWithToken(updateUserUrl({ user_id }), awsToken, {
+          method: 'PATCH',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user_id,
+            phone: values.phone,
+            age: values.age,
+            sex: values.sex,
+          }),
+        });
       } catch (e) {
         alert(`Submission failed! ${e.message}`);
       }
@@ -101,7 +95,7 @@ const Profile = () => {
 
   const changeHandler = (event) => {
     setPicture(event.target.files[0]);
-		setIsFilePicked(true);
+    setIsFilePicked(true);
   };
 
   return (

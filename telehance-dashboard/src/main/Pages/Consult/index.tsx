@@ -6,6 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
+import { getConsultUrl, updateTranscriptUrl } from 'Api';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
 import { ConsultData, TranscriptData } from 'Models';
@@ -16,21 +17,18 @@ export default function Consult(props: any) {
     params: { consultId },
   } = props.match;
 
-  const [infermedicaActive, setInfermedicaActive] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const BASE_URL =
-    'https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id';
 
   const { data: consult, error } = useSWR<ConsultData>(
-    [`${BASE_URL}?consult_id=${consultId}`, awsToken],
+    [getConsultUrl({ consult_id: consultId }), awsToken],
     fetchWithToken
   );
 
   function updateTranscript(transcript: TranscriptData | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
-    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/update-transcript-edited?consult_id=${consult_id}`;
-    putWithToken(url, awsToken, transcript);
+    putWithToken(updateTranscriptUrl({ consult_id }), awsToken, transcript);
   }
 
   const {
@@ -55,7 +53,7 @@ export default function Consult(props: any) {
         {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
         <section
           className={clsx(classes.main, {
-            [classes.infermedicaActive]: infermedicaActive,
+            [classes.sidebarExpanded]: sidebarExpanded,
           })}
         >
           <Controls {...controlsProps} />
@@ -65,7 +63,7 @@ export default function Consult(props: any) {
             {...audioPlayerProps}
           />
         </section>
-        <Assistant consult={consult} action={setInfermedicaActive} />
+        <Assistant consult={consult} action={setSidebarExpanded} />
       </div>
     </div>
   );

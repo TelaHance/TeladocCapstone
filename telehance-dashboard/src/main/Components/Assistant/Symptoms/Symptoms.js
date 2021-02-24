@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { updateSymptomsUrl } from 'Api';
 import { putWithToken } from 'Util/fetch';
 import symptomsJson from 'assets/symptoms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -118,19 +119,28 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
   }
 
   function saveSymptoms(tempSymptoms) {
-    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/updateSymptoms?consult_id=${consultId}&start_time=${startTime}`;
-    putWithToken(url, awsToken, tempSymptoms);
+    putWithToken(
+      updateSymptomsUrl({
+        consult_id: consultId,
+        start_time: startTime,
+      }),
+      awsToken,
+      tempSymptoms
+    );
   }
 
-  function diagnose() {
-    
-  }
+  function diagnose() {}
 
   return (
     <div className={classes.content}>
       <h4>Symptoms Analysis</h4>
       <div className={classes.search}>
-        <Button variant='brand' label='Diagnose' size='small' onClick={diagnose}/>
+        <Button
+          variant='brand'
+          label='Diagnose'
+          size='small'
+          onClick={diagnose}
+        />
         <Lookup
           id='symptom-lookup'
           placeholder='Add Symptoms'
@@ -150,7 +160,7 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
             setSearchState({ option: null });
           }}
         >
-          <FontAwesomeIcon icon={faPlusCircle} size='2x'/>
+          <FontAwesomeIcon icon={faPlusCircle} size='2x' />
         </button>
       </div>
       {symptomsState && (

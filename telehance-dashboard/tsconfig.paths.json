@@ -4,6 +4,7 @@
     "paths": {
       "src/*": ["src/*"],
       "main/*": ["src/main/*"],
+      "Api": ["src/main/Api/index.ts"],
       "assets/*": ["src/main/assets/*"],
       "Components/*": ["src/main/Components/*"],
       "Pages/*": ["src/main/Pages/*"],

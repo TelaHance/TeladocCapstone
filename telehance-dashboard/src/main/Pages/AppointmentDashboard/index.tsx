@@ -1,10 +1,10 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
+import { getApptsUrl, getUserUrl } from 'Api';
 import { fetchWithToken, fetchWithUser } from 'Util/fetch';
 import Spinner from 'Components/Spinner';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
-import styles from './AppointmentDashboard.module.css';
 import {
   ButtonFormatter,
   dateFormatter,
@@ -13,6 +13,7 @@ import {
 } from './getColumns';
 import ScheduleAppointment from 'Pages/AppointmentDashboard/AppointmentModal';
 import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
+import styles from './AppointmentDashboard.module.css';
 
 function getRole(appointmentList: any) {
   if (appointmentList[0].patient) return 'DOCTOR';
@@ -25,20 +26,12 @@ function AppointmentDashboard() {
   const userToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const appToken = process.env.REACT_APP_APPOINTMENT_API_KEY;
   const { data: roleInfo } = useSWR(
-    [
-      'https://qf5ajjc2x6.execute-api.us-west-2.amazonaws.com/dev/user-by-id',
-      userToken,
-      'POST',
-      user_id,
-    ],
+    [getUserUrl, userToken, 'POST', user_id],
     fetchWithUser
   );
   const role = JSON.parse(roleInfo.body).role.toLowerCase();
   const { data: appointmentList, error } = useSWR(
-    [
-      `https://klnb89q4vj.execute-api.us-west-2.amazonaws.com/dev/by${role}?${role}_id=${user_id}`,
-      appToken,
-    ],
+    [getApptsUrl(role, { user_id }), appToken],
     fetchWithToken
   );
   if (error || (appointmentList && appointmentList.length === 0))
