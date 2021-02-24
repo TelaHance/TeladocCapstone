@@ -16,6 +16,10 @@
   overflow-y: hidden!important;
 }
 
+th > div > div > span {
+  font-weight: 700;
+}
+
 .controls {
   display: flex;
   align-items: flex-start;
