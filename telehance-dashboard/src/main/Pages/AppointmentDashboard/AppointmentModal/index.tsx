@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'react-rainbow-components';
 import AppointmentModal from 'Pages/AppointmentDashboard/AppointmentModal/AppointmentModal';
-import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcaseMedical, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { addApptUrl } from 'Api';
