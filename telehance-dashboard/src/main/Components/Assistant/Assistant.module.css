@@ -15,6 +15,8 @@
 }
 
 .infermedica h4 {
+  font-weight: 700;
+  color: #532197;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
 }
@@ -25,6 +27,18 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.search button {
+  margin: 0 1em;
+}
+
+.search button svg {
+  color: #28a745;
+}
+
+.lookup {
+  width: 70%;
 }
 
 .lookup > div > div > ul {
@@ -39,39 +53,6 @@ button {
 
 button:hover {
   cursor: pointer;
-}
-
-.sidebar {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid rgba(0,0,0,.125);
-  background-color: white;
-}
-
-.sidebar button {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  color: gray;
-  font-size: 2em;
-  padding: 0.5rem;
-}
-
-.sidebar button div {
-  font-size: 1rem;
-  margin-left: 1em;
-}
-
-.sidebar button:hover {
-  color: #532197;
-}
-
-.sidebar .active {
-  color: #532197 !important;
 }
 
 .name {
@@ -91,7 +72,6 @@ button:hover {
   margin: 0.5em; 
   display: flex;
   justify-content: center;
-  
 }
 
 .actions button {
@@ -101,8 +81,8 @@ button:hover {
 }
 
 .itemContainer {
-  box-shadow: 2px 2px 5px #888888;
-  border-radius: calc(.25rem) calc(.25rem) calc(.25rem) calc(.25rem);
+  /* box-shadow: 2px 2px 5px #888888; */
+  border-radius: calc(.25rem);
   border: none;
 }
 
@@ -112,18 +92,14 @@ button:hover {
   text-align: left;
   align-items: center;
   padding: 0.5rem;
-  border: 1px solid rgba(0,0,0,.125);
+  margin-bottom: 0.25rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .item .icon {
   margin-right: 1em;
   font-size: 1.5em;
   width: 1em!important;
-}
-
-.search .icon {
-  margin-left: 0.5em;
-  font-size: 1.5em;
 }
 
 .update {
