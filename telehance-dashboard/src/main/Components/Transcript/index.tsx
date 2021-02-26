@@ -15,7 +15,7 @@ export default function Transcript({
   transcript,
   onChange = () => {},
   isEditing = false,
-  currWordStartTime = 0,
+  currWordStartTime = -1,
   setStartFrom = () => {},
 }: TranscriptProps) {
   const editor = useCustomEditor();

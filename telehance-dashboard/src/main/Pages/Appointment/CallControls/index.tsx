@@ -7,8 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonIcon } from 'react-rainbow-components';
 import { ReadyState } from 'react-use-websocket';
-import classes from './CallControls.module.css';
 import { Connection } from 'twilio-client';
+import classes from './CallControls.module.css';
 
 export default function CallControls({
   wsStatus,
@@ -20,11 +20,15 @@ export default function CallControls({
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
+    console.log(isMuted);
     mute(isMuted);
   }, [isMuted]);
 
   useEffect(() => {
     console.log(callStatus);
+    if (callStatus === Connection.State.Open) {
+      setIsMuted(false);
+    }
   }, [callStatus]);
 
   return (

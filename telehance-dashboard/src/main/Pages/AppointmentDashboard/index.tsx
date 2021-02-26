@@ -81,7 +81,7 @@ export default function AppointmentDashboard() {
           <Column
             header=''
             field='user_id'
-            defaultWidth={75}
+            defaultWidth={100}
             component={ButtonFormatter}
           />
         </TableWithBrowserPagination>
