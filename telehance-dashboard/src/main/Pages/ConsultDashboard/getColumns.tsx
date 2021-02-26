@@ -140,10 +140,7 @@ export default function getColumns(
     columns = columns.concat(doctor);
   }
   if (role !== 'PATIENT') {
-    columns = columns.concat(patient);
-  }
-  if (role === 'ADMIN') {
-    columns = columns.concat(sentiment);
+    columns = columns.concat(patient, sentiment);
   }
   columns.push(viewConsult(history));
 
