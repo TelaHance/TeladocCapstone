@@ -4,7 +4,6 @@ import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
-import Spinner from 'Components/Spinner';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, SymptomData } from 'Models';
@@ -20,6 +19,7 @@ export default function Appointment(route: RouteComponentProps) {
   };
 
   const [connection, setConnection] = useState<Connection>();
+  const [callStatus, setCallStatus] = useState<Connection.State>();
   const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
@@ -57,18 +57,20 @@ export default function Appointment(route: RouteComponentProps) {
     console.log(lastMessage);
   }, [lastMessage]);
 
+  useEffect(() => {
+    setCallStatus(connection?.status());
+  }, [connection]);
+
   function call() {
-    setConnection(
-      device.connect({
-        callTo: `${appointment.patient.phone}`,
-        consult_id: appointment.consult_id,
-      })
-    );
-    setIsCalling(true);
+    const conn = device.connect({
+      callTo: `${appointment.patient.phone}`,
+      consult_id: appointment.consult_id,
+    });
+    conn.mute(true);
+    setConnection(conn);
   }
 
   function hangup() {
-    setIsCalling(false);
     connection?.disconnect();
     device.destroy();
     // history.push(`/consult/${appointment.consult_id}`);
@@ -89,8 +91,8 @@ export default function Appointment(route: RouteComponentProps) {
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           <Transcript transcript={transcript} />
           <CallControls
-            callState={readyState}
-            isCalling={isCalling}
+            wsStatus={readyState}
+            callStatus={callStatus}
             call={call}
             hangup={hangup}
             mute={mute}
