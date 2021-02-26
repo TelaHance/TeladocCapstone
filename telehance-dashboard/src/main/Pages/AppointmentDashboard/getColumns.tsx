@@ -45,17 +45,19 @@ export function ButtonFormatter(value: any) {
   const appointment = value.row as AppointmentData;
 
   return (
-    <Button
-      label='Start'
-      variant='brand'
-      onClick={() =>
-        history.push({
-          pathname: `/appointment/${appointment.consult_id}`,
-          state: {
-            appointment,
-          },
-        })
-      }
-    />
+    <div className={classes.start}>
+      <Button
+        label='Start'
+        variant='brand'
+        onClick={() =>
+          history.push({
+            pathname: `/appointment/${appointment.consult_id}`,
+            state: {
+              appointment,
+            },
+          })
+        }
+      />
+    </div>
   );
 }
