@@ -100,7 +100,7 @@ export type ConsultData = AppointmentData &
 export type LiveConsultData = ConsultKeyData & Partial<InfermedicaData>;
 
 export type InfermedicaData = {
-  medical_conditions: MedicalConditionData[];
+  medical_conditions: ConditionData[];
   question: string;
   symptoms: SymptomData[];
 };
