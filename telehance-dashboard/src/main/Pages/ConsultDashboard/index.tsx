@@ -1,8 +1,8 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
-import { getAllConsultsUrl } from 'Api';
-import { fetchWithToken } from 'Util/fetch';
+import { getAllConsultsUrl, getUserUrl } from 'Api';
+import { fetchWithToken, fetchWithUser } from 'Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -39,25 +39,26 @@ const pagination = paginationFactory({
   alwaysShowAllBtns: true,
 });
 
-function getRole(consultList: any) {
-  if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
-  else if (consultList[0].patient) return 'DOCTOR';
-  else return 'PATIENT';
-}
+const { REACT_APP_CONSULT_API_KEY, REACT_APP_MANAGEMENT_API_KEY } = process.env;
 
 function ConsultDashboard({ history }: RouteComponentProps) {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
-  const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
+  const { data: userData } = useSWR(
+    [getUserUrl, REACT_APP_MANAGEMENT_API_KEY, 'POST', user_id],
+    fetchWithUser
+  );
 
-  const { data: consultList, error } = useSWR(
-    [getAllConsultsUrl({ user_id }), awsToken],
+  const role = JSON.parse(userData.body).role.toUpperCase();
+
+  const { data: consults, error } = useSWR(
+    [getAllConsultsUrl({ user_id }), REACT_APP_CONSULT_API_KEY],
     fetchWithToken
   );
 
-  if (error || (consultList && consultList.length === 0))
-    return <h1 style={{ textAlign: 'center' }}>No Consults</h1>;
-  if (!consultList) return <Spinner />;
+  if (!consults) return <Spinner />;
+  if (error)
+    return <h1 style={{ textAlign: 'center' }}>Error retrieving consults.</h1>;
 
   return (
     <>
@@ -66,8 +67,8 @@ function ConsultDashboard({ history }: RouteComponentProps) {
         <ToolkitProvider
           bootstrap4
           keyField='id'
-          data={consultList}
-          columns={getColumns(history, getRole(consultList))}
+          data={consults}
+          columns={getColumns(history, role)}
           search={{
             searchFormatted: true,
           }}

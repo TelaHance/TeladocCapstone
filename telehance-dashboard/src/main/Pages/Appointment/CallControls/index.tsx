@@ -23,6 +23,10 @@ export default function CallControls({
     mute(isMuted);
   }, [isMuted]);
 
+  useEffect(() => {
+    console.log(callStatus);
+  }, [callStatus]);
+
   return (
     <div className={classes.container}>
       {!callStatus || callStatus === Connection.State.Closed ? (

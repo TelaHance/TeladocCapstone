@@ -20,7 +20,6 @@ export default function Appointment(route: RouteComponentProps) {
 
   const [connection, setConnection] = useState<Connection>();
   const [callStatus, setCallStatus] = useState<Connection.State>();
-  const [isCalling, setIsCalling] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
