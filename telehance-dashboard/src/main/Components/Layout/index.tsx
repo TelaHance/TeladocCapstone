@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../Nav/Navbar';
+import Navbar from 'Components/Nav/Navbar';
 import classes from './Layout.module.css';
 
 export default function Layout({ children }: LayoutProps) {

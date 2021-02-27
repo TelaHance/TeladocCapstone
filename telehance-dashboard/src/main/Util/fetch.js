@@ -40,6 +40,6 @@ export async function putWithToken(url, token, body) {
     body: JSON.stringify(body),
   });
   if (response.status >= 400 && response.status < 600) {
-    throw new Error(response.error_description);
+    throw new Error(response.status);
   }
 }
