@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { retimeAll, getStartTimes } from 'Util/retime';
 import { AudioPlayerProps } from 'Pages/Consult/AudioPlayer';
 import { ControlsProps } from 'Pages/Consult/Controls';
-import { TranscriptData, TranscriptProps } from 'Components/Transcript';
+import { TranscriptProps } from 'Components/Transcript';
+import { TranscriptData } from 'Models';
 
 export default function useFinishedTranscriptProps(
   updateTranscript: (transcript?: TranscriptData) => void,
@@ -37,8 +38,7 @@ export default function useFinishedTranscriptProps(
     const nextTranscript = isViewingEdited
       ? localTranscriptEdited ?? transcript
       : transcript;
-    if (nextTranscript)
-      setStartTimes(getStartTimes(nextTranscript));
+    if (nextTranscript) setStartTimes(getStartTimes(nextTranscript));
   }, [isViewingEdited, transcript, localTranscriptEdited]);
 
   /*
@@ -100,7 +100,7 @@ export default function useFinishedTranscriptProps(
   function toggleView() {
     setIsViewingEdited(!isViewingEdited);
   }
-  
+
   return {
     audioPlayerProps: {
       startFrom,

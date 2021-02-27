@@ -1,6 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
+import { getAllConsultsUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
@@ -48,11 +49,9 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
+
   const { data: consultList, error } = useSWR(
-    [
-      `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-all?user_id=${user_id}`,
-      awsToken,
-    ],
+    [getAllConsultsUrl({ user_id }), awsToken],
     fetchWithToken
   );
 
