@@ -114,6 +114,7 @@ button:hover {
   box-shadow: 2px 2px 5px #888888;
   border-radius: calc(.25rem) calc(.25rem) calc(.25rem) calc(.25rem);
   border: none;
+  margin-bottom: 1em;
 }
 
 .item {
