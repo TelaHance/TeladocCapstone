@@ -1,30 +1,33 @@
 import React from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
-import { WordData } from '../Word';
-import Sentiment, { SentimentData } from 'Components/Sentiment';
+import { SentimentData } from 'Models';
+import Sentiment from 'Components/Sentiment';
 import classes from './Message.module.css';
+
+const doctorLabels = ['CH_0', 'DOCTOR'];
 
 export default function Message({
   attributes,
   children,
   element,
-  userSpeakerLabel,
-}: RenderElementProps & MessageProps) {
-  const speaker = element.speaker;
-  const isSelf = userSpeakerLabel === speaker;
+}: RenderElementProps) {
+  const speaker = element.speaker as string;
+  const isDoctor = doctorLabels.includes(speaker.toUpperCase());
 
   return (
     <div className={classes.container}>
-      {element.sentiment ? <Sentiment
-        sentiment={element.sentiment as SentimentData}
-        className={isSelf ? classes['badges-self'] : classes['badges-other']}
-        showOnlyIssues
-      /> : null}
+      {element.sentiment ? (
+        <Sentiment
+          sentiment={element.sentiment as SentimentData}
+          className={isDoctor ? classes['badges-self'] : classes['badges-other']}
+          showOnlyIssues
+        />
+      ) : null}
       <div
         className={clsx(classes.message, {
-          [classes.self]: isSelf,
-          [classes.other]: !isSelf,
+          [classes.self]: isDoctor,
+          [classes.other]: !isDoctor,
         })}
         {...attributes}
       >
@@ -33,16 +36,3 @@ export default function Message({
     </div>
   );
 }
-
-export type MessageProps = {
-  userSpeakerLabel: string;
-};
-
-export type MessageData = {
-  type: 'message';
-  children: WordData[];
-  start: number;
-  speaker: string;
-  sentiment: number;
-  fullText: string;
-};

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import useSWR from 'swr';
 import Spinner from 'Components/Spinner';
 import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
-import Transcript, { TranscriptData } from 'Components/Transcript';
-import { SentimentData } from 'Components/Sentiment';
-import Assistant from './Assistant/Assistant';
+import Transcript from 'Components/Transcript';
+import Assistant from 'Components/Assistant/Assistant';
+import { getConsultUrl, updateTranscriptUrl } from 'Api';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
+import { ConsultData, TranscriptData } from 'Models';
 import classes from './Consult.module.css';
 
 export default function Consult(props: any) {
@@ -15,21 +17,18 @@ export default function Consult(props: any) {
     params: { consultId },
   } = props.match;
 
-  const [infermedicaActive, setInfermedicaActive] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const BASE_URL =
-    'https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/consult-get-by-id';
 
   const { data: consult, error } = useSWR<ConsultData>(
-    [`${BASE_URL}?consult_id=${consultId}`, awsToken],
+    [getConsultUrl({ consult_id: consultId }), awsToken],
     fetchWithToken
   );
 
   function updateTranscript(transcript: TranscriptData | undefined) {
     if (!consult) return;
     const { consult_id } = consult;
-    const url = `https://53q2e7vhgl.execute-api.us-west-2.amazonaws.com/dev/update-transcript-edited?consult_id=${consult_id}`;
-    putWithToken(url, awsToken, transcript);
+    putWithToken(updateTranscriptUrl({ consult_id }), awsToken, transcript);
   }
 
   const {
@@ -51,7 +50,12 @@ export default function Consult(props: any) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>
-        <section className={infermedicaActive ? classes.main + ' ' + classes.infermedicaActive : classes.main}>
+        {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
+        <section
+          className={clsx(classes.main, {
+            [classes.sidebarExpanded]: sidebarExpanded,
+          })}
+        >
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
@@ -59,49 +63,8 @@ export default function Consult(props: any) {
             {...audioPlayerProps}
           />
         </section>
-        <Assistant
-          consult={consult}
-          isLive={false}
-          action={setInfermedicaActive}
-        />
+        <Assistant consult={consult} action={setSidebarExpanded} />
       </div>
     </div>
   );
 }
-
-export type UserData = {
-  user_id: string;
-  given_name: string;
-  family_name: string;
-  picture?: string;
-};
-
-export type MedicalConditionData = {
-  common_name: string;
-  id: string;
-  name: string;
-  probability: number;
-};
-
-export type SymptomData = {
-  choice_id: string;
-  common_name: string;
-  id: string;
-  name: string;
-  type: string;
-};
-
-export type ConsultData = {
-  consult_id: string;
-  call_sid: string;
-  doctor: UserData;
-  patient: UserData;
-  sentiment?: SentimentData;
-  start_time: number;
-  end_time: number;
-  transcript: TranscriptData;
-  medical_conditions: MedicalConditionData[];
-  question: string;
-  symptoms: SymptomData[];
-  transcript_edited?: TranscriptData;
-};
