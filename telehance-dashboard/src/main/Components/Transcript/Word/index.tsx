@@ -18,10 +18,10 @@ export default function Word({
         [classes.highlight]: isCurrent,
       })}
       onMouseDown={() => {
-        if (!isEditing && onClick) onClick(startTime);
+        if (!isEditing) onClick(startTime);
       }}
       onDoubleClick={() => {
-        if (isEditing && onClick) onClick(startTime);
+        if (isEditing) onClick(startTime);
       }}
       {...attributes}
     >
@@ -34,17 +34,9 @@ export type WordProps = {
   isEditing: boolean;
   isCurrent: boolean;
   startTime: number;
-  onClick?: (newTime: number) => void;
+  onClick: (newTime: number) => void;
   attributes: {
     'data-slate-leaf': true,
   }
   children: any,
 };
-
-export type WordData = {
-  start: number;
-  end: number;
-  text: string;
-  confidence: number;
-  splitIdx?: number;
-}

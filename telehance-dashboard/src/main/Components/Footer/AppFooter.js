@@ -5,7 +5,7 @@ const AppFooter = () => {
     <footer className='bg-light p-3 text-center'>
       This is a dashboard to detect problematic telehealth consults. Check out
       the source code on{' '}
-      <a href='https://github.com/tkomarlu/TeladocCapstonehttps://github.com/tkomarlu/TeladocCapstone'>
+      <a href='https://github.com/TelaHance/TeladocCapstone'>
         GitHub
       </a>
       !
