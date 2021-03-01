@@ -22,3 +22,9 @@
 .rounded-circle {
   border-radius: 50% !important;
 }
+.table {
+  border-radius: 20px;
+}
+.flexContainer {
+  display: flex;
+}
