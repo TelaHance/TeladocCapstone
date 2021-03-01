@@ -5,22 +5,23 @@ import { getAllConsultsUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider, {
-  Search,
-  CSVExport,
-} from 'react-bootstrap-table2-toolkit';
-import filterFactory from 'react-bootstrap-table2-filter';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+// import BootstrapTable from 'react-bootstrap-table-next';
+// import ToolkitProvider, {
+//   Search,
+//   CSVExport,
+// } from 'react-bootstrap-table2-toolkit';
+// import filterFactory from 'react-bootstrap-table2-filter';
+// import paginationFactory from 'react-bootstrap-table2-paginator';
 import Spinner from 'Components/Spinner';
-import getColumns from './getColumns';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import styles from './ConsultDashboard.module.css';
+import {Card, Column, TableWithBrowserPagination} from "react-rainbow-components";
+import {ButtonFormatter, sentimentFormatter, nameFormatter, dateFormatter} from './getColumns';
 
-const { SearchBar, ClearSearchButton } = Search;
-const { ExportCSVButton } = CSVExport;
+// const { SearchBar, ClearSearchButton } = Search;
+// const { ExportCSVButton } = CSVExport;
 
 const customTotal = (from: number, to: number, size: number) => (
   <span className='react-bootstrap-table-pagination-total'>
@@ -28,16 +29,16 @@ const customTotal = (from: number, to: number, size: number) => (
   </span>
 );
 
-const pagination = paginationFactory({
-  firstPageText: '<<',
-  prePageText: '<',
-  nextPageText: '>',
-  lastPageText: '>>',
-  sizePerPage: 10,
-  showTotal: true,
-  paginationTotalRenderer: customTotal,
-  alwaysShowAllBtns: true,
-});
+// const pagination = paginationFactory({
+//   firstPageText: '<<',
+//   prePageText: '<',
+//   nextPageText: '>',
+//   lastPageText: '>>',
+//   sizePerPage: 10,
+//   showTotal: true,
+//   paginationTotalRenderer: customTotal,
+//   alwaysShowAllBtns: true,
+// });
 
 function getRole(consultList: any) {
   if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
@@ -59,11 +60,23 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     return <h1 style={{ textAlign: 'center' }}>No Consults</h1>;
   if (!consultList) return <Spinner />;
 
+  
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
-      <Container className={styles.container}>
-        <ToolkitProvider
+      <Container className='mb-5 text-center'>
+        <TableWithBrowserPagination pageSize={5} data={consultList} keyField="id">
+                    {(getRole(consultList) !== 'DOCTOR') &&
+                    <Column header="Doctor" width={250} field="doctor" component={nameFormatter}/>
+                    }
+                    {(getRole(consultList) !== 'PATIENT') &&
+                    <Column header="Patient" width={250} field="patient" component={nameFormatter} />
+                    }
+                    <Column header="Consult Date" width={230} field="start_time" component={dateFormatter}/>
+                    <Column header="Problematic Rating" width={177} field="sentiment" component={sentimentFormatter}/>
+                    <Column header="" width={200} field="consult_id" component={ButtonFormatter}/>
+            </TableWithBrowserPagination>
+        {/* <ToolkitProvider
           bootstrap4
           keyField='id'
           data={consultList}
@@ -90,7 +103,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
               />
             </>
           )}
-        </ToolkitProvider>
+        </ToolkitProvider> */}
       </Container>
     </>
   );
