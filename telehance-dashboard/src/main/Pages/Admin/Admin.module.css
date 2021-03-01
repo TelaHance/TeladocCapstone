@@ -6,15 +6,19 @@
   text-align: center;
 }
 
-.react-bootstrap-table-pagination div {
-  display: flex;
-  align-items: center;
+.lineGraph {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 450px;
 }
 
-.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list {
-  justify-content: flex-end;
+.picklist {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 250px;
 }
-
-.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list ul {
-  margin-bottom: 0;
+.rounded-circle {
+  border-radius: 50% !important;
 }
