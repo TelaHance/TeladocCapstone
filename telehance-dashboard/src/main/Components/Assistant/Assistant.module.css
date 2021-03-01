@@ -18,7 +18,7 @@
   font-weight: 700;
   color: #532197;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(0,0,0,.125);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .search {
@@ -69,7 +69,7 @@ button:hover {
 }
 
 .actions {
-  margin: 0.5em; 
+  margin: 0.5em;
   display: flex;
   justify-content: center;
 }
@@ -81,25 +81,28 @@ button:hover {
 }
 
 .itemContainer {
-  /* box-shadow: 2px 2px 5px #888888; */
-  border-radius: calc(.25rem);
   border: none;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .item {
-  background-color: #fff!important;
+  background-color: #fff !important;
   display: flex;
   text-align: left;
   align-items: center;
   padding: 0.5rem;
   margin-bottom: 0.25rem;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  animation: new-item .3s forwards;
+  border-radius: calc(0.25rem);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .item .icon {
   margin-right: 1em;
   font-size: 1.5em;
-  width: 1em!important;
+  width: 1em !important;
 }
 
 .update {
@@ -108,7 +111,15 @@ button:hover {
 }
 
 .progressBar {
-  width: 8rem!important;
+  width: 8rem !important;
   margin-right: 1rem;
 }
 
+@keyframes new-item {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
