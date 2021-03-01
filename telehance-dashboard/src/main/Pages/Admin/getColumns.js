@@ -1,11 +1,13 @@
 import React from 'react';
+import classes from '../AppointmentDashboard/AppointmentDashboard.module.css';
+import { Badge } from "react-rainbow-components";
+
 
 export function nameFormatter (value) {
-    console.log(value);
     return(
         <div>
-            <img className={classes['rounded-circle']} src={value.value.value} width="35" alt=""/>
-            <span> {value.value.value} {value.value.value} </span>
+            <img className={classes['avatar']} src={value.row.picture} width="35" alt=""/>
+            <span> {value.row.given_name} {value.row.family_name} </span>
         </div>
     )
 };
@@ -13,6 +15,6 @@ export function nameFormatter (value) {
 export function roleBadge ( value ) {
     const badgeStyles = { color: '#1de9b6', marginLeft: '0.5rem' };
     return(
-        <Badge label={value.value} variant="lightest" style={badgeStyles}/>
+        <Badge label={value.row.role} variant="brand" />
     );
 }
