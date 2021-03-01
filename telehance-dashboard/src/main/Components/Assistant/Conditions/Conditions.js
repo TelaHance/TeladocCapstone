@@ -1,6 +1,32 @@
 import React from 'react';
-import classes from '../Assistant.module.css';
 import { ProgressBar } from 'react-bootstrap';
+import AnimatedList from '../AnimatedList';
+import classes from '../Assistant.module.css';
+
+function Condition({ item }) {
+  return (
+    <div className={classes.item}>
+      <div>
+        <ProgressBar
+          now={Math.round(item.probability * 100)}
+          variant={
+            Math.round(item.probability * 100) > 66
+              ? 'success'
+              : Math.round(item.probability * 100) > 33
+              ? 'warning'
+              : 'danger'
+          }
+          className={classes.progressBar}
+        />
+        {Math.round(item.probability * 100) + '%'}
+      </div>
+      <div>
+        <div className={classes.name}>{item.name}</div>
+        <div className={classes.commonName}>{item.common_name}</div>
+      </div>
+    </div>
+  );
+}
 
 const Conditions = ({ medicalConditions, question }) => {
   return (
@@ -10,7 +36,8 @@ const Conditions = ({ medicalConditions, question }) => {
       {question && <div style={{ marginBottom: '1rem' }}>{question}</div>}
       {medicalConditions && (
         <div className={classes.itemContainer}>
-          {medicalConditions.map((condition) => (
+          <AnimatedList items={medicalConditions} component={Condition} />
+          {/* {medicalConditions.map((condition) => (
             <div className={classes.item} key={condition.id}>
               <div>
                 <ProgressBar
@@ -33,7 +60,7 @@ const Conditions = ({ medicalConditions, question }) => {
                 </div>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       )}
     </div>

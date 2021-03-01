@@ -10,6 +10,7 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { Button, Lookup } from 'react-rainbow-components';
+import AnimatedList from '../AnimatedList';
 import classes from '../Assistant.module.css';
 
 const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
@@ -131,6 +132,33 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
 
   function diagnose() {}
 
+  function Symptom(symptomData) {
+    return (
+      <div className={classes.item}>
+        <button title='Toggle Present' onClick={() => changeSymptom(symptomData)}>
+          <FontAwesomeIcon
+            icon={symptomData.choice_id === 'present' ? faCheck : faTimes}
+            style={{
+              color: symptomData.choice_id === 'present' ? 'green' : 'red',
+            }}
+            className={classes.icon}
+          />
+        </button>
+        <div>
+          <div className={classes.name}>{symptomData.name}</div>
+          <div className={classes.commonName}>{symptomData.common_name}</div>
+        </div>
+        <button
+          className={classes.update}
+          onClick={() => removeSymptom(symptomData)}
+          title='Remove Symptom'
+        >
+          <FontAwesomeIcon icon={faMinusCircle} style={{ color: 'red' }} />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.content}>
       <h4>Symptoms Analysis</h4>
@@ -165,7 +193,8 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
       </div>
       {symptomsState && (
         <div className={classes.itemContainer}>
-          {symptomsState.map((symptomData) => (
+          <AnimatedList items={symptomsState} component={Symptom} />
+          {/* {symptomsState.map((symptomData) => (
             <div className={classes.item} key={symptomData.id}>
               <button
                 title='Toggle Present'
@@ -197,7 +226,7 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
                 />
               </button>
             </div>
-          ))}
+          ))} */}
         </div>
       )}
     </div>
