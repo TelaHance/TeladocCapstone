@@ -20,6 +20,13 @@
   margin-left: 0.25em;
 }
 
+.date {
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 40px;
+  margin: 4px 0.5rem;
+}
+
 .issues {
   min-width: 200px;
   position: relative;
@@ -35,4 +42,9 @@
 
 .rounded-circle {
   border-radius: 50%!important;
+}
+
+.view-container{
+  display:flex;
+  justify-content: center;
 }
