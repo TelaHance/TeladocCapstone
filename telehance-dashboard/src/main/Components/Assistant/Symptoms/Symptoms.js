@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { putWithToken } from 'Util/fetch';
 import symptomsJson from 'assets/symptoms';
 import conditionsJson from 'assets/conditions';
+import riskFactorsJson from 'assets/risk_factors';
 import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faMinusCircle, faPlusCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faCrutch, faDiagnoses } from '@fortawesome/free-solid-svg-icons';
 import { Lookup } from 'react-rainbow-components';
 
 const Symptoms = ({
@@ -41,7 +42,6 @@ const Symptoms = ({
         id: symptom.id,
         label: symptom.name,
         description: symptom.common_name,
-        choice_id: 'present',
       })
     })
 
@@ -51,6 +51,15 @@ const Symptoms = ({
         id: condition.id,
         label: condition.name,
         description: condition.common_name,
+      })
+    })
+  )
+  database.push(...
+    riskFactorsJson.map(riskFactors => {
+      return ({
+        id: riskFactors.id,
+        label: riskFactors.name,
+        description: riskFactors.common_name,
       })
     })
   )
@@ -98,7 +107,7 @@ const Symptoms = ({
 
   function changeTerm(termData) {
     let updatedTermData = { ...termData };
-    updatedTermData.choice_id = updaTedtermData.choice_id === "present" ? "absent" : "present";
+    updatedTermData.choice_id = updatedTermData.choice_id === "present" ? "absent" : "present";
     let newTerms = [...medicalTermsState];
     newTerms[newTerms.indexOf(termData)] = updatedTermData;
     setMedicalTerms(newTerms);
@@ -129,8 +138,8 @@ const Symptoms = ({
       common_name: searchState.option.description,
       id: searchState.option.id,
       name: searchState.option.label,
-      type: searchState.option.id[0] === 's' ? "symptom" : 
-      searchState.option.id[0] === 'c' ? "condition" : "risk_factor"
+      type: searchState.option.id[0] === 's' ? "symptom" :
+        searchState.option.id[0] === 'c' ? "condition" : "risk_factor"
     }
     newTerms.push(newTerm);
     setMedicalTerms(newTerms);
@@ -170,61 +179,50 @@ const Symptoms = ({
             className={classes.icon}
           />
         </button>
+        <button title="Diagnose" className={classes.actions}>
+          Diagnose
+        </button>
       </div>
-      {medicalTermsState && medicalTermsState.length > 0 && <><h5>Symptoms</h5>
-      <div className={classes.itemContainer}>
-        
-        {medicalTermsState.map((termData) => (
-          <div className={classes.item} key={termData.id}>
-            <button title="Toggle Present"
-              onClick={() => changeTerm(termData)}>
+      {medicalTermsState && medicalTermsState.length > 0 &&
+        <div className={classes.itemContainer}>
+
+          {medicalTermsState.map((termData) => (
+            <div className={classes.item} key={termData.id}>
+
               <FontAwesomeIcon
-                icon={termData.choice_id === "present" ? faCheck : faTimes}
-                style={{ color: termData.choice_id === "present" ? "green" : "red" }}
+                icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faDiagnoses : faCrutch}
+                style={{ color: '#532197' }}
                 className={classes.icon}
               />
-            </button>
-            <div>
-              <div className={classes.name}>
-                {termData.name}
+              <div>
+                <div className={classes.name}>
+                  {termData.name}
+                </div>
+                <div className={classes.commonName}>
+                  {termData.common_name}
+                </div>
               </div>
-              <div className={classes.commonName}>
-                {termData.common_name}
+              <div className={classes.update}>
+                <button title="Toggle Present"
+                  onClick={() => changeTerm(termData)}>
+                  <FontAwesomeIcon
+                    icon={termData.choice_id === "present" ? faCheck : faTimes}
+                    style={{ color: termData.choice_id === "present" ? "green" : "red" }}
+                  />
+                </button>
+                <button onClick={() => removeTerm(termData)}
+                  title="Remove Symptom">
+                  <FontAwesomeIcon
+                    icon={faMinusCircle}
+                    style={{ color: "red" }}
+                  />
+                </button>
               </div>
+
             </div>
-            <button className={classes.update} onClick={() => removeTerm(termData)}
-              title="Remove Symptom">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
-                style={{ color: "red" }}
-              />
-            </button>
-          </div>
-        ))}
-      </div></>}
-      {conditionsState && conditionsState.length > 0 && <><h5>Conditions</h5>
-      <div className={classes.itemContainer}>
+          ))}
+        </div>}
         
-        {conditionsState.map((conditionData) => (
-          <div className={classes.item} key={conditionData.id}>
-            <div>
-              <div className={classes.name}>
-                {conditionData.name}
-              </div>
-              <div className={classes.commonName}>
-                {conditionData.common_name}
-              </div>
-            </div>
-            <button className={classes.update} onClick={() => removeCondition(conditionData)}
-              title="Remove Condition">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
-                style={{ color: "red" }}
-              />
-            </button>
-          </div>
-        ))}
-      </div></>}
     </div>
   )
 }

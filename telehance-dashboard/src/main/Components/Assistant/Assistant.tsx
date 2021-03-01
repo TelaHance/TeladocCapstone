@@ -67,7 +67,7 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
         <Tool
           consultId={consult_id}
           startTime={start_time}
-          symptoms={symptoms}
+          medicalTerms={symptoms}
           medicalConditions={medical_conditions}
           question={question}
           isLive={isLive}
