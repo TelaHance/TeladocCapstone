@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from "react-rainbow-components";
 import {AdminCharts} from "Pages/Admin/AdminCharts";
+import classes from './Admin.module.css';
 
 const Admin = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
@@ -51,7 +52,7 @@ const Admin = () => {
         <br/><br/>
         <Row>
           <h5 className='text-left'>Manage Users</h5>
-          <TableWithBrowserPagination pageSize={5} data={users} keyField="user_id">
+          <TableWithBrowserPagination pageSize={10} data={users} keyField="user_id" className={classes['table']}>
             <Column header="Name" field="name" component={nameFormatter}/>
             <Column header="email" field="email" />
             <Column header="Status" field="status" component={roleBadge} />
