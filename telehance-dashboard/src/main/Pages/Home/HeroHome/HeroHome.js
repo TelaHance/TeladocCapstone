@@ -33,15 +33,24 @@ const HeroHome = () => {
                             <span className={classes["blue-header"]}>Hance&nbsp;</span></h1>
                         <div>
                             <p className={classes["subsection"]} data-aos="zoom-y-out" data-aos-delay="150">Changing Telemedicine</p>
-                            { !user &&
-                                <div className={classes["login-button"]} data-aos="zoom-y-out" data-aos-delay="300">
+                            <div className={classes['btn-container']}>
+                                { !user &&
+                                    <div className={classes["login-button"]} data-aos="zoom-y-out" data-aos-delay="300">
+                                        <div>
+                                            <a onClick={loginWithRedirect} className={styles.login}>
+                                                Log In
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                                <div className={classes["learn-button"]} data-aos="zoom-y-out" data-aos-delay="300">
                                     <div>
                                         <a onClick={loginWithRedirect} className={styles.login}>
-                                            Log In
+                                            Learn More
                                         </a>
                                     </div>
                                 </div>
-                            }
+                            </div>
                         </div>
                     </div>
 

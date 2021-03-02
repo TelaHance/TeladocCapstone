@@ -4,7 +4,7 @@
 .illustration{
     pointer-events: none;
     bottom: 0px;
-    transform: translateX(-50%) translateY(-100%);
+    transform: translateX(-50%) translateY(-50%);
     position: absolute;
     left: 50%;
 }
@@ -15,7 +15,7 @@
     padding-left: 1rem;
     padding-right: 1rem;
 }
-.hero div:first-child{
+.hero > div{
     padding-top: 5.5rem;
     padding-bottom: 0.125rem;
 }
@@ -32,7 +32,7 @@
     --tw-text-opacity: 1;
     color: #522ba5;
 }
-.section-header div:first-child{
+.section-header > div{
     max-width: 48rem;
     margin-left: auto;
     margin-right: auto;
@@ -51,9 +51,14 @@
     --tw-text-opacity: 1;
     color: rgba(75, 85, 99, var(--tw-text-opacity));
 }
+.btn-container{
+    padding-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap:1rem;
+}
+
 .login-button{
-    margin-left: auto;
-    margin-right: auto;
     max-width: 20rem;
 }
 .login-button div:first-child > a{
@@ -61,7 +66,6 @@
     color: rgba(255, 255, 255, var(--tw-text-opacity));
     --tw-bg-opacity: 1;
     background-color: #1ec2f6;
-    margin-bottom: 1rem;
     font-weight: 700;
     width: 100%;
     padding-top: 0.5rem;
@@ -71,6 +75,29 @@
     border-radius: 0.25rem;
 }
 .login-button div:first-child > a:hover{
+    cursor: pointer;
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: #522ba5;
+}
+.learn-button{
+    max-width: 20rem;
+}
+.learn-button div:first-child > a{
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: #2f2e2e;
+    font-weight: 700;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0.25rem;
+}
+.learn-button div:first-child > a:hover{
     cursor: pointer;
     --tw-text-opacity: 1;
     color: rgba(255, 255, 255, var(--tw-text-opacity));

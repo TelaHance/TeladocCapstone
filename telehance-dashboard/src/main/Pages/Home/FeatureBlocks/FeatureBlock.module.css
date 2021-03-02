@@ -52,20 +52,19 @@
     color: rgba(75, 85, 99, var(--tw-text-opacity));
 }
 .items{
-    max-width: 24rem;
-    margin-left: auto;
-    margin-right: auto;
     gap: 1.5rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: flex-start;
+    justify-content: center;
     display: flex;
 }
 .first-item{
+    max-width: 10rem;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1.5rem;
+    min-height:15rem;
+    min-width:20rem;
     --tw-bg-opacity: 1;
     background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
     border-radius: 0.25rem;
@@ -81,14 +80,15 @@
     --tw-text-opacity: 1;
 }
 .card-header{
-    font-size: 1.25rem;
+    font-size: 1rem;
     line-height: 1.75rem;
     font-weight: 700;
     line-height: 1.375;
     letter-spacing: -0.025em;
-    margin-bottom: 0.25rem;
+    padding-top: 1rem;
 }
 .card-text{
+    padding-top: 1rem;
     --tw-text-opacity: 1;
     color: rgba(75, 85, 99, var(--tw-text-opacity));
     text-align: center;
