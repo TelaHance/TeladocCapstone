@@ -42,6 +42,7 @@ export const updateSymptomsUrl = (query: UpdateSymptomsQuery) =>
   getUrl('consult', '/updateSymptoms', query);
 export const updateTranscriptUrl = (query: GetConsultQuery) =>
   getUrl('consult', '/update-transcript-edited', query);
+export const diagnoseUrl = getUrl('consult', '/diagnose')
 export const adminGraphUrl = getUrl('consult', '/get-graph-data')
 // Consult Websocket (Live Consult) Api
 

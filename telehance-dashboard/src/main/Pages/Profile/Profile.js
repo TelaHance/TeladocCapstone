@@ -158,7 +158,7 @@ const Profile = () => {
                 required
                 as='select'
                 placeholder='Sex'
-                defaultValue={values.sex}
+                value={values.sex}
                 onChange={set('sex')}
               >
                 <option></option>

@@ -81,6 +81,7 @@ export type SymptomListData = {
 export type ConsultKeyData = {
   consult_id: string;
   start_time: number;
+  patient: UserData;
 };
 
 export type AppointmentData = ConsultKeyData & {

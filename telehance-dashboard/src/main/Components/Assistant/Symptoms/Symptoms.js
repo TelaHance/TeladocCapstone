@@ -1,55 +1,104 @@
 import React, { useEffect, useState } from 'react';
-import { updateSymptomsUrl } from 'Api';
-import { putWithToken } from 'Util/fetch';
-import symptomsJson from 'assets/symptoms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
   faMinusCircle,
   faPlusCircle,
   faTimes,
+  faHeadSideCough,
+  faExclamationTriangle,
+  faVirus,
 } from '@fortawesome/free-solid-svg-icons';
-import { Button, Lookup } from 'react-rainbow-components';
+import { Lookup } from 'react-rainbow-components';
+import { updateSymptomsUrl } from 'src/main/Api';
+import { putWithToken } from 'Util/fetch';
+import symptomsJson from 'assets/symptoms';
+import conditionsJson from 'assets/conditions';
+import riskFactorsJson from 'assets/risk_factors';
 import AnimatedList from '../AnimatedList';
 import classes from '../Assistant.module.css';
 
 const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-const symptomDatabase = symptomsJson.map((symptom) => {
+
+const entityMap = {
+  symptom: {
+    title: 'Symptom',
+    icon: faHeadSideCough,
+    color: '#532197',
+  },
+  condition: {
+    title: 'Condition',
+    icon: faVirus,
+    color: 'red',
+  },
+  risk_factor: {
+    title: 'Risk Factor',
+    icon: faExclamationTriangle,
+    color: 'orange',
+  },
+};
+
+const dbMap = [
+  { type: 'symptom', json: symptomsJson },
+  { type: 'condition', json: conditionsJson },
+  { type: 'risk_factor', json: riskFactorsJson },
+];
+
+const database = dbMap.map(({ type, json }) => {
+  const { title, icon, color } = entityMap[type];
   return {
-    id: symptom.id,
-    label: symptom.name,
-    description: symptom.common_name,
-    choice_id: 'present',
+    ...json.map(({ id, name, common_name }) => {
+      return {
+        id,
+        label: name,
+        description: common_name,
+        icon: (
+          <FontAwesomeIcon
+            title={title}
+            icon={icon}
+            color={color}
+            style={{
+              height: 20,
+              width: 20,
+            }}
+          />
+        ),
+      };
+    }),
   };
 });
 
-export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
-  const [symptomsState, setSymptoms] = useState(symptoms ? [...symptoms] : []);
+export default function Symptoms({
+  medicalTerms,
+  consultId,
+  startTime,
+  isLive,
+  diagnose,
+  setMedicalTerms,
+}) {
   const [searchState, setSearchState] = useState({ options: null });
 
   useEffect(() => {
     if (isLive) {
-      setSymptoms((symptomsState) => {
-        let newSymptoms = [];
-        symptoms?.forEach((newSymptom) => {
-          if (symptomsState.every((symptom) => symptom.id !== newSymptom.id)) {
-            newSymptoms.push(newSymptom);
+      setMedicalTerms((medicalTerms) => {
+        let newTerms = [];
+        medicalTerms.forEach((newTerm) => {
+          if (medicalTerms.every((term) => term.id !== newTerm.id)) {
+            newTerms.push(newTerm);
           }
         });
-        return [...symptomsState, ...newSymptoms];
+        return [...medicalTerms, ...newTerms];
       });
     }
-  }, [symptoms, isLive]);
+  }, [medicalTerms, isLive]);
 
   function filter(query, options) {
     if (query) {
       return options.filter((item) => {
         const regex = new RegExp(query, 'i');
-        return (
-          regex.test(item.label) ||
-          (regex.test(item.description) &&
-            symptomsState.every((symptom) => symptom.id !== item.id))
-        );
+        if (regex.test(item.label) || regex.test(item.description)) {
+          return medicalTerms.every((term) => term.id !== item.id);
+        }
       });
     }
     return [];
@@ -67,9 +116,17 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
       });
     } else if (value) {
       setSearchState({
-        options: filter(value, symptomDatabase),
+        isLoading: true,
         value,
       });
+      setTimeout(
+        () =>
+          setSearchState({
+            options: filter(value, database),
+            isLoading: false,
+          }),
+        500
+      );
     } else {
       setSearchState({
         isLoading: false,
@@ -79,117 +136,119 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
     }
   }
 
-  function changeSymptom(symptomData) {
-    let updatedSymptomData = { ...symptomData };
-    updatedSymptomData.choice_id =
-      updatedSymptomData.choice_id === 'present' ? 'absent' : 'present';
-    let tempSymptoms = [...symptomsState];
-    tempSymptoms[tempSymptoms.indexOf(symptomData)] = updatedSymptomData;
-    setSymptoms(tempSymptoms);
-    saveSymptoms(tempSymptoms);
+  function changeTerm(termData) {
+    let updatedTermData = { ...termData };
+    updatedTermData.choice_id =
+      updatedTermData.choice_id === 'present' ? 'absent' : 'present';
+    let newTerms = [...medicalTerms];
+    newTerms[newTerms.indexOf(termData)] = updatedTermData;
+    setMedicalTerms(newTerms);
+    saveTerms(newTerms);
   }
 
-  function removeSymptom(symptomData) {
-    if (!symptomsState) {
+  function removeTerm(termData) {
+    if (!medicalTerms) {
       return;
     }
-    let tempSymptoms = symptomsState.filter(
-      (symptom) => symptom.id !== symptomData.id
-    );
-    setSymptoms(tempSymptoms);
-    saveSymptoms(tempSymptoms);
+    let newTerms = medicalTerms.filter((term) => term.id !== termData.id);
+    setMedicalTerms(newTerms);
+    saveTerms(newTerms);
   }
 
-  function addSymptom() {
-    let tempSymptoms = symptomsState ? [...symptomsState] : [];
-    const newSymptom = {
+  function addEntity() {
+    const newTerms = medicalTerms ? [...medicalTerms] : [];
+    const { id, label, description } = searchState.option;
+    const newTerm = {
+      id,
+      name: label,
+      common_name: description,
+      type:
+        id[0] === 's' ? 'symptom' : id[0] === 'c' ? 'condition' : 'risk_factor',
       choice_id: 'present',
-      common_name: searchState.option.description,
-      id: searchState.option.id,
-      name: searchState.option.label,
-      type: 'symptom',
     };
-    tempSymptoms.push(newSymptom);
-    setSymptoms(tempSymptoms);
-    saveSymptoms(tempSymptoms);
+    newTerms.push(newTerm);
+    setMedicalTerms(newTerms);
+    saveTerms(newTerms);
   }
 
-  function saveSymptoms(tempSymptoms) {
-    putWithToken(
-      updateSymptomsUrl({
-        consult_id: consultId,
-        start_time: startTime,
-      }),
-      awsToken,
-      tempSymptoms
-    );
+  function saveTerms(newTerms) {
+    const url = updateSymptomsUrl({
+      consult_id: consultId,
+      start_time: startTime,
+    });
+    putWithToken(url, awsToken, newTerms);
   }
 
-  function diagnose() {}
-
-  function Symptom(symptomData) {
+  function Symptom({ name, common_name, type, choice_id }) {
+    const { title, icon, color } = entityMap[type];
     return (
       <div className={classes.item}>
-        <button
-          title='Toggle Present'
-          onClick={() => changeSymptom(symptomData)}
-        >
-          <FontAwesomeIcon
-            icon={symptomData.choice_id === 'present' ? faCheck : faTimes}
-            style={{
-              color: symptomData.choice_id === 'present' ? 'green' : 'red',
-            }}
-            className={classes.icon}
-          />
-        </button>
+        <FontAwesomeIcon
+          title={title}
+          icon={icon}
+          color={color}
+          className={classes.icon}
+        />
         <div>
-          <div className={classes.name}>{symptomData.name}</div>
-          <div className={classes.commonName}>{symptomData.common_name}</div>
+          <div className={classes.name}>{name}</div>
+          <div className={classes.commonName}>{common_name}</div>
         </div>
-        <button
-          className={classes.update}
-          onClick={() => removeSymptom(symptomData)}
-          title='Remove Symptom'
-        >
-          <FontAwesomeIcon icon={faMinusCircle} style={{ color: 'red' }} />
-        </button>
+        <div className={classes.update}>
+          <button title='Toggle Present' onClick={() => changeTerm(termData)}>
+            <FontAwesomeIcon
+              icon={choice_id === 'present' ? faCheck : faTimes}
+              style={{
+                color: choice_id === 'present' ? 'green' : 'red',
+              }}
+            />
+          </button>
+          <button onClick={() => removeTerm(termData)} title='Remove Symptom'>
+            <FontAwesomeIcon icon={faMinusCircle} style={{ color: 'red' }} />
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={classes.content}>
-      <h4>Symptoms Analysis</h4>
+      <h4>Analysis</h4>
       <div className={classes.search}>
-        <Button
-          variant='brand'
-          label='Diagnose'
-          size='small'
-          onClick={diagnose}
-        />
         <Lookup
-          id='symptom-lookup'
-          placeholder='Add Symptoms'
-          size='small'
+          id='lookup-3'
+          placeholder='Add'
+          size='medium'
           options={searchState.options}
           value={searchState.option}
           onChange={(option) => setSearchState({ option })}
           debounce
           isLoading={searchState.isLoading}
           onSearch={search}
+          style={{ width: '100%' }}
           className={classes.lookup}
         />
         <button
-          title='Add Symptom'
+          title='Add'
           onClick={() => {
-            addSymptom();
+            addEntity();
             setSearchState({ option: null });
           }}
         >
-          <FontAwesomeIcon icon={faPlusCircle} size='2x' />
+          <FontAwesomeIcon
+            icon={faPlusCircle}
+            style={{ color: 'green' }}
+            className={classes.icon}
+          />
+        </button>
+        <button
+          title='Diagnose'
+          className={classes.actions}
+          onClick={() => diagnose(medicalTerms)}
+        >
+          Diagnose
         </button>
       </div>
-      {symptomsState && (
+      {medicalTerms && medicalTerms.length > 0 && (
         <div className={classes.itemContainer}>
           <AnimatedList items={symptomsState} component={Symptom} />
         </div>
@@ -197,3 +256,5 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
     </div>
   );
 }
+
+export default Symptoms;
