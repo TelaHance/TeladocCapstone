@@ -9,7 +9,7 @@ import {
 import {Card} from "./Card/Card";
 const FeaturesBlocks = () => {
     return (
-        <section className={classes['relative']}>
+        <section id='learn-more' className={classes['relative']}>
 
             <div className={classes['section']} aria-hidden="true"/>
             <div className={classes['background']}/>

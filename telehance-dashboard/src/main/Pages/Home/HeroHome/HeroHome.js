@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import classes from './HeroHome.module.css'
 import styles from "Components/Nav/Navbar.module.css";
 import {useAuth0} from "@auth0/auth0-react";
+import {Link} from 'react-scroll';
+
 const HeroHome = () => {
     const { user, loginWithRedirect } = useAuth0();
 
@@ -45,9 +47,8 @@ const HeroHome = () => {
                                 }
                                 <div className={classes["learn-button"]} data-aos="zoom-y-out" data-aos-delay="300">
                                     <div>
-                                        <a onClick={loginWithRedirect} className={styles.login}>
-                                            Learn More
-                                        </a>
+                                       <Link to='learn-more' spy={true} smooth={true}>Learn more
+                                       </Link>
                                     </div>
                                 </div>
                             </div>
