@@ -95,6 +95,7 @@ export type ConsultData = AppointmentData &
     sentiment?: SentimentData;
     transcript: TranscriptData;
     transcript_edited?: TranscriptData;
+    purpose: string;
   };
 
 export type LiveConsultData = ConsultKeyData & Partial<InfermedicaData>;

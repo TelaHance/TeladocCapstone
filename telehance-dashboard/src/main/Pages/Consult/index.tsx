@@ -6,6 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
+import Profile from './PatientInfo/PatientInfo';
 import { getConsultUrl, updateTranscriptUrl } from 'Api';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
@@ -50,12 +51,17 @@ export default function Consult(props: any) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>
-        {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
+        
         <section
           className={clsx(classes.main, {
             [classes.sidebarExpanded]: sidebarExpanded,
           })}
         >
+          <Profile 
+            name={consult.patient.given_name + " " + consult.patient.family_name}
+            picture={consult.patient.picture}
+            purpose={consult.purpose}
+          />
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
