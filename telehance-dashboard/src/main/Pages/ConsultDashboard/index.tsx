@@ -5,39 +5,13 @@ import { getAllConsultsUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider, {
-  Search,
-  CSVExport,
-} from 'react-bootstrap-table2-toolkit';
-import filterFactory from 'react-bootstrap-table2-filter';
-import paginationFactory from 'react-bootstrap-table2-paginator';
 import Spinner from 'Components/Spinner';
-import getColumns from './getColumns';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import styles from './ConsultDashboard.module.css';
-
-const { SearchBar, ClearSearchButton } = Search;
-const { ExportCSVButton } = CSVExport;
-
-const customTotal = (from: number, to: number, size: number) => (
-  <span className='react-bootstrap-table-pagination-total'>
-    &nbsp; Showing Consults {from} to {to} of {size}
-  </span>
-);
-
-const pagination = paginationFactory({
-  firstPageText: '<<',
-  prePageText: '<',
-  nextPageText: '>',
-  lastPageText: '>>',
-  sizePerPage: 10,
-  showTotal: true,
-  paginationTotalRenderer: customTotal,
-  alwaysShowAllBtns: true,
-});
+import { Column, TableWithBrowserPagination} from "react-rainbow-components";
+import {ButtonFormatter, sentimentFormatter, nameFormatter, dateFormatter} from './getColumns';
+import classes from "./ConsultDashboard.module.css";
 
 function getRole(consultList: any) {
   if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
@@ -62,35 +36,18 @@ function ConsultDashboard({ history }: RouteComponentProps) {
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
-      <Container className={styles.container}>
-        <ToolkitProvider
-          bootstrap4
-          keyField='id'
-          data={consultList}
-          columns={getColumns(history, getRole(consultList))}
-          search={{
-            searchFormatted: true,
-          }}
-          exportCSV={{
-            onlyExportFiltered: true,
-          }}
-        >
-          {({ searchProps, baseProps, csvProps }) => (
-            <>
-              <div className={styles.controls}>
-                <SearchBar {...searchProps} />
-                <ClearSearchButton />
-                <ExportCSVButton {...csvProps}>Export to CSV</ExportCSVButton>
-              </div>
-              <hr />
-              <BootstrapTable
-                pagination={pagination}
-                filter={filterFactory()}
-                {...baseProps}
-              />
-            </>
-          )}
-        </ToolkitProvider>
+      <Container className='mb-5 text-center'>
+        <TableWithBrowserPagination pageSize={5} data={consultList} keyField="id" className={classes['table']}>
+                    {(getRole(consultList) !== 'DOCTOR') &&
+                    <Column header="Doctor" defaultWidth={180} field="doctor" component={nameFormatter}/>
+                    }
+                    {(getRole(consultList) !== 'PATIENT') &&
+                    <Column header="Patient" defaultWidth={180} field="patient" component={nameFormatter} />
+                    }
+                    <Column header="Consult Date" defaultWidth={180} field="start_time" component={dateFormatter}/>
+                    <Column header="Problematic Rating" defaultWidth={190} field="sentiment" component={sentimentFormatter}/>
+                    <Column header="" defaultWidth={197} field="consult_id" component={ButtonFormatter}/>
+            </TableWithBrowserPagination>
       </Container>
     </>
   );

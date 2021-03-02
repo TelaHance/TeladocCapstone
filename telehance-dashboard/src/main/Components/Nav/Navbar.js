@@ -96,7 +96,7 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {role !== 'admin' && (
+            {(role === 'patient' || role === 'doctor') && (
               <li>
                 <NavLink
                   to='/appointments'
