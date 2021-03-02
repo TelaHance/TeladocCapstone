@@ -256,5 +256,3 @@ export default function Symptoms({
     </div>
   );
 }
-
-export default Symptoms;
