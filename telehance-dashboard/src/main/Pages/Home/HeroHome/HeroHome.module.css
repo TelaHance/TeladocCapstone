@@ -1,0 +1,105 @@
+.relative {
+    position: relative;
+}
+.illustration{
+    pointer-events: none;
+    bottom: 0px;
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    left: 50%;
+}
+.hero{
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.hero div:first-child{
+    padding-top: 3.5rem;
+    padding-bottom: 0.125rem;
+}
+.section-header{
+    padding-bottom: 3rem;
+    text-align: center;
+}
+.section-header h1:first-child{
+    font-size: 6rem;
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 1rem;
+    --tw-text-opacity: 1;
+    color: #522ba5;
+}
+.section-header div:first-child{
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.blue-header{
+    background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+    --tw-gradient-from: #522ba5;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(59, 130, 246, 0));
+    --tw-gradient-to: #41e4f6;
+}
+.subsection{
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+}
+.login-button{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 20rem;
+}
+.login-button div:first-child > a{
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: #1ec2f6;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0.25rem;
+}
+.login-button div:first-child > a:hover{
+    cursor: pointer;
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: #522ba5;
+}
+.heroImageDiv{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+.heroImageDiv div:first-child{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.imageStyles{
+    margin-left: auto;
+    margin-right: auto;
+}
+.blueCircle{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 100vh;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+}

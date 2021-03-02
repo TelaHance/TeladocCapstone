@@ -1,7 +1,6 @@
-.container {
-  height: 100%;
-  min-width: 300px;
-  margin: 0 auto;
+.flex-container{
+  flex-grow: 1;
+  background-color: #FFFFFF;
 }
 
 .hero {
