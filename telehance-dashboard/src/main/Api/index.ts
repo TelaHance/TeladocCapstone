@@ -55,7 +55,8 @@ export const getTwilioTokenUrl = getUrl('twilio', '/get-token');
 
 export const getAllDoctorsUrl = getUrl('user', '/doctor-get-all');
 export const getAllUsersUrl = getUrl('user', '/user-get-all');
-export const getUserUrl = (query: GetUserQuery) =>
+export const getUserUrl = getUrl('user', '/user-by-id');
+export const getUserProfileUrl = (query: GetUserQuery) =>
   getUrl('user', '/user-by-id', query);
 export const updateUserUrl = getUrl('user', '/update-phone');
 

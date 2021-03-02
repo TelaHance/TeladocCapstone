@@ -52,7 +52,7 @@ const Profile = () => {
   });
   const [validated, setValidated] = useState(false);
   const { data, error } = useSWR(
-    [getUserUrl({ user_id }), awsToken],
+    [getUserProfileUrl({ user_id }), awsToken],
     fetchWithToken,
     {
       onSuccess: function (data) {
