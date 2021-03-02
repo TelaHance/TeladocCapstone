@@ -70,7 +70,6 @@ export default function AudioPlayer({
       onClickNext={next}
       customAdditionalControls={[]}
       style={{ 'marginTop': 'auto' }}
-      // className={classes.container}
       ref={player}
     />
   );
