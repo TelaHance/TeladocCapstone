@@ -50,19 +50,17 @@ const Admin = () => {
         <br/>
         <AdminCharts consults={consults}/>
         <br/><br/>
-        <Row>
-          <h5 className='text-left'>Manage Users</h5>
-          <TableWithBrowserPagination pageSize={10} data={users} keyField="user_id" className={classes['table']}>
-            <Column header="Name" field="name" component={nameFormatter}/>
-            <Column header="email" field="email" />
-            <Column header="Status" field="status" component={roleBadge} />
-            <Column type="action">
-              <MenuItem label="Change role to Admin" onClick={(event, data) => changeRole(data.user_id, 'Admin')} />
-              <MenuItem label="Change role to Doctor" onClick={(event, data) => changeRole(data.user_id, 'Doctor')} />
-              <MenuItem label="Change role to Patient" onClick={(event, data) => changeRole(data.user_id, 'Patient')} />
-            </Column>
-          </TableWithBrowserPagination>
-        </Row>
+        <h5 className='text-left'>Manage Users</h5>
+        <TableWithBrowserPagination pageSize={10} data={users} keyField="user_id" className={classes['table']}>
+          <Column header="Name" field="name" component={nameFormatter}/>
+          <Column header="email" field="email" />
+          <Column header="Status" field="status" component={roleBadge} />
+          <Column type="action">
+            <MenuItem label="Change role to Admin" onClick={(event, data) => changeRole(data.user_id, 'Admin')} />
+            <MenuItem label="Change role to Doctor" onClick={(event, data) => changeRole(data.user_id, 'Doctor')} />
+            <MenuItem label="Change role to Patient" onClick={(event, data) => changeRole(data.user_id, 'Patient')} />
+          </Column>
+        </TableWithBrowserPagination>
       </Container>
     </>
   );
