@@ -93,7 +93,6 @@ button:hover {
   align-items: center;
   padding: 0.5rem;
   margin-bottom: 0.25rem;
-  animation: new-item .3s forwards;
   border-radius: calc(0.25rem);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
@@ -113,13 +112,4 @@ button:hover {
 .progressBar {
   width: 8rem !important;
   margin-right: 1rem;
-}
-
-@keyframes new-item {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
 }

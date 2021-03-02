@@ -135,7 +135,10 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
   function Symptom(symptomData) {
     return (
       <div className={classes.item}>
-        <button title='Toggle Present' onClick={() => changeSymptom(symptomData)}>
+        <button
+          title='Toggle Present'
+          onClick={() => changeSymptom(symptomData)}
+        >
           <FontAwesomeIcon
             icon={symptomData.choice_id === 'present' ? faCheck : faTimes}
             style={{
@@ -194,39 +197,6 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
       {symptomsState && (
         <div className={classes.itemContainer}>
           <AnimatedList items={symptomsState} component={Symptom} />
-          {/* {symptomsState.map((symptomData) => (
-            <div className={classes.item} key={symptomData.id}>
-              <button
-                title='Toggle Present'
-                onClick={() => changeSymptom(symptomData)}
-              >
-                <FontAwesomeIcon
-                  icon={symptomData.choice_id === 'present' ? faCheck : faTimes}
-                  style={{
-                    color:
-                      symptomData.choice_id === 'present' ? 'green' : 'red',
-                  }}
-                  className={classes.icon}
-                />
-              </button>
-              <div>
-                <div className={classes.name}>{symptomData.name}</div>
-                <div className={classes.commonName}>
-                  {symptomData.common_name}
-                </div>
-              </div>
-              <button
-                className={classes.update}
-                onClick={() => removeSymptom(symptomData)}
-                title='Remove Symptom'
-              >
-                <FontAwesomeIcon
-                  icon={faMinusCircle}
-                  style={{ color: 'red' }}
-                />
-              </button>
-            </div>
-          ))} */}
         </div>
       )}
     </div>
