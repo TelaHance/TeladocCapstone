@@ -75,13 +75,10 @@
 .first-svg{
     width: 4rem;
     height: 4rem;
-    width: 4rem;
     margin-bottom: 0.5rem;
 }
 .rect{
     --tw-text-opacity: 1;
-    color: #00c1ff;
-    fill: currentColor;
 }
 .card-header{
     font-size: 1.25rem;

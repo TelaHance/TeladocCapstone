@@ -27,7 +27,7 @@
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    padding-top: 12rem;
+    padding-top: 8rem;
     padding-bottom: 3rem;
 }
 .section-header h2{
@@ -40,3 +40,29 @@
     color: rgba(75, 85, 99, var(--tw-text-opacity));
 }
 
+.socials{
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+.socials li{
+    margin-left: 1rem;
+    list-style: none
+}
+.github{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+    border-radius: 9999px;
+    --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.github svg{
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+}
