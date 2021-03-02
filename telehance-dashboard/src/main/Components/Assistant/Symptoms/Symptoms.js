@@ -37,6 +37,10 @@ const Symptoms = ({
   const containerStyles = {
     width: '100%',
   };
+  const iconStyles = {
+    height: 20,
+    width: 20,
+  }
 
   const database =
     symptomsJson.map(symptom => {
@@ -49,7 +53,7 @@ const Symptoms = ({
             title={"Symptom"}
             icon={faHeadSideCough}
             color={'blue'}
-            style={{height: 20, width: 20}}
+            style={iconStyles}
           />
         )
       })
@@ -66,7 +70,7 @@ const Symptoms = ({
             title={"Condition"}
             icon={faVirus}
             color={'red'}
-            style={{height: 20, width: 20}}
+            style={iconStyles}
           />
         )
       })
@@ -83,7 +87,7 @@ const Symptoms = ({
             title={"Risk Factor"}
             icon={faExclamationTriangle}
             color={'orange'}
-            style={{height: 20, width: 20, marginLeft: '0.25em'}}
+            style={iconStyles}
           />
         )
       })
