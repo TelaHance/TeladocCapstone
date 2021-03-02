@@ -1,5 +1,5 @@
 .container {
-  margin: 0 2em 2em 2em;
+  margin: 0 8em 2em;
 }
 
 .container > div {
@@ -56,7 +56,7 @@ th > div > div > span {
   overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.5em;
-  height: 4.5em;
+  max-height: 4.5em;
   overflow-y: hidden;
   margin: 4px 0.75rem;
 }

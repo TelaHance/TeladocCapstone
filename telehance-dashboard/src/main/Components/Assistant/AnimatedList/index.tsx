@@ -1,7 +1,7 @@
 import React from 'react';
 import { animated, useTransition } from 'react-spring';
 
-export default function AnimatedList({ items, component }: CardListProps) {
+export default function AnimatedList({ items, component }: AnimatedListProps) {
   const transitions = useTransition(items, (item) => item.id, {
     from: { transform: 'translateX(100%)', opacity: 0 },
     enter: { transform: 'translateX(0)', opacity: 1 },
@@ -17,7 +17,7 @@ export default function AnimatedList({ items, component }: CardListProps) {
 type Item = {
   id: string;
 };
-type CardListProps = {
+type AnimatedListProps = {
   items: Item[];
   component: React.FunctionComponent<Item>;
 };
