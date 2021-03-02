@@ -1,11 +1,17 @@
 import React from 'react';
 import useSWR from 'swr';
-import { Table, DropdownButton, Dropdown } from 'react-bootstrap';
-import { getAllUsersUrl } from 'Api';
+import {getUserUrl, getAllUsersUrl, adminGraphUrl} from 'Api';
 import { fetchWithToken } from 'Util/fetch';
-import Container from 'react-bootstrap/Container';
-import './Admin.module.css';
+import {Container, Row} from 'react-bootstrap';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
+import {nameFormatter, roleBadge} from "Pages/Admin/getColumns";
+import {
+  TableWithBrowserPagination,
+  Column,
+  MenuItem,
+} from "react-rainbow-components";
+import {AdminCharts} from "Pages/Admin/AdminCharts";
+import classes from './Admin.module.css';
 
 const Admin = () => {
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
@@ -13,10 +19,14 @@ const Admin = () => {
     [getAllUsersUrl, awsToken],
     fetchWithToken
   );
-
+  const consultToken = process.env.REACT_APP_CONSULT_API_KEY;
+  const { data: consults, mutate: mutateConsults } = useSWR(
+      [adminGraphUrl, consultToken],
+      fetchWithToken
+  );
   const changeRole = async (id, role) => {
     try {
-      await fetchWithToken(getAllUsersUrl, awsToken, {
+      await fetchWithToken(getUserUrl, awsToken, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
@@ -34,50 +44,23 @@ const Admin = () => {
   return (
     <>
       <BreadcrumbBar page='Admin Panel' />
-      <h2 className='text-center'>All Users</h2>
       <Container className='mb-5'>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Email</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Role</th>
-              <th>Change Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users &&
-              users.map((user) => {
-                return (
-                  <tr key={user.user_id}>
-                    <td>{user.user_id}</td>
-                    <td>{user.email}</td>
-                    <td>{user.given_name}</td>
-                    <td>{user.family_name}</td>
-                    <td>{user.role}</td>
-                    <td>
-                      <DropdownButton
-                        alignRight
-                        title='Change Role'
-                        id='dropdown-menu-align-right'
-                        onSelect={async (e) => {
-                          await changeRole(user.user_id, e);
-                        }}
-                      >
-                        <Dropdown.Item eventKey='Admin'>Admin</Dropdown.Item>
-                        <Dropdown.Item eventKey='Doctor'>Doctor</Dropdown.Item>
-                        <Dropdown.Item eventKey='Patient'>
-                          Patient
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </Table>
+        <h2 className='text-left'>Welcome Admin!</h2>
+        <h5 className='text-left'>Dashboard</h5>
+        <br/>
+        <AdminCharts consults={consults}/>
+        <br/><br/>
+        <h5 className='text-left'>Manage Users</h5>
+        <TableWithBrowserPagination pageSize={10} data={users} keyField="user_id" className={classes['table']}>
+          <Column header="Name" field="name" component={nameFormatter}/>
+          <Column header="email" field="email" />
+          <Column header="Status" field="status" component={roleBadge} />
+          <Column type="action">
+            <MenuItem label="Change role to Admin" onClick={(event, data) => changeRole(data.user_id, 'Admin')} />
+            <MenuItem label="Change role to Doctor" onClick={(event, data) => changeRole(data.user_id, 'Doctor')} />
+            <MenuItem label="Change role to Patient" onClick={(event, data) => changeRole(data.user_id, 'Patient')} />
+          </Column>
+        </TableWithBrowserPagination>
       </Container>
     </>
   );
