@@ -5,29 +5,31 @@ import conditionsJson from 'assets/conditions';
 import riskFactorsJson from 'assets/risk_factors';
 import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faExclamationTriangle, faVirus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faExclamationTriangle, faVirus, faDiagnoses } from '@fortawesome/free-solid-svg-icons';
 import { Lookup } from 'react-rainbow-components';
 
 const Symptoms = ({
   medicalTerms,
   consultId,
   startTime,
-  isLive
+  isLive,
+  diagnose,
+  setMedicalTerms
 }) => {
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const [medicalTermsState, setMedicalTerms] = useState(medicalTerms ? [...medicalTerms] : []);
+  
   const [searchState, setSearchState] = useState({ options: null });
 
   useEffect(() => {
     if (isLive) {
-      setMedicalTerms(medicalTermsState => {
+      setMedicalTerms(medicalTerms => {
         let newTerms = [];
         medicalTerms.forEach(newTerm => {
-          if (medicalTermsState.every(term => term.id !== newTerm.id)) {
+          if (medicalTerms.every(term => term.id !== newTerm.id)) {
             newTerms.push(newTerm);
           }
         });
-        return [...medicalTermsState, ...newTerms]
+        return [...medicalTerms, ...newTerms]
       })
     }
   }, [medicalTerms, isLive]);
@@ -42,6 +44,14 @@ const Symptoms = ({
         id: symptom.id,
         label: symptom.name,
         description: symptom.common_name,
+        icon: (
+          <FontAwesomeIcon
+            title={"Symptom"}
+            icon={faHeadSideCough}
+            color={'blue'}
+            style={{height: 20, width: 20}}
+          />
+        )
       })
     })
 
@@ -51,6 +61,14 @@ const Symptoms = ({
         id: condition.id,
         label: condition.name,
         description: condition.common_name,
+        icon: (
+          <FontAwesomeIcon
+            title={"Condition"}
+            icon={faVirus}
+            color={'red'}
+            style={{height: 20, width: 20}}
+          />
+        )
       })
     })
   )
@@ -60,6 +78,14 @@ const Symptoms = ({
         id: riskFactors.id,
         label: riskFactors.name,
         description: riskFactors.common_name,
+        icon: (
+          <FontAwesomeIcon
+            title={"Risk Factor"}
+            icon={faExclamationTriangle}
+            color={'orange'}
+            style={{height: 20, width: 20, marginLeft: '0.25em'}}
+          />
+        )
       })
     })
   )
@@ -70,7 +96,7 @@ const Symptoms = ({
       return options.filter(item => {
         const regex = new RegExp(query, 'i');
         if (regex.test(item.label) || regex.test(item.description)) {
-          return medicalTermsState.every(term => term.id !== item.id);
+          return medicalTerms.every(term => term.id !== item.id);
         }
       });
     }
@@ -108,38 +134,30 @@ const Symptoms = ({
   function changeTerm(termData) {
     let updatedTermData = { ...termData };
     updatedTermData.choice_id = updatedTermData.choice_id === "present" ? "absent" : "present";
-    let newTerms = [...medicalTermsState];
+    let newTerms = [...medicalTerms];
     newTerms[newTerms.indexOf(termData)] = updatedTermData;
     setMedicalTerms(newTerms);
     saveTerms(newTerms);
   }
 
   function removeTerm(termData) {
-    if (!medicalTermsState) {
+    if (!medicalTerms) {
       return;
     }
-    let newTerms = medicalTermsState.filter(term => term.id !== termData.id);
+    let newTerms = medicalTerms.filter(term => term.id !== termData.id);
     setMedicalTerms(newTerms);
     saveTerms(newTerms);
   }
 
-  // function removeCondition(conditionData) {
-  //   if(!conditionsState) {
-  //     return;
-  //   }
-  //   let tempConditions = conditionsState.filter(condition => condition.id !== conditionData.id);
-  //   setConditions(tempConditions);
-  // }
-
   function addEntity() {
-    let newTerms = medicalTermsState ? [...medicalTermsState] : [];
+    let newTerms = medicalTerms ? [...medicalTerms] : [];
     const newTerm = {
       choice_id: "present",
       common_name: searchState.option.description,
       id: searchState.option.id,
       name: searchState.option.label,
       type: searchState.option.id[0] === 's' ? "symptom" :
-        searchState.option.id[0] === 'c' ? "condition" : "risk_factor"
+        searchState.option.id[0] === 'c' ? "condition" : "risk_factor",
     }
     newTerms.push(newTerm);
     setMedicalTerms(newTerms);
@@ -179,20 +197,21 @@ const Symptoms = ({
             className={classes.icon}
           />
         </button>
-        <button title="Diagnose" className={classes.actions}>
+        <button title="Diagnose" className={classes.actions}
+          onClick={() => diagnose(medicalTerms)}>
           Diagnose
         </button>
       </div>
-      {medicalTermsState && medicalTermsState.length > 0 &&
+      {medicalTerms && medicalTerms.length > 0 &&
         <div className={classes.itemContainer}>
 
-          {medicalTermsState.map((termData) => (
+          {medicalTerms.map((termData) => (
             <div className={classes.item} key={termData.id}>
 
               <FontAwesomeIcon
                 title={termData.type}
                 icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faVirus : faExclamationTriangle}
-                color={termData.type === "symptom" ? 'orange' : termData.type === 'condition' ? 'red' : 'yellow'}
+                color={termData.type === "symptom" ? 'blue' : termData.type === 'condition' ? 'red' : 'orange'}
                 className={classes.icon}
               />
               <div>
@@ -223,7 +242,7 @@ const Symptoms = ({
             </div>
           ))}
         </div>}
-        
+
     </div>
   )
 }
