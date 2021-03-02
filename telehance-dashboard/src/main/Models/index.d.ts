@@ -88,6 +88,7 @@ export type AppointmentData = ConsultKeyData & {
   doctor: UserData;
   patient: UserData;
   end_time: number;
+  purpose: string;
 };
 
 export type ConsultData = AppointmentData &

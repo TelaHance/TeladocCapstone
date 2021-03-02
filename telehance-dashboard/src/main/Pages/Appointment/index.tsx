@@ -4,6 +4,7 @@ import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
+import PatientInfo from 'Components/PatientInfo/PatientInfo';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, EntityData } from 'Models';
@@ -85,7 +86,10 @@ export default function Appointment(route: RouteComponentProps) {
             [classes.sidebarExpanded]: sidebarExpanded,
           })}
         >
-          {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
+          <PatientInfo
+            patient={appointment.patient}
+            purpose={appointment.purpose}
+          />
           <Transcript transcript={transcript} />
           <CallControls
             status={callStatus}
