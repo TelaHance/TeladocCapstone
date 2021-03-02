@@ -1,6 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Container } from 'react-bootstrap';
 import { getApptsUrl, getUserUrl } from 'Api';
 import { fetchWithToken, fetchWithUser } from 'Util/fetch';
 import Spinner from 'Components/Spinner';
@@ -45,7 +46,7 @@ export default function AppointmentDashboard() {
   return (
     <>
       <BreadcrumbBar page='Appointment Dashboard' />
-      <div className={styles.container}>
+      <Container className='mb-5 text-center'>
         {role === 'PATIENT' && <ScheduleAppointment />}
         <TableWithBrowserPagination
           pageSize={3}
@@ -72,7 +73,7 @@ export default function AppointmentDashboard() {
           <Column
             header='Appointment Date'
             field='start_time'
-            defaultWidth={170}
+            defaultWidth={200}
             component={dateFormatter}
           />
           <Column
@@ -81,10 +82,10 @@ export default function AppointmentDashboard() {
             component={purposeFormatter}
           />
           {role === 'DOCTOR' && (
-            <Column header='' defaultWidth={100} component={ButtonFormatter} />
+            <Column header='' defaultWidth={150} component={ButtonFormatter} />
           )}
         </TableWithBrowserPagination>
-      </div>
+      </Container>
     </>
   );
 }
