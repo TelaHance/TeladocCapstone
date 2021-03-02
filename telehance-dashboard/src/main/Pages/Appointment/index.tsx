@@ -9,7 +9,7 @@ import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, SymptomData } from 'Models';
 // import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import classes from './Appointment.module.css';
-import CallControls from './CallControls';
+import CallControls, { Status } from './CallControls';
 
 const device = new Device();
 
@@ -18,9 +18,8 @@ export default function Appointment(route: RouteComponentProps) {
     appointment: Omit<AppointmentData, 'doctor'>;
   };
 
-  const [ready, setReady] = useState(false);
+  const [callStatus, setCallStatus] = useState<Status>(Status.Waiting);
   const [connection, setConnection] = useState<Connection>();
-  const [callStatus, setCallStatus] = useState<Connection.State>();
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
@@ -42,8 +41,7 @@ export default function Appointment(route: RouteComponentProps) {
 
   useEffect(() => {
     if (lastMessage) {
-      const { idx, block, symptoms, ready } = JSON.parse(lastMessage.data);
-      console.log({ idx, block, symptoms, ready });
+      const { idx, block, symptoms, status } = JSON.parse(lastMessage.data);
       if (idx !== undefined && block) {
         setTranscript((prevTranscript) => {
           const newTranscript = [...prevTranscript];
@@ -54,15 +52,11 @@ export default function Appointment(route: RouteComponentProps) {
       if (symptoms && symptoms.length !== 0) {
         setNewSymptoms(symptoms);
       }
-      if (ready) {
-        setReady(!!ready);
+      if (status) {
+        setCallStatus(status);
       }
     }
   }, [lastMessage]);
-
-  useEffect(() => {
-    setCallStatus(connection?.status());
-  }, [connection]);
 
   function call() {
     const conn = device.connect({
@@ -94,8 +88,7 @@ export default function Appointment(route: RouteComponentProps) {
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           <Transcript transcript={transcript} />
           <CallControls
-            ready={ready}
-            callStatus={callStatus}
+            status={callStatus}
             call={call}
             hangup={hangup}
             mute={mute}
