@@ -1,4 +1,4 @@
-# Teladoc Capstone
+# TelaHance
 
 A Clinical Quality Serverless React web app made with Create React App.
 
