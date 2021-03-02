@@ -18,13 +18,14 @@ export default function Appointment(route: RouteComponentProps) {
     appointment: Omit<AppointmentData, 'doctor'>;
   };
 
+  const [ready, setReady] = useState(false);
   const [connection, setConnection] = useState<Connection>();
   const [callStatus, setCallStatus] = useState<Connection.State>();
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  const { lastMessage, readyState, getWebSocket } = useWebSocket(
+  const { lastMessage, getWebSocket } = useWebSocket(
     consultWebsocketUrl
   );
   const history = useHistory();
@@ -43,17 +44,21 @@ export default function Appointment(route: RouteComponentProps) {
 
   useEffect(() => {
     if (lastMessage) {
-      const { idx, block, symptoms } = JSON.parse(lastMessage.data);
-      setTranscript((prevTranscript) => {
-        const newTranscript = [...prevTranscript];
-        newTranscript[idx] = block;
-        return newTranscript;
-      });
+      const { idx, block, symptoms, ready } = JSON.parse(lastMessage.data);
+      if (idx && block) {
+        setTranscript((prevTranscript) => {
+          const newTranscript = [...prevTranscript];
+          newTranscript[idx] = block;
+          return newTranscript;
+        });
+      }
       if (symptoms && symptoms.length !== 0) {
         setNewSymptoms(symptoms);
       }
+      if (ready) {
+        setReady(!!ready);
+      }
     }
-    console.log(lastMessage);
   }, [lastMessage]);
 
   useEffect(() => {
@@ -90,7 +95,7 @@ export default function Appointment(route: RouteComponentProps) {
           {/* TODO: PROFILE PREVIEW COMPONENT HERE */}
           <Transcript transcript={transcript} />
           <CallControls
-            wsStatus={readyState}
+            ready={ready}
             callStatus={callStatus}
             call={call}
             hangup={hangup}
