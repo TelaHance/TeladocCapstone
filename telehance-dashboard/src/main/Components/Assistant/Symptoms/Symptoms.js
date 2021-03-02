@@ -174,7 +174,7 @@ export default function Symptoms({
           color={color}
           className={classes.icon}
         />
-        <div>
+        <div className={classes.text}>
           <div className={classes.name}>{name}</div>
           <div className={classes.commonName}>{common_name}</div>
         </div>
