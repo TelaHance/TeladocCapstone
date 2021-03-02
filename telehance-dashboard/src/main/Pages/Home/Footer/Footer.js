@@ -14,6 +14,12 @@ const Footer = () =>{
                 </p>
             </div>
             <div className={classes['footer']}>
+                <div className={classes['credText']}>
+                    Made by&nbsp;
+                    <a className={classes['credLink']} href="https://capstone.cs.ucsb.edu/teams.html">
+                        Team SALT
+                    </a>
+                </div>
                 <ul className={classes['socials']}>
                     <li>
                         <a href="https://github.com/TelaHance/TeladocCapstone" className={classes['github']} aria-label="Github">
@@ -23,12 +29,6 @@ const Footer = () =>{
                         </a>
                     </li>
                 </ul>
-                <div className={classes['credText']}>
-                    Made by&nbsp;
-                    <a className={classes['credLink']} href="https://capstone.cs.ucsb.edu/teams.html">
-                        Team SALT
-                    </a>
-                </div>
             </div>
         </>
     );

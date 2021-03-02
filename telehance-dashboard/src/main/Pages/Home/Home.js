@@ -6,13 +6,14 @@ import Footer from "Pages/Home/Footer/Footer";
 
 const Home = () => {
   return (
-      <main className={classes["flex-container"]}>
-
-          {/*  Page sections */}
-          <HeroHome />
-          <FeaturesBlocks/>
-          <Footer/>
-      </main>
+      <div className={classes["bg-container"]}>
+          <div className={classes["flex-container"]}>
+              {/*  Page sections */}
+              <HeroHome />
+              <FeaturesBlocks/>
+              <Footer/>
+          </div>
+      </div>
   );
 }
 export default Home;
