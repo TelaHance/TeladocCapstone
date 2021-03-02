@@ -31,7 +31,7 @@ export function nameFormatter(cell: any) {
   return (
     <>
       <img
-        className='rounded-circle'
+        className={classes.avatar}
         src={cell.value.picture}
         width='31'
         alt=''
