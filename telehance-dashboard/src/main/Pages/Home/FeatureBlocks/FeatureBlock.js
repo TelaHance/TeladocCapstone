@@ -2,9 +2,9 @@ import React from 'react';
 import classes from './FeatureBlock.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faBriefcaseMedical,
     faStethoscope,
-    faNotesMedical
+    faNotesMedical,
+    faComments
 } from '@fortawesome/free-solid-svg-icons';
 import {Card} from "./Card/Card";
 const FeaturesBlocks = () => {
@@ -28,7 +28,7 @@ const FeaturesBlocks = () => {
 
                         {/* 1st item */}
                         <Card
-                            icon={<FontAwesomeIcon icon={faBriefcaseMedical} transform="shrink-7 up-0.5" className={classes['briefcase']}/>}
+                            icon={<FontAwesomeIcon icon={faComments} transform="shrink-7" className={classes['briefcase']}/>}
                             header="Problematic Consult Identification"
                             subtext="State of the art sentiment analysis to identify hostile and problematic consultations and provide auditors with a visualization of the frequency of these appointments."
                         />
@@ -40,7 +40,7 @@ const FeaturesBlocks = () => {
                         <Card
                             icon={<FontAwesomeIcon icon={faStethoscope} transform="shrink-7" className={classes['briefcase']}/>}
                             header="Intelligent Diagnostic Assistant"
-                            subtext="Diagnostic virtual assistant that provides probably patient conditions and guiding questions to further the diagnostic process."
+                            subtext="Diagnostic virtual assistant that provides probable patient conditions and guiding questions to further the diagnostic process."
                         />
 
                     </div>

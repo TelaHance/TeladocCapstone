@@ -10,7 +10,7 @@
 }
 .credText{
     margin-left: 1rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.25rem;
     --tw-text-opacity: 1;
     color: rgba(75, 85, 99, var(--tw-text-opacity));
@@ -44,8 +44,8 @@
     transition-duration: 150ms;
 }
 .github svg{
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     fill: currentColor;
 }
 .section-header{
@@ -66,9 +66,15 @@
     --tw-text-opacity: 1;
     color: rgba(75, 85, 99, var(--tw-text-opacity));
 }
-
 .socials{
     display: flex;
     margin-bottom: 0.75rem;
 }
-
+.logo{
+    transform: scale(0.4);
+}
+.collab{
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: 15vh;
+}

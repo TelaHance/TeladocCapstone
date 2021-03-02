@@ -1,5 +1,6 @@
 import React from 'react';
 import classes from './Footer.module.css';
+import TeladocLogo from '../../../assets/Teladoc.svg';
 const Footer = () =>{
     return(
         <>
@@ -19,6 +20,10 @@ const Footer = () =>{
                     <a className={classes['credLink']} href="https://capstone.cs.ucsb.edu/teams.html">
                         Team SALT
                     </a>
+                </div>
+                <div className={classes['collab']}>
+                    Made in collaboration with
+                    <img className={classes['logo']} src={TeladocLogo} alt="React Logo" />
                 </div>
                 <ul className={classes['socials']}>
                     <li>
