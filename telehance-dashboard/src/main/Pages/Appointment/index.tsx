@@ -25,9 +25,7 @@ export default function Appointment(route: RouteComponentProps) {
   const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  const { lastMessage, getWebSocket } = useWebSocket(
-    consultWebsocketUrl
-  );
+  const { lastMessage, getWebSocket } = useWebSocket(consultWebsocketUrl);
   const history = useHistory();
 
   useEffect(() => {
@@ -45,7 +43,8 @@ export default function Appointment(route: RouteComponentProps) {
   useEffect(() => {
     if (lastMessage) {
       const { idx, block, symptoms, ready } = JSON.parse(lastMessage.data);
-      if (idx && block) {
+      console.log({ idx, block, symptoms, ready });
+      if (idx !== undefined && block) {
         setTranscript((prevTranscript) => {
           const newTranscript = [...prevTranscript];
           newTranscript[idx] = block;
