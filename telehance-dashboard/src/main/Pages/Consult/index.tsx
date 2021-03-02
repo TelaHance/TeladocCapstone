@@ -6,7 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
-import Profile from './PatientInfo/PatientInfo';
+import Profile from '../../Components/PatientInfo/PatientInfo';
 import { getConsultUrl, updateTranscriptUrl } from 'Api';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
