@@ -71,7 +71,7 @@ button:hover {
 
 .content {
   flex: 100%;
-  padding: 2em 2em 2em 0;
+  padding: 2em 2em 2em 5px;
 }
 
 /* .actions {
@@ -84,8 +84,9 @@ button:hover {
   margin: 0.5em;
   background-color: #532197;
   border-color: #532197;
-  border-radius: .25rem;
+  border-radius: .6rem;
   color: white;
+  padding: 0.5em 1em;
 }
 
 .itemContainer {
@@ -103,6 +104,7 @@ button:hover {
   padding: 0.5rem;
   margin-bottom: 0.25rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 0.5em;
 }
 
 .item .icon {
