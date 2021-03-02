@@ -24,7 +24,6 @@ const symptomDatabase = symptomsJson.map((symptom) => {
 });
 
 export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
-  const [hasChanges, setHasChanges] = useState(false);
   const [symptomsState, setSymptoms] = useState(symptoms ? [...symptoms] : []);
   const [searchState, setSearchState] = useState({ options: null });
 
@@ -41,10 +40,6 @@ export default function Symptoms({ symptoms, consultId, startTime, isLive }) {
       });
     }
   }, [symptoms, isLive]);
-
-  useEffect(() => {
-    setHasChanges(true);
-  }, [symptomsState]);
 
   function filter(query, options) {
     if (query) {
