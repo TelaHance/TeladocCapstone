@@ -102,7 +102,7 @@ export const AdminCharts = ({ consults }) => {
         typeof consults !== 'undefined'
             ? Object.keys(consults.platformAverages).reverse()
             : [];
-    const docGraphTitle = "Dr. " + chosenDocVal.split(" ")[1] + '\'s Average Consult Ratings';
+    const docGraphTitle = "Dr. " + chosenDoc.split(" ")[1] + '\'s Average Consult Ratings';
     const options = {
         responsive: true,
         maintainAspectRatio: false,
