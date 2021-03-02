@@ -5,7 +5,7 @@ import conditionsJson from 'assets/conditions';
 import riskFactorsJson from 'assets/risk_factors';
 import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faCrutch, faDiagnoses } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faExclamationTriangle, faVirus } from '@fortawesome/free-solid-svg-icons';
 import { Lookup } from 'react-rainbow-components';
 
 const Symptoms = ({
@@ -190,7 +190,8 @@ const Symptoms = ({
             <div className={classes.item} key={termData.id}>
 
               <FontAwesomeIcon
-                icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faDiagnoses : faCrutch}
+                title={termData.type}
+                icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faVirus : faExclamationTriangle}
                 style={{ color: '#532197' }}
                 className={classes.icon}
               />
