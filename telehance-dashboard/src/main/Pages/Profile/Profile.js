@@ -63,6 +63,7 @@ const Profile = () => {
   if (error) {
     return <Jumbotron>Error</Jumbotron>;
   }
+  console.log(values);
   const set = (name) => {
     return ({ target: { value } }) => {
       setValues((oldValues) => ({ ...oldValues, [name]: value }));
@@ -158,7 +159,7 @@ const Profile = () => {
                 required
                 as='select'
                 placeholder='Sex'
-                defaultValue={values.sex}
+                value={values.sex}
                 onChange={set('sex')}
               >
                 <option></option>
