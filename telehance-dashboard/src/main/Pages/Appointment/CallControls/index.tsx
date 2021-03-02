@@ -24,7 +24,7 @@ export default function CallControls({
   }, [isMuted]);
 
   useEffect(() => {
-    console.log(callStatus);
+    console.log('Call Status: ', callStatus);
     if (callStatus === Connection.State.Open) {
       setIsMuted(false);
     }
@@ -36,7 +36,7 @@ export default function CallControls({
         <ButtonIcon
           variant='success'
           size='large'
-          disabled={ready}
+          disabled={!ready}
           onClick={call}
           icon={<FontAwesomeIcon icon={faPhoneAlt} />}
         />
@@ -45,7 +45,7 @@ export default function CallControls({
           // @ts-ignore
           variant='destructive'
           size='large'
-          disabled={ready}
+          disabled={!ready}
           onClick={hangup}
           icon={
             <FontAwesomeIcon icon={faPhoneAlt} className={classes.hangup} />
