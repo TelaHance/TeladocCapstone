@@ -250,7 +250,7 @@ export default function Symptoms({
       </div>
       {medicalTerms && medicalTerms.length > 0 && (
         <div className={classes.itemContainer}>
-          <AnimatedList items={symptomsState} component={Symptom} />
+          <AnimatedList items={medicalTerms} component={Symptom} />
         </div>
       )}
     </div>

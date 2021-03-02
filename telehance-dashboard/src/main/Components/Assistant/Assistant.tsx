@@ -5,7 +5,7 @@ import {
   faSearch,
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
-import { LiveConsultData } from 'Models';
+import { LiveConsultData, SymptomData } from 'Models';
 import Symptoms from './Symptoms/Symptoms';
 import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
@@ -46,34 +46,35 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const [diagnoseResult, setDiagnoseResult] = useState();
-  const [medicalTerms, setMedicalTerms] = useState(symptoms ? [...symptoms] : []);
+  const [medicalTerms, setMedicalTerms] = useState(
+    symptoms ? [...symptoms] : []
+  );
 
   function changeTool(option: string) {
     setCurrentTool((oldTool) => (oldTool !== option ? option : undefined));
   }
 
-  async function diagnose(medicalTerms: any) {
+  async function diagnose(medicalTerms: SymptomData[]) {
     const options = {
       method: 'POST',
       body: JSON.stringify({
-        symptoms: medicalTerms.map((term: any) => {
-          return ({
+        symptoms: medicalTerms.map((term) => {
+          return {
             id: term.id,
-            choice_id: term.choice_id
-          })
+            choice_id: term.choice_id,
+          };
         }),
         start_time: start_time,
         consult_id: consult_id,
-        patient_id: patient.user_id
-      })
-    }
+        patient_id: patient.user_id,
+      }),
+    };
     try {
       const diagnosis = await fetchWithToken(diagnoseUrl, awsToken, options);
       setDiagnoseResult(diagnosis);
     } catch (e) {
       alert(`Submission failed! ${e.message}`);
     }
-
   }
 
   useEffect(() => {
@@ -84,8 +85,8 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
   const Tool = currentTool
     ? tools[currentTool].component
     : () => {
-      return <></>;
-    };
+        return <></>;
+      };
 
   return (
     <>
@@ -98,7 +99,9 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
           consultId={consult_id}
           startTime={start_time}
           medicalTerms={medicalTerms}
-          medicalConditions={diagnoseResult ? diagnoseResult : medical_conditions}
+          medicalConditions={
+            diagnoseResult ? diagnoseResult : medical_conditions
+          }
           question={question}
           isLive={isLive}
           diagnose={diagnose}
