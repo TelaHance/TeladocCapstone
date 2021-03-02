@@ -141,7 +141,6 @@ export const AdminCharts = ({ consults }) => {
                     onChange={(selectedVal) => {
                         setChosenDoc(selectedVal.label);
                         setChosenDocVal(selectedVal);
-                        console.log(selectedVal);
                     }}
                     value={chosenDocVal}
                     label='Select a Doctor'
