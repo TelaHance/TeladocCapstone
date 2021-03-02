@@ -192,7 +192,7 @@ const Symptoms = ({
               <FontAwesomeIcon
                 title={termData.type}
                 icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faVirus : faExclamationTriangle}
-                style={{ color: '#532197' }}
+                color={termData.type === "symptom" ? 'orange' : termData.type === 'condition' ? 'red' : 'yellow'}
                 className={classes.icon}
               />
               <div>
