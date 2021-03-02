@@ -1,9 +1,6 @@
 import React from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { ColumnDescription } from 'react-bootstrap-table-next';
-import { ConsultData, UserData } from 'Models';
+import { useHistory } from 'react-router-dom';
 import Sentiment from '../../Components/Sentiment';
-import SentimentFilter, { filter } from '../../Components/Sentiment/Filter';
 import classes from './ConsultDashboard.module.css';
 import {Button} from "react-rainbow-components";
 
@@ -31,28 +28,6 @@ export function dateFormatter (value:any) {
   );
 }
 
-// const dateFormatter = (cell: number, row: ConsultData) => {
-//   if (typeof cell === 'string') cell = parseInt(cell);
-//   return new Date(cell).toLocaleString('default', {
-//     month: 'long',
-//     day: '2-digit',
-//     year: 'numeric',
-//   });
-// };
-
-// const csvDateFormatter = (cell: number | string, row: ConsultData) => {
-//   if (typeof cell === 'string') cell = parseInt(cell);
-//   return new Date(cell).toISOString().split('T')[0]; // yyyy-mm-dd
-// };
-
-// const firstNameFormatter = (cell: UserData, row: ConsultData) => {
-//   return cell.given_name;
-// };
-
-// const lastNameFormatter = (cell: UserData, row: ConsultData) => {
-//   return cell.family_name;
-// };
-
 export function nameFormatter(cell:any){
   return(
     <div>
@@ -67,11 +42,6 @@ export function sentimentFormatter(cell:any){
   return <Sentiment sentiment={cell.value} />;
 }
 
-// const csvSentimentFormatter = (cell?: number, row?: ConsultData) => {
-//   if (cell) return cell;
-//   return -1;
-// };
-
 export function ButtonFormatter(
   cell: any
 ){
@@ -84,97 +54,3 @@ export function ButtonFormatter(
     </div>
   );
 }
-
-// COLUMN DESCRIPTIONS
-
-// const start_date = {
-//   dataField: 'start_time',
-//   text: 'Consult Date',
-//   formatter: dateFormatter,
-//   csvFormatter: csvDateFormatter,
-//   sort: true,
-// };
-
-// const doctor: ColumnDescription[] = [
-//   {
-//     dataField: 'doctor.given_name',
-//     text: 'Doctor First Name',
-//     hidden: true,
-//   },
-//   {
-//     dataField: 'doctor.family_name',
-//     text: 'Doctor Last Name',
-//     hidden: true,
-//   },
-//   {
-//     dataField: 'doctor',
-//     text: 'Doctor',
-//     formatter: nameFormatter,
-//     csvExport: false,
-//   },
-// ];
-
-// const patient: ColumnDescription[] = [
-//   {
-//     dataField: 'patient.given_name',
-//     text: 'Patient First Name',
-//     hidden: true,
-//   },
-//   {
-//     dataField: 'patient.family_name',
-//     text: 'Patient Last Name',
-//     hidden: true,
-//   },
-//   {
-//     dataField: 'patient',
-//     text: 'Patient',
-//     formatter: nameFormatter,
-//     csvExport: false,
-//   },
-// ];
-
-// const sentiment = {
-//   dataField: 'sentiment',
-//   text: 'Issues',
-//   formatter: sentimentFormatter,
-//   csvType: Number,
-//   headerClasses: classes.issues,
-//   // filter: textFilter({
-//   //   // @ts-ignore
-//   //   onFilter: filter
-//   // }),
-//   filterRenderer: (onFilter: any, column: any) => (
-//     <SentimentFilter onFilter={onFilter} column={column} />
-//   ),
-// };
-
-// export function viewConsult(history: RouteComponentProps['history']) {
-//   return {
-//     field: 'button',
-//     header: 'Actions',
-//     formatter: (cell: any, row: any) => buttonFormatter(cell, row, history),
-//     csvExport: false,
-//   };
-// }
-
-// PRIMARY FUNCTION
-
-// export default function getColumns(
-//   history: RouteComponentProps['history'],
-//   role: string
-// ): ColumnDescription[] {
-
-//   let columns: ColumnDescription[] = [start_date];
-//   if (role !== 'DOCTOR') {
-//     columns = columns.concat(doctor);
-//   }
-//   if (role !== 'PATIENT') {
-//     columns = columns.concat(patient);
-//   }
-//   if (role === 'ADMIN') {
-//     columns = columns.concat(sentiment);
-//   }
-//   columns.push(viewConsult(history));
-
-//   return columns;
-// }
