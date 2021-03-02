@@ -47,12 +47,12 @@ function ConsultDashboard() {
           pageSize={5}
           data={consults}
           keyField='id'
-          className={classes['table']}
+          className={classes.table}
         >
           {role !== 'DOCTOR' && (
             <Column
               header='Doctor'
-              defaultWidth={180}
+              defaultWidth={200}
               field='doctor'
               component={nameFormatter}
             />
@@ -60,14 +60,13 @@ function ConsultDashboard() {
           {role !== 'PATIENT' && (
             <Column
               header='Patient'
-              defaultWidth={180}
+              defaultWidth={200}
               field='patient'
               component={nameFormatter}
             />
           )}
           <Column
             header='Consult Date'
-            defaultWidth={180}
             field='start_time'
             component={dateFormatter}
           />
@@ -79,7 +78,7 @@ function ConsultDashboard() {
           />
           <Column
             header=''
-            defaultWidth={197}
+            width={150}
             field='consult_id'
             component={ButtonFormatter}
           />
