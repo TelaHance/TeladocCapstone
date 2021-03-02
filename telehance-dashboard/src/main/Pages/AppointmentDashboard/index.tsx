@@ -14,6 +14,7 @@ import {
 import ScheduleAppointment from 'Pages/AppointmentDashboard/AppointmentModal';
 import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
 import styles from './AppointmentDashboard.module.css';
+import classes from "Pages/Admin/Admin.module.css";
 
 function getRole(appointmentList: any) {
   if (appointmentList[0].patient) return 'DOCTOR';
@@ -43,9 +44,10 @@ function AppointmentDashboard() {
       <div className={styles.container}>
         {getRole(appointmentList) === 'PATIENT' && <ScheduleAppointment />}
         <TableWithBrowserPagination
-          pageSize={5}
+          pageSize={3}
           data={appointmentList}
           keyField='id'
+          className={classes['table']}
         >
           {getRole(appointmentList) === 'PATIENT' && (
             <Column
@@ -66,7 +68,7 @@ function AppointmentDashboard() {
           <Column
             header='Appointment Date'
             field='start_time'
-            defaultWidth={200}
+            defaultWidth={170}
             component={dateFormatter}
           />
           <Column
@@ -74,12 +76,14 @@ function AppointmentDashboard() {
             field='purpose'
             component={purposeFormatter}
           />
-          <Column
-            header=''
-            field='user_id'
-            width={75}
-            component={ButtonFormatter}
-          />
+          {getRole(appointmentList) === 'DOCTOR' && (
+            <Column
+              header=''
+              field='user_id'
+              width={105}
+              component={ButtonFormatter}
+            />
+          )}
         </TableWithBrowserPagination>
       </div>
     </>

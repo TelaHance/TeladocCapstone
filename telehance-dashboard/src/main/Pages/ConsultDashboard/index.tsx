@@ -11,6 +11,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import { Column, TableWithBrowserPagination} from "react-rainbow-components";
 import {ButtonFormatter, sentimentFormatter, nameFormatter, dateFormatter} from './getColumns';
+import classes from "./ConsultDashboard.module.css";
 
 function getRole(consultList: any) {
   if (consultList[0].doctor && consultList[0].patient) return 'ADMIN';
@@ -36,7 +37,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
     <>
       <BreadcrumbBar page='Consult Dashboard' />
       <Container className='mb-5 text-center'>
-        <TableWithBrowserPagination pageSize={5} data={consultList} keyField="id">
+        <TableWithBrowserPagination pageSize={5} data={consultList} keyField="id" className={classes['table']}>
                     {(getRole(consultList) !== 'DOCTOR') &&
                     <Column header="Doctor" defaultWidth={180} field="doctor" component={nameFormatter}/>
                     }
@@ -45,7 +46,7 @@ function ConsultDashboard({ history }: RouteComponentProps) {
                     }
                     <Column header="Consult Date" defaultWidth={180} field="start_time" component={dateFormatter}/>
                     <Column header="Problematic Rating" defaultWidth={190} field="sentiment" component={sentimentFormatter}/>
-                    <Column header="" defaultWidth={200} field="consult_id" component={ButtonFormatter}/>
+                    <Column header="" defaultWidth={197} field="consult_id" component={ButtonFormatter}/>
             </TableWithBrowserPagination>
       </Container>
     </>
