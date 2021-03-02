@@ -13,22 +13,25 @@ import {
 } from 'react-rainbow-components';
 import classes from './Admin.module.css';
 import {getLabel} from "Components/Sentiment/Pill";
+import {bgColor, categories} from "Pages/Admin/AdminConstants";
 export const AdminCharts = ({ consults }) => {
     const [chosenDoc, setChosenDoc] = useState('Tanay Komarlu');
-    const [chosenDocVal, setChosenDocVal] = useState('Tanay Komarlu');
+    const [chosenDocVal, setChosenDocVal] = useState({
+        icon: <img
+            className={classes['rounded-circle']}
+            src='https://lh5.googleusercontent.com/-nWGfFsvI9FU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmM4LfRfQZBBou_hOJV_eBkkPlFdQ/s96-c/photo.jpg'
+            width='25'
+            alt=''
+        />,
+        label: "Tanay Komarlu",
+        name: "Tanay Komarlu",
+    });
     const [avgListVal, setAvgListVal] = useState([
         { label: 'Toxicity', name: 'TOXICITY' },{ label: 'Insult', name: 'INSULT' },{ label: 'Flirtation', name: 'FLIRTATION' },
     ]);
     const [avgDatasets, setAvgDatasets] = useState([]);
     const [docDatasets, setDocDatasets] = useState([]);
-    const categories = [
-        'FLIRTATION',
-        'THREAT',
-        'PROFANITY',
-        'INSULT',
-        'IDENTITY_ATTACK',
-        'TOXICITY',
-    ];
+
     useEffect(() => {
         let newDatasets = [];
         for (let i = 0; i < avgListVal.length; i++) {
@@ -40,14 +43,7 @@ export const AdminCharts = ({ consults }) => {
                             return 100 * sentiment[avgListVal[i].name];
                         })
                     : [];
-            const bgColor = {
-                FLIRTATION: '#e83e8c',
-                THREAT: '#dc3545',
-                PROFANITY: '#e65100',
-                INSULT: '#d6cd00',
-                IDENTITY_ATTACK: '#007bff',
-                TOXICITY: '#6f42c1',
-            };
+
             newDatasets.push({
                 title: avgListVal[i].label,
                 borderColor: bgColor[avgListVal[i].name],
@@ -76,14 +72,6 @@ export const AdminCharts = ({ consults }) => {
                     .map(function (sentiment) {
                         return 100 * sentiment;
                     });
-                const bgColor = {
-                    FLIRTATION: '#e83e8c',
-                    THREAT: '#dc3545',
-                    PROFANITY: '#e65100',
-                    INSULT: '#d6cd00',
-                    IDENTITY_ATTACK: '#007bff',
-                    TOXICITY: '#6f42c1',
-                };
                 newDatasets.push({
                     title: getLabel(categories[i]),
                     borderColor: bgColor[categories[i]],
@@ -93,7 +81,6 @@ export const AdminCharts = ({ consults }) => {
             setDocDatasets(newDatasets);
         }
     }, [chosenDocVal, consults]);
-    (typeof consults !== "undefined") ? console.log(Object.keys(consults.platformAverages).reverse()) : console.log('hell');
     const docLabels =
         typeof consults !== 'undefined'
             ? Object.keys(consults.doctorAverage[chosenDoc].sentiment['TOXICITY']).reverse()
@@ -154,6 +141,7 @@ export const AdminCharts = ({ consults }) => {
                     onChange={(selectedVal) => {
                         setChosenDoc(selectedVal.label);
                         setChosenDocVal(selectedVal);
+                        console.log(selectedVal);
                     }}
                     value={chosenDocVal}
                     label='Select a Doctor'
