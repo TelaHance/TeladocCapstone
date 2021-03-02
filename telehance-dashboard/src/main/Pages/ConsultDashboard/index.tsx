@@ -45,8 +45,8 @@ function ConsultDashboard({ history }: RouteComponentProps) {
                     <Column header="Patient" defaultWidth={180} field="patient" component={nameFormatter} />
                     }
                     <Column header="Consult Date" defaultWidth={180} field="start_time" component={dateFormatter}/>
-                    <Column header="Problematic Rating" defaultWidth={190} field="sentiment" component={sentimentFormatter}/>
-                    <Column header="" defaultWidth={197} field="consult_id" component={ButtonFormatter}/>
+                    <Column header="Problematic Rating" defaultWidth={187} field="sentiment" component={sentimentFormatter}/>
+                    <Column header=""  field="consult_id" component={ButtonFormatter}/>
             </TableWithBrowserPagination>
       </Container>
     </>

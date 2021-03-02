@@ -1,0 +1,102 @@
+.section{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    top: 50%;
+    --tw-bg-opacity: 1;
+    background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
+    pointer-events: none;
+    margin-top: 4rem;
+    margin-bottom: -2.5rem;
+}
+.relative {
+    position: relative;
+}
+.background {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    width: 1px;
+    padding: 1px;
+    height: 5rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+    transform: translateY(-50%);
+}
+.section-bg{
+    position: relative;
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.sectionHeader{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 48rem;
+    text-align: center;
+    padding-bottom: 3rem;
+}
+.sectionHeader h2:first-child{
+    margin-bottom: 1rem;
+}
+.sectionHeader p:first-child{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+}
+.items{
+    max-width: 24rem;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: flex-start;
+    display: flex;
+}
+.first-item{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    border-radius: 0.25rem;
+    --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.first-svg{
+    width: 4rem;
+    height: 4rem;
+    width: 4rem;
+    margin-bottom: 0.5rem;
+}
+.rect{
+    --tw-text-opacity: 1;
+    color: #00c1ff;
+    fill: currentColor;
+}
+.card-header{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    line-height: 1.375;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
+}
+.card-text{
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+    text-align: center;
+}
+.briefcase{
+    color:#FFFFFF;
+    font-size: 30px;
+}
