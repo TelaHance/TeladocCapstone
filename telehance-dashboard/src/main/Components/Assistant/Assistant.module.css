@@ -132,23 +132,3 @@ button:hover {
   width: 8rem !important;
   margin-right: 1rem;
 }
-
-.patient {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1em;
-}
-
-.patient > h6 {
-  margin-left: 0.5em;
-  font-weight: bold;
-  margin-right: 1em;
-}
-
-.patient > div > h7 {
-  font-weight: bold;
-}
-
-.patient > div {
-  margin-left: auto;
-}
