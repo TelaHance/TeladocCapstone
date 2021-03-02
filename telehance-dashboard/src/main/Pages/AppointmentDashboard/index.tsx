@@ -14,6 +14,7 @@ import {
 import ScheduleAppointment from 'Pages/AppointmentDashboard/AppointmentModal';
 import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
 import styles from './AppointmentDashboard.module.css';
+import classes from 'Pages/Admin/Admin.module.css';
 
 const {
   REACT_APP_MANAGEMENT_API_KEY,
@@ -47,9 +48,10 @@ export default function AppointmentDashboard() {
       <div className={styles.container}>
         {role === 'PATIENT' && <ScheduleAppointment />}
         <TableWithBrowserPagination
-          pageSize={5}
+          pageSize={3}
           data={appointments}
           keyField='id'
+          className={classes['table']}
         >
           {role === 'PATIENT' && (
             <Column
@@ -70,7 +72,7 @@ export default function AppointmentDashboard() {
           <Column
             header='Appointment Date'
             field='start_time'
-            defaultWidth={200}
+            defaultWidth={170}
             component={dateFormatter}
           />
           <Column

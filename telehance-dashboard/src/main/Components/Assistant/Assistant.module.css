@@ -29,10 +29,6 @@
   align-items: center;
 }
 
-.search button {
-  margin: 0 1em;
-}
-
 .search button svg {
   color: #28a745;
 }
@@ -43,6 +39,14 @@
 
 .lookup > div > div > ul {
   padding-left: 0;
+}
+
+.lookup > div > div > ul > li > div > span {
+  font-size: 1rem;
+}
+
+.lookup > div > div > ul > li > div > span > span {
+  font-size: 0.8rem;
 }
 
 button {
@@ -65,25 +69,29 @@ button:hover {
 
 .content {
   flex: 100%;
-  padding: 2em;
+  padding: 2em 2em 2em 5px;
 }
+
+/* .actions {
+  margin: 0.5em; 
+  display: flex;
+  justify-content: center;
+} */
 
 .actions {
   margin: 0.5em;
-  display: flex;
-  justify-content: center;
-}
-
-.actions button {
-  margin: 0.5em;
   background-color: #532197;
   border-color: #532197;
+  border-radius: 0.6rem;
+  color: white;
+  padding: 0.5em 1em;
 }
 
 .itemContainer {
   border: none;
   display: flex;
   flex-direction: column-reverse;
+  margin-bottom: 1em;
 }
 
 .item {
@@ -93,7 +101,7 @@ button:hover {
   align-items: center;
   padding: 0.5rem;
   margin-bottom: 0.25rem;
-  border-radius: calc(0.25rem);
+  border-radius: 0.5em;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
@@ -104,6 +112,11 @@ button:hover {
   width: 1em !important;
 }
 
+.search .icon {
+  font-size: 1.5em;
+  display: flex;
+}
+
 .update {
   margin-left: auto;
   font-size: 1.5em;
@@ -112,4 +125,24 @@ button:hover {
 .progressBar {
   width: 8rem !important;
   margin-right: 1rem;
+}
+
+.patient {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.patient > h6 {
+  margin-left: 0.5em;
+  font-weight: bold;
+  margin-right: 1em;
+}
+
+.patient > div > h7 {
+  font-weight: bold;
+}
+
+.patient > div {
+  margin-left: auto;
 }
