@@ -23,8 +23,13 @@
 .date {
   overflow-wrap: break-word;
   white-space: normal;
-  line-height: 40px;
   margin: 4px 0.5rem;
+  overflow-y: hidden;
+}
+
+.date > p {
+  margin: 0;
+  line-height: 2em;
 }
 
 .issues {
@@ -47,4 +52,16 @@
 .view-container{
   display:flex;
   justify-content: center;
+}
+
+.table{
+  border: 1px solid rgba(215,217,226,1);
+  border-radius: 15px;
+}
+.table > div:first-child > div:last-child > div{
+  border-radius: 15px 15px 0 0;
+  border:none;
+}
+.table > div:last-child {
+  border-radius: 0 0 15px 15px;
 }

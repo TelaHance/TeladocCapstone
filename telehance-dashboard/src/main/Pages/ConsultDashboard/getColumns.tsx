@@ -21,19 +21,18 @@ export function dateFormatter (value:any) {
   });
   return(
       <div className={classes['date']}>
-          <span> {date} </span>
-          <br/>
-          <span> {time} </span>
+          <p> {date} </p>
+          <p> {time} </p>
       </div>
   );
 }
 
 export function nameFormatter(cell:any){
   return(
-    <div>
+    <>
       <img className="rounded-circle" src={cell.value.picture} width="31" alt=""></img>
       <span> {cell.value.given_name} {cell.value.family_name} </span>
-    </div>
+    </>
   )
 }
 
@@ -45,7 +44,7 @@ export function sentimentFormatter(cell:any){
 export function ButtonFormatter(
   cell: any
 ){
-  const history = useHistory()
+  const history = useHistory();
   return (
     <div className={classes['view-container']}>
       <Button onClick={() => history.push(`/consults/${cell.value}`)}>
