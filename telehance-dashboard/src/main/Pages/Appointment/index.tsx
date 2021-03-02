@@ -4,11 +4,9 @@ import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
 import { useHistory, RouteComponentProps } from 'react-router-dom';
 import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
-import Spinner from 'Components/Spinner';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, SymptomData } from 'Models';
-// import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import classes from './Appointment.module.css';
 import CallControls from './CallControls';
 
@@ -54,7 +52,6 @@ export default function Appointment(route: RouteComponentProps) {
         setNewSymptoms(symptoms);
       }
     }
-    console.log(lastMessage);
   }, [lastMessage]);
 
   function call() {
@@ -71,7 +68,6 @@ export default function Appointment(route: RouteComponentProps) {
     setIsCalling(false);
     connection?.disconnect();
     device.destroy();
-    // history.push(`/consult/${appointment.consult_id}`);
   }
 
   function mute(shouldMute?: boolean) {
