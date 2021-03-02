@@ -107,7 +107,8 @@ button:hover {
 }
 
 .item .icon {
-  margin-right: 1em;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
   font-size: 1.5em;
   width: 1em !important;
 }
@@ -120,6 +121,7 @@ button:hover {
 .update {
   margin-left: auto;
   font-size: 1.5em;
+  display: flex;
 }
 
 .progressBar {

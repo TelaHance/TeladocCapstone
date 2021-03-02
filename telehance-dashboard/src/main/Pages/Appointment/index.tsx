@@ -7,7 +7,6 @@ import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
 import { AppointmentData, TranscriptData, SymptomData } from 'Models';
-// import Diagnoses from 'Components/Diagnoses/Diagnoses';
 import classes from './Appointment.module.css';
 import CallControls, { Status } from './CallControls';
 
@@ -70,7 +69,6 @@ export default function Appointment(route: RouteComponentProps) {
   function hangup() {
     connection?.disconnect();
     device.destroy();
-    // history.push(`/consult/${appointment.consult_id}`);
   }
 
   function mute(shouldMute?: boolean) {
