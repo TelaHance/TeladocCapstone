@@ -63,7 +63,6 @@ const Profile = () => {
   if (error) {
     return <Jumbotron>Error</Jumbotron>;
   }
-  console.log(values);
   const set = (name) => {
     return ({ target: { value } }) => {
       setValues((oldValues) => ({ ...oldValues, [name]: value }));

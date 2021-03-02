@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import useSWR from 'swr';
 import {
   faCommentAlt,
   faSearch,
@@ -68,11 +67,9 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
         patient_id: patient.user_id
       })
     }
-    console.log(options);
     try {
       const diagnosis = await fetchWithToken(diagnoseUrl, awsToken, options);
       setDiagnoseResult(diagnosis);
-      console.log(diagnosis);
     } catch (e) {
       alert(`Submission failed! ${e.message}`);
     }
