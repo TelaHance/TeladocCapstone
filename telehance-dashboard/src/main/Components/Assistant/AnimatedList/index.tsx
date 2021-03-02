@@ -3,16 +3,15 @@ import { animated, useTransition } from 'react-spring';
 
 export default function AnimatedList({ items, component }: CardListProps) {
   const transitions = useTransition(items, (item) => item.id, {
-    from: { transform: 'translateX(100%)' },
-    enter: { transform: 'translateX(0)' },
-    leave: { height: 0, opacity: 0 },
+    from: { transform: 'translateX(100%)', opacity: 0 },
+    enter: { transform: 'translateX(0)', opacity: 1 },
+    leave: { transform: 'translateX(100%)', opacity: 0 },
   });
-  const list = transitions.map(({ item, props, key }) => {
+  return transitions.map(({ item, props, key }) => (
     <animated.div key={key} style={props}>
       {component(item)}
-    </animated.div>;
-  });
-  return list;
+    </animated.div>
+  ));
 }
 
 type Item = {
