@@ -42,7 +42,7 @@ export const updateSymptomsUrl = (query: UpdateSymptomsQuery) =>
   getUrl('consult', '/updateSymptoms', query);
 export const updateTranscriptUrl = (query: GetConsultQuery) =>
   getUrl('consult', '/update-transcript-edited', query);
-
+export const adminGraphUrl = getUrl('consult', '/get-graph-data')
 // Consult Websocket (Live Consult) Api
 
 export const consultWebsocketUrl = getUrl('consultWebsocket', '/');
@@ -56,6 +56,8 @@ export const getTwilioTokenUrl = getUrl('twilio', '/get-token');
 export const getAllDoctorsUrl = getUrl('user', '/doctor-get-all');
 export const getAllUsersUrl = getUrl('user', '/user-get-all');
 export const getUserUrl = getUrl('user', '/user-by-id');
+export const getUserProfileUrl = (query: GetUserQuery) =>
+    getUrl('user', '/user-by-id', query);
 export const updateUserUrl = getUrl('user', '/update-phone');
 
 // Type Definitions
