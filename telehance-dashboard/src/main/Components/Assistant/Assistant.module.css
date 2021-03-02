@@ -59,6 +59,10 @@ button:hover {
   cursor: pointer;
 }
 
+.text {
+  margin-left: 0.5rem;
+}
+
 .name {
   font-size: 18px;
 }
