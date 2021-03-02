@@ -78,12 +78,9 @@ export default function AppointmentDashboard() {
             field='purpose'
             component={purposeFormatter}
           />
-          <Column
-            header=''
-            field='user_id'
-            defaultWidth={100}
-            component={ButtonFormatter}
-          />
+          {role === 'DOCTOR' && (
+            <Column header='' defaultWidth={100} component={ButtonFormatter} />
+          )}
         </TableWithBrowserPagination>
       </div>
     </>

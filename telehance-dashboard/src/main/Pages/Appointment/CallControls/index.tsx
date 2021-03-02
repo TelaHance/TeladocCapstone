@@ -6,12 +6,11 @@ import {
   faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonIcon } from 'react-rainbow-components';
-import { ReadyState } from 'react-use-websocket';
 import { Connection } from 'twilio-client';
 import classes from './CallControls.module.css';
 
 export default function CallControls({
-  wsStatus,
+  ready,
   callStatus,
   call,
   hangup,
@@ -20,7 +19,7 @@ export default function CallControls({
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
-    console.log(isMuted);
+    console.log('Muted: ', isMuted);
     mute(isMuted);
   }, [isMuted]);
 
@@ -37,9 +36,7 @@ export default function CallControls({
         <ButtonIcon
           variant='success'
           size='large'
-          disabled={
-            wsStatus === ReadyState.CONNECTING || wsStatus === ReadyState.CLOSED
-          }
+          disabled={ready}
           onClick={call}
           icon={<FontAwesomeIcon icon={faPhoneAlt} />}
         />
@@ -48,9 +45,7 @@ export default function CallControls({
           // @ts-ignore
           variant='destructive'
           size='large'
-          disabled={
-            wsStatus === ReadyState.CONNECTING || wsStatus === ReadyState.CLOSED
-          }
+          disabled={ready}
           onClick={hangup}
           icon={
             <FontAwesomeIcon icon={faPhoneAlt} className={classes.hangup} />
@@ -80,7 +75,7 @@ export default function CallControls({
 }
 
 type CallControlsProps = {
-  wsStatus: ReadyState;
+  ready: boolean;
   callStatus?: Connection.State;
   call: () => void;
   hangup: () => void;
