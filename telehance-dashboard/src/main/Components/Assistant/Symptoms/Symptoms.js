@@ -17,7 +17,7 @@ const Symptoms = ({
   setMedicalTerms
 }) => {
   const awsToken = process.env.REACT_APP_CONSULT_API_KEY;
-  
+
   const [searchState, setSearchState] = useState({ options: null });
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Symptoms = ({
           <FontAwesomeIcon
             title={"Symptom"}
             icon={faHeadSideCough}
-            color={'blue'}
+            color={'#532197'}
             style={iconStyles}
           />
         )
@@ -214,7 +214,7 @@ const Symptoms = ({
               <FontAwesomeIcon
                 title={termData.type}
                 icon={termData.type === "symptom" ? faHeadSideCough : termData.type === 'condition' ? faVirus : faExclamationTriangle}
-                color={termData.type === "symptom" ? 'blue' : termData.type === 'condition' ? 'red' : 'orange'}
+                color={termData.type === "symptom" ? '#532197' : termData.type === 'condition' ? 'red' : 'orange'}
                 className={classes.icon}
               />
               <div>
