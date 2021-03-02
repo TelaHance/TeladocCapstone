@@ -67,14 +67,14 @@ function ConsultDashboard({ history }: RouteComponentProps) {
       <Container className='mb-5 text-center'>
         <TableWithBrowserPagination pageSize={5} data={consultList} keyField="id">
                     {(getRole(consultList) !== 'DOCTOR') &&
-                    <Column header="Doctor" width={250} field="doctor" component={nameFormatter}/>
+                    <Column header="Doctor" defaultWidth={250} field="doctor" component={nameFormatter}/>
                     }
                     {(getRole(consultList) !== 'PATIENT') &&
-                    <Column header="Patient" width={250} field="patient" component={nameFormatter} />
+                    <Column header="Patient" defaultWidth={250} field="patient" component={nameFormatter} />
                     }
-                    <Column header="Consult Date" width={230} field="start_time" component={dateFormatter}/>
-                    <Column header="Problematic Rating" width={177} field="sentiment" component={sentimentFormatter}/>
-                    <Column header="" width={200} field="consult_id" component={ButtonFormatter}/>
+                    <Column header="Consult Date" field="start_time" component={dateFormatter}/>
+                    <Column header="Problematic Rating" defaultWidth={177} field="sentiment" component={sentimentFormatter}/>
+                    <Column header="" defaultWidth={200} field="consult_id" component={ButtonFormatter}/>
             </TableWithBrowserPagination>
         {/* <ToolkitProvider
           bootstrap4
