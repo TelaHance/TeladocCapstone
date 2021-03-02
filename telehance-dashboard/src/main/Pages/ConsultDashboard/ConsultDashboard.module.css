@@ -45,8 +45,9 @@
   z-index: 1;
 }
 
-.rounded-circle {
-  border-radius: 50%!important;
+.avatar {
+  border-radius: 50% !important;
+  margin-right: 9px;
 }
 
 .view-container{
