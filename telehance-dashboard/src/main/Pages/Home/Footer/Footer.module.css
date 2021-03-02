@@ -1,0 +1,80 @@
+.footer{
+    display: flex;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+    border-top: 2px solid;
+    --border-opacity: 1;
+    border-color: rgba(234,234,234,var(--border-opacity));
+    margin-top: 10px;
+}
+.credText{
+    margin-left: 1rem;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+    margin-right: 1rem;
+}
+.credLink{
+    --tw-text-opacity: 1;
+    color: rgba(37, 99, 235, var(--tw-text-opacity));
+}
+.credLink:hover{
+    text-decoration: underline;
+}
+.socials li{
+    list-style: none
+}
+.socials{
+    margin-left: auto;
+    margin-right: 1rem;
+}
+.github{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+    border-radius: 9999px;
+    --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.github svg{
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: currentColor;
+}
+.section-header{
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+}
+.section-header h2{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.section-header p{
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    --tw-text-opacity: 1;
+    color: rgba(75, 85, 99, var(--tw-text-opacity));
+}
+.socials{
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+.logo{
+    transform: scale(0.4);
+}
+.collab{
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: 15vh;
+}
