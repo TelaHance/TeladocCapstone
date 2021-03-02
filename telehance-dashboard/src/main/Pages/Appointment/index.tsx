@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
@@ -6,7 +6,7 @@ import { useHistory, RouteComponentProps } from 'react-router-dom';
 import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
-import { AppointmentData, TranscriptData, SymptomData } from 'Models';
+import { AppointmentData, TranscriptData, EntityData } from 'Models';
 import classes from './Appointment.module.css';
 import CallControls, { Status } from './CallControls';
 
@@ -20,7 +20,7 @@ export default function Appointment(route: RouteComponentProps) {
   const [callStatus, setCallStatus] = useState<Status>(Status.Waiting);
   const [connection, setConnection] = useState<Connection>();
   const [transcript, setTranscript] = useState<TranscriptData>([]);
-  const [newSymptoms, setNewSymptoms] = useState<SymptomData[]>();
+  const [newEntities, setNewEntities] = useState<EntityData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   const { lastMessage, getWebSocket } = useWebSocket(consultWebsocketUrl);
@@ -40,7 +40,9 @@ export default function Appointment(route: RouteComponentProps) {
 
   useEffect(() => {
     if (lastMessage) {
-      const { idx, block, symptoms, status } = JSON.parse(lastMessage.data);
+      const { idx, block, symptoms: entities, status } = JSON.parse(
+        lastMessage.data
+      );
       if (idx !== undefined && block) {
         setTranscript((prevTranscript) => {
           const newTranscript = [...prevTranscript];
@@ -48,8 +50,8 @@ export default function Appointment(route: RouteComponentProps) {
           return newTranscript;
         });
       }
-      if (symptoms && symptoms.length !== 0) {
-        setNewSymptoms(symptoms);
+      if (entities && entities.length !== 0) {
+        setNewEntities(entities);
       }
       if (status) {
         setCallStatus(status);
@@ -93,9 +95,9 @@ export default function Appointment(route: RouteComponentProps) {
           />
         </section>
         <Assistant
-          consult={{ symptoms: newSymptoms, ...appointment }}
+          consult={appointment}
+          newEntities={newEntities}
           action={setSidebarExpanded}
-          isLive
         />
       </div>
     </div>
