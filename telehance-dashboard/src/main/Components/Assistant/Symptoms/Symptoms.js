@@ -5,7 +5,7 @@ import conditionsJson from 'assets/conditions';
 import riskFactorsJson from 'assets/risk_factors';
 import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faExclamationTriangle, faVirus, faDiagnoses } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinusCircle, faPlusCircle, faTimes, faHeadSideCough, faExclamationTriangle, faVirus } from '@fortawesome/free-solid-svg-icons';
 import { Lookup } from 'react-rainbow-components';
 
 const Symptoms = ({
@@ -89,7 +89,6 @@ const Symptoms = ({
       })
     })
   )
-  console.log(database)
 
   function filter(query, options) {
     if (query) {

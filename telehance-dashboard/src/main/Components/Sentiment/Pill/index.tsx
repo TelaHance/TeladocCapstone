@@ -34,44 +34,6 @@ export const PillTypes = [
   'UNRATED',
 ];
 
-// export default function Pill({
-//   attribute,
-//   value,
-//   showTooltip = true,
-// }: PillProps) {
-//   const props = attributeToProps[attribute];
-//   const target = useRef(null);
-
-//   if (props === undefined)
-//     return (
-//       <Badge pill variant='secondary'>
-//         {attribute}
-//       </Badge>
-//     );
-
-//   const { variant, className } = props;
-
-//   return (
-//     <>
-//       <Badge
-//         pill
-//         variant={variant ?? 'secondary'}
-//         className={clsx(className, classes.badge)}
-//         ref={target}
-//       >
-//         {getLabel(attribute)}
-//       </Badge>
-//       {showTooltip ? (
-//         <Overlay target={target.current}>
-//           <Tooltip id={attribute}>
-//             {typeof value === 'number' ? `${Math.round(value * 100)}%` : value}
-//           </Tooltip>
-//         </Overlay>
-//       ) : null}
-//     </>
-//   );
-// }
-
 export default function Pill({
   attribute,
   value,
