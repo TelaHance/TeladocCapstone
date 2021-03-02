@@ -21,6 +21,14 @@ export type SentimentData = {
  *  INFERMEDICA API DATA
  */
 
+export type EntityData = {
+  choice_id: string;
+  common_name: string;
+  id: string;
+  name: string;
+  type: string;
+};
+
 export type ConditionData = {
   common_name: string;
   id: string;
@@ -43,14 +51,6 @@ export type ConditionListData = {
   };
   triage_level: string;
   recommended_channel: string;
-};
-
-export type SymptomData = {
-  choice_id: string;
-  common_name: string;
-  id: string;
-  name: string;
-  type: string;
 };
 
 export type SymptomListData = {
@@ -104,7 +104,7 @@ export type LiveConsultData = ConsultKeyData & Partial<InfermedicaData>;
 export type InfermedicaData = {
   medical_conditions: ConditionData[];
   question: string;
-  symptoms: SymptomData[];
+  symptoms: EntityData[];
 };
 
 export type TranscriptData = MessageData[];

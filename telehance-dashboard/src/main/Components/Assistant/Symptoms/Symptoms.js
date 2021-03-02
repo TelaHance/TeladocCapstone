@@ -72,25 +72,10 @@ export default function Symptoms({
   medicalTerms,
   consultId,
   startTime,
-  isLive,
   diagnose,
   setMedicalTerms,
 }) {
   const [searchState, setSearchState] = useState({ options: null });
-
-  useEffect(() => {
-    if (isLive) {
-      setMedicalTerms((medicalTerms) => {
-        let newTerms = [];
-        medicalTerms.forEach((newTerm) => {
-          if (medicalTerms.every((term) => term.id !== newTerm.id)) {
-            newTerms.push(newTerm);
-          }
-        });
-        return [...medicalTerms, ...newTerms];
-      });
-    }
-  }, [medicalTerms, isLive]);
 
   function filter(query, options) {
     if (query) {
