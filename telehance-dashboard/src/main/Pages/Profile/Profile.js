@@ -4,7 +4,7 @@ import { Col, Form, Button, Jumbotron } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import useSWR from 'swr';
-import { getUserUrl, updateUserUrl } from 'Api';
+import {getUserProfileUrl, getUserUrl, updateUserUrl} from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import styles from './Profile.module.css';
@@ -51,8 +51,8 @@ const Profile = () => {
     age: '',
   });
   const [validated, setValidated] = useState(false);
-  const { data, error } = useSWR(
-    [getUserUrl({ user_id }), awsToken],
+  const {data:data, mutate: mutateData, error: error} = useSWR(
+    [getUserProfileUrl({ user_id }), awsToken],
     fetchWithToken,
     {
       onSuccess: function (data) {
@@ -61,7 +61,6 @@ const Profile = () => {
     }
   );
   if (error) {
-    console.error(error);
     return <Jumbotron>Error</Jumbotron>;
   }
   const set = (name) => {
@@ -74,7 +73,7 @@ const Profile = () => {
     event.preventDefault();
     if (event.target.checkValidity()) {
       try {
-        await fetchWithToken(updateUserUrl({ user_id }), awsToken, {
+        await fetchWithToken(updateUserUrl, awsToken, {
           method: 'PATCH',
           headers: {
             'content-type': 'application/json',
