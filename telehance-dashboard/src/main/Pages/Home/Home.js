@@ -1,29 +1,19 @@
 import React from 'react';
 import classes from './Home.module.css';
+import HeroHome from "Pages/Home/HeroHome/HeroHome";
+import FeaturesBlocks from "Pages/Home/FeatureBlocks/FeatureBlock";
+import Footer from "Pages/Home/Footer/Footer";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div className={classes.container}>
-    <div className={classes.hero}>
-      <h1 className={classes['hero-title']}>
-        Whole-Person
-        <br></br>
-        <b>Virtual Care for All</b>
-        <br></br>
-      </h1>
-      <div className={classes['hero-text']}>
-        <p>
-          The technology to connect, expertise you can trust and the power to
-          improve health
-        </p>
+      <div className={classes["bg-container"]}>
+          <div className={classes["flex-container"]}>
+              {/*  Page sections */}
+              <HeroHome />
+              <FeaturesBlocks/>
+              <Footer/>
+          </div>
       </div>
-      <div className={classes['hero-img-container']}>
-        <img
-          src='//images.ctfassets.net/l3v9j0ltz3yi/4bXqK2gD3hJh254bJsfrvT/cafe3766afb0b42cc72157bf671e2d87/hero-img.jpg'
-          alt='Whole-person virtual care for all'
-        />
-      </div>
-    </div>
-    </div>
   );
 }
+export default Home;
