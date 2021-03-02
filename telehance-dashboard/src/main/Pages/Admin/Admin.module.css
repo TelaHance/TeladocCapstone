@@ -1,20 +1,41 @@
 .react-bootstrap-table table {
   table-layout: auto !important;
 }
-
 .text-center {
   text-align: center;
 }
-
-.react-bootstrap-table-pagination div {
+.card {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  height: 300px;
+  padding: 0px 10px 10px 10px;
 }
-
-.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list {
-  justify-content: flex-end;
+.card > div:first-child > header:first-child > h2 {
+  font-size: 1rem;
 }
-
-.react-bootstrap-table-pagination .react-bootstrap-table-pagination-list ul {
-  margin-bottom: 0;
+.picklist {
+  display: inline;
+}
+.rounded-circle {
+  border-radius: 50% !important;
+}
+.table{
+  border: 1px solid rgba(215,217,226,1);
+  border-radius: 15px;
+}
+.table > div:first-child > div:last-child > div{
+  border-radius: 15px 15px 0 0;
+  border:none;
+}
+.table > div:last-child {
+  border-radius: 0 0 15px 15px;
+}
+.flexContainer {
+  display: flex;
+  justify-content: space-around;
+}
+.flexContainer > div {
+  /* flex: 1; */
+  width: 420px;
 }
