@@ -138,3 +138,7 @@ button:hover {
 .header button:hover {
   color: #532197;
 }
+
+.loading {
+  opacity: 0.5;
+}
