@@ -78,3 +78,42 @@
     margin-left: auto;
     margin-right: 15vh;
 }
+@media (max-width: 500px) {
+    .github svg{
+        width: 4rem;
+        height: 4rem;
+        fill: currentColor;
+    }
+    .footer {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .socials{
+        margin-left: 50vh;
+        margin-right: 55vh;
+    }
+    .collab{
+        font-size: 1.5rem;
+        line-height: 2rem;
+        padding-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .logo{
+        transform: scale(0.7);
+    }
+    .credText{
+        font-size: 1.5rem;
+        line-height: 2rem;
+        padding-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .section-header h2{
+        font-size: 2rem;
+    }
+    .section-header p{
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+}

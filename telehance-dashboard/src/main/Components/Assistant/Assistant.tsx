@@ -5,7 +5,7 @@ import {
   faSearch,
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
-import { LiveConsultData, EntityData } from 'Models';
+import { LiveConsultData, EntityData, InfermedicaData } from 'Models';
 import Symptoms from './Symptoms/Symptoms';
 import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
@@ -50,16 +50,18 @@ export default function Assistant({
 
   const [currentTool, setCurrentTool] = useState<string>();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [diagnoseResult, setDiagnoseResult] = useState(null);
+  const [diagnoseResult, setDiagnoseResult] = useState<
+    Omit<InfermedicaData, 'symptoms'>
+  >();
   const [medicalTerms, setMedicalTerms] = useState(entities ?? []);
 
   useEffect(() => {
     if (newEntities) {
       setMedicalTerms((prevTerms) => {
-        const newTerms = newEntities.filter((entity) =>
-          prevTerms.every((prevTerm) => prevTerm.id !== entity.id)
+        const oldTerms = prevTerms.filter((prevTerm) =>
+          newEntities.every((entity) => prevTerm.id !== entity.id)
         );
-        return newTerms.length > 0 ? [...prevTerms, ...newTerms] : prevTerms;
+        return [...oldTerms, ...newEntities];
       });
     }
   }, [newEntities]);
@@ -81,8 +83,8 @@ export default function Assistant({
       }),
     };
     try {
-      const diagnosis = await fetchWithToken(diagnoseUrl, awsToken, options);
-      setDiagnoseResult(diagnosis);
+      const response = await fetchWithToken(diagnoseUrl, awsToken, options);
+      setDiagnoseResult(response);
     } catch (e) {
       alert(`Submission failed! ${e.message}`);
     }
@@ -103,10 +105,9 @@ export default function Assistant({
           medicalTerms={medicalTerms}
           medicalConditions={
             // @ts-ignore
-            diagnoseResult ? diagnoseResult.conditions : medical_conditions
+            diagnoseResult?.conditions ?? medical_conditions
           }
-          // @ts-ignore
-          question={diagnoseResult ? diagnoseResult.question : question}
+          question={diagnoseResult?.question ?? question}
           diagnose={diagnose}
           setMedicalTerms={setMedicalTerms}
         />
