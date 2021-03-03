@@ -20,7 +20,7 @@ const FeaturesBlocks = () => {
                     {/* Section header */}
                     <div className={classes['sectionHeader']}>
                         <h2>How TelaHance works</h2>
-                        <p>Teladoc Health is on a mission to address the full spectrum of health and well-being—not only when people are sick but also throughout their lifelong journeys to achieve better health.</p>
+                        <p className={classes['sectionPara']}>Teladoc Health is on a mission to address the full spectrum of health and well-being—not only when people are sick but also throughout their lifelong journeys to achieve better health.</p>
                     </div>
 
                     {/* Items */}
