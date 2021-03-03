@@ -10,9 +10,9 @@ function Condition(item) {
         <ProgressBar
           now={Math.round(item.probability * 100)}
           variant={
-            Math.round(item.probability * 100) > 66
+            Math.round(item.probability * 100) < 33
               ? 'success'
-              : Math.round(item.probability * 100) > 33
+              : Math.round(item.probability * 100) < 66
               ? 'warning'
               : 'danger'
           }
