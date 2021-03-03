@@ -6,28 +6,40 @@ import {
   faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonIcon } from 'react-rainbow-components';
-import { ReadyState } from 'react-use-websocket';
 import classes from './CallControls.module.css';
 
 export default function CallControls({
-  callState,
-  isCalling,
+  status,
   call,
   hangup,
   mute,
 }: CallControlsProps) {
-  const [callsDisabled, setCallsDisabled] = useState(
-    callState === ReadyState.CONNECTING
-  );
-  const [isMuted, setIsMuted] = useState(false);
-
-  useEffect(() => {
-    setCallsDisabled(callState === ReadyState.CONNECTING);
-  }, [callState]);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const [isCalling, setIsCalling] = useState(false);
 
   useEffect(() => {
     mute(isMuted);
   }, [isMuted]);
+
+  useEffect(() => {
+    switch (status) {
+      case Status.Ready:
+        setIsReady(true);
+        break;
+      case Status.Initiated:
+      case Status.Ringing:
+        break;
+      case Status.InProgress:
+        setIsMuted(false);
+        break;
+      default:
+        setIsReady(false);
+        setIsCalling(false);
+        setIsMuted(true);
+        break;
+    }
+  }, [status]);
 
   return (
     <div className={classes.container}>
@@ -36,8 +48,11 @@ export default function CallControls({
           // @ts-ignore
           variant='destructive'
           size='large'
-          disabled={callsDisabled}
-          onClick={hangup}
+          disabled={!isReady}
+          onClick={() => {
+            hangup();
+            setIsCalling(false);
+          }}
           icon={
             <FontAwesomeIcon icon={faPhoneAlt} className={classes.hangup} />
           }
@@ -46,8 +61,11 @@ export default function CallControls({
         <ButtonIcon
           variant='success'
           size='large'
-          disabled={callsDisabled}
-          onClick={call}
+          disabled={!isReady}
+          onClick={() => {
+            call();
+            setIsCalling(true);
+          }}
           icon={<FontAwesomeIcon icon={faPhoneAlt} />}
         />
       )}
@@ -56,7 +74,7 @@ export default function CallControls({
           // @ts-ignore
           variant='destructive'
           size='large'
-          disabled={callsDisabled}
+          disabled={status !== Status.InProgress}
           onClick={() => setIsMuted(false)}
           icon={<FontAwesomeIcon icon={faMicrophoneSlash} />}
         />
@@ -64,8 +82,7 @@ export default function CallControls({
         <ButtonIcon
           variant='border-filled'
           size='large'
-          shaded
-          disabled={callsDisabled}
+          disabled={status !== Status.InProgress}
           onClick={() => setIsMuted(true)}
           icon={<FontAwesomeIcon icon={faMicrophone} />}
         />
@@ -74,9 +91,18 @@ export default function CallControls({
   );
 }
 
+export enum Status {
+  Waiting = 'waiting',
+  Ready = 'ready',
+  Initiated = 'initiated',
+  Ringing = 'ringing',
+  InProgress = 'in-progress',
+  Completed = 'completed',
+  Closed = 'closed',
+}
+
 type CallControlsProps = {
-  callState: number;
-  isCalling: boolean;
+  status: Status;
   call: () => void;
   hangup: () => void;
   mute: (shouldMute?: boolean) => void;

@@ -30,7 +30,7 @@ export function getUrl(api: Api, route: string, query?: ApiQuery) {
 
 export const addApptUrl = getUrl('appointment', '/addappt');
 export const getApptsUrl = (role: string, query: GetUserQuery) =>
-  getUrl('appointment', `/by${role}`, query);
+  getUrl('appointment', `/by${role.toLowerCase()}`, query);
 
 // Consult Api
 
@@ -58,7 +58,7 @@ export const getAllDoctorsUrl = getUrl('user', '/doctor-get-all');
 export const getAllUsersUrl = getUrl('user', '/user-get-all');
 export const getUserUrl = getUrl('user', '/user-by-id');
 export const getUserProfileUrl = (query: GetUserQuery) =>
-    getUrl('user', '/user-by-id', query);
+  getUrl('user', '/user-by-id', query);
 export const updateUserUrl = getUrl('user', '/update-phone');
 
 // Type Definitions

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import H5AudioPlayer from 'react-h5-audio-player';
+import classes from './AudioPlayer.module.css';
 import 'react-h5-audio-player/lib/styles.css';
 
 export default function AudioPlayer({
@@ -69,7 +70,7 @@ export default function AudioPlayer({
       onClickPrevious={previous}
       onClickNext={next}
       customAdditionalControls={[]}
-      style={{ 'marginTop': 'auto' }}
+      className={classes.container}
       ref={player}
     />
   );

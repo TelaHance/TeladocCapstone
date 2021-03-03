@@ -4,7 +4,7 @@ import { Col, Form, Button, Jumbotron } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import useSWR from 'swr';
-import {getUserProfileUrl, getUserUrl, updateUserUrl} from 'Api';
+import { getUserProfileUrl, getUserUrl, updateUserUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import styles from './Profile.module.css';
@@ -51,7 +51,7 @@ const Profile = () => {
     age: '',
   });
   const [validated, setValidated] = useState(false);
-  const {data:data, mutate: mutateData, error: error} = useSWR(
+  const { data, error } = useSWR(
     [getUserProfileUrl({ user_id }), awsToken],
     fetchWithToken,
     {
