@@ -130,3 +130,53 @@
     margin-right: auto;
     height: auto;
 }
+@media (max-width: 640px) {
+    .hero{
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+@media (max-width: 500px) {
+    .hero > div{
+        padding-top: 10rem;
+        padding-bottom: 5rem;
+    }
+    .section-header{
+        padding-bottom: 4rem;
+    }
+    .section-header h1:first-child{
+        font-size: 3.5rem;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        margin-bottom: 1rem;
+        --tw-text-opacity: 1;
+        color: #522ba5;
+    }
+    .subsection{
+        font-size: 1.35rem;
+        line-height: 1.75rem;
+        --tw-text-opacity: 1;
+        color: rgba(75, 85, 99, var(--tw-text-opacity));
+    }
+    .learn-button div:first-child > a{
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .login-button div:first-child > a{
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .illustration{
+        visibility: hidden;
+    }
+    .blueCircle {
+        visibility: hidden;
+    }
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        position: relative
+    }
+}
