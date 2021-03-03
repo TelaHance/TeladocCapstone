@@ -25,3 +25,17 @@
   display: block;
   padding-bottom: 100%;
 }
+
+.container{
+  position: relative
+}
+
+
+.dropdown{
+  position: fixed;
+  z-index: 5000;
+  width: 200px;
+  margin-top: 10px;
+  overflow-y: visible
+}
+
