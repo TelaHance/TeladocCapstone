@@ -1,5 +1,6 @@
 import React from 'react';
 import { ProgressBar } from 'react-bootstrap';
+import clsx from 'clsx';
 import AnimatedList from '../AnimatedList';
 import classes from '../Assistant.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,7 +31,7 @@ function Condition(item) {
   );
 }
 
-const Conditions = ({ medicalConditions, question, diagnose }) => {
+const Conditions = ({ medicalConditions, question, diagnose, isLoading }) => {
   return (
     <div className={classes.content}>
       <h4>Intelligent Diagnostic Assistant</h4>
@@ -48,7 +49,9 @@ const Conditions = ({ medicalConditions, question, diagnose }) => {
       </div>
 
       {medicalConditions && (
-        <div className={classes.itemContainer}>
+        <div className={clsx(classes.itemContainer, {
+          [classes.loading]: isLoading,
+        })}>
           <AnimatedList items={medicalConditions} component={Condition} />
         </div>
       )}

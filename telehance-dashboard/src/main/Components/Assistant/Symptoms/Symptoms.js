@@ -80,6 +80,7 @@ export default function Symptoms({
   startTime,
   diagnose,
   setMedicalTerms,
+  setActive,
 }) {
   const [searchState, setSearchState] = useState({ options: null });
 
@@ -239,7 +240,10 @@ export default function Symptoms({
         <button
           title='Diagnose'
           className={classes.actions}
-          onClick={() => diagnose()}
+          onClick={() => {
+            diagnose();
+            setActive('conditions');
+          }}
         >
           Diagnose
         </button>
