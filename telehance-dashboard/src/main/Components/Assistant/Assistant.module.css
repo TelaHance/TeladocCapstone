@@ -94,7 +94,7 @@ button:hover {
 .itemContainer {
   border: none;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   margin-bottom: 1em;
 }
 

@@ -237,7 +237,10 @@ export default function Symptoms({
         </button>
       </div>
       {medicalTerms && medicalTerms.length > 0 && (
-        <div className={classes.itemContainer}>
+        <div
+          className={classes.itemContainer}
+          style={{ flexDirection: 'column-reverse' }}
+        >
           <AnimatedList items={medicalTerms} component={Symptom} />
         </div>
       )}
