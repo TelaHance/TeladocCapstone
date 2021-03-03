@@ -66,12 +66,21 @@ const database = dbMap.flatMap(({ type, json }) => {
   });
 });
 
+const theme = {
+  rainbow: {
+    palette: {
+      brand: 'rgb(0, 128, 0)',
+    },
+  },
+};
+
 export default function Symptoms({
   medicalTerms,
   consultId,
   startTime,
   diagnose,
   setMedicalTerms,
+  setActive,
 }) {
   const [searchState, setSearchState] = useState({ options: null });
 
@@ -231,7 +240,10 @@ export default function Symptoms({
         <button
           title='Diagnose'
           className={classes.actions}
-          onClick={() => diagnose(medicalTerms)}
+          onClick={() => {
+            diagnose();
+            setActive('conditions');
+          }}
         >
           Diagnose
         </button>
