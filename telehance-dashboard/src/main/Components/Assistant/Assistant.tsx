@@ -50,7 +50,7 @@ export default function Assistant({
 
   const [currentTool, setCurrentTool] = useState<string>();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [diagnoseResult, setDiagnoseResult] = useState();
+  const [diagnoseResult, setDiagnoseResult] = useState(null);
   const [medicalTerms, setMedicalTerms] = useState(entities ?? []);
 
   useEffect(() => {
@@ -65,10 +65,12 @@ export default function Assistant({
   }, [newEntities]);
 
   function changeTool(option: string) {
-    setCurrentTool((oldTool) => (oldTool !== option ? option : undefined));
+    setIsExpanded(!(currentTool === option && isExpanded))
+    action(!(currentTool === option && isExpanded))
+    setCurrentTool((oldTool) => (oldTool !== option ? option : oldTool));
   }
 
-  async function diagnose(medicalTerms: EntityData[]) {
+  async function diagnose() {
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -86,11 +88,6 @@ export default function Assistant({
     }
   }
 
-  useEffect(() => {
-    setIsExpanded(!!currentTool);
-    action(!!currentTool);
-  }, [currentTool]);
-
   const Tool = currentTool ? tools[currentTool].component : () => <></>;
 
   return (
@@ -105,14 +102,16 @@ export default function Assistant({
           startTime={start_time}
           medicalTerms={medicalTerms}
           medicalConditions={
-            diagnoseResult ? diagnoseResult : medical_conditions
+            // @ts-ignore
+            diagnoseResult ? diagnoseResult.conditions : medical_conditions
           }
-          question={question}
+          // @ts-ignore
+          question={diagnoseResult ? diagnoseResult.question : question}
           diagnose={diagnose}
           setMedicalTerms={setMedicalTerms}
         />
       </div>
-      <Sidebar currentTool={currentTool} onClick={changeTool} tools={tools} />
+      <Sidebar currentTool={currentTool} onClick={changeTool} tools={tools} isExpanded={isExpanded} />
     </>
   );
 }
