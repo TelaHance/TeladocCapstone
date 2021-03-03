@@ -166,7 +166,8 @@ export default function Symptoms({
     putWithToken(url, awsToken, newTerms);
   }
 
-  function Symptom({ name, common_name, type, choice_id }) {
+  function Symptom(termData) {
+    const { name, common_name, type, choice_id } = termData;
     const { title, icon, color } = entityMap[type];
     return (
       <div className={classes.item}>
