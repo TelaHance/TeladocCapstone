@@ -90,14 +90,13 @@ body {
 
 .mainNav > li > a {
   display: block;
-  font-size: 1em;
+  font-size: 18px;
   font-weight: 500;
   color: rgb(117, 117, 117);
   padding: 1em 1.5em;
 }
 
-.sidebarOpen .mainNav > li > a:hover
-.sidebarOpen .mainNav > li > a:active {
+.sidebarOpen .mainNav > li > a:hover .sidebarOpen .mainNav > li > a:active {
   color: #000;
 }
 

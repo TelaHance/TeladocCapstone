@@ -1,5 +1,5 @@
 .container {
-  margin: 0 2em 2em 2em;
+  margin: 0 8em 2em;
 }
 
 .container > div {
@@ -10,10 +10,17 @@
   text-align: left;
 }
 
-/* Prevent scroll on table */
+/* Prevent left-right scroll on table + scrollbar padding */
+.container > section > div > div > div {
+  overflow-x: hidden;
+}
+
+/* Smoother growing transition for table (shrinking still wack) */
 .container > section > div > div > div > div {
-  overflow-x: scroll;
-  overflow-y: hidden!important;
+  width: 100% !important;
+}
+.container > section > div > div > div > div > table {
+  width: 100% !important;
 }
 
 th > div > div > span {
@@ -56,17 +63,17 @@ th > div > div > span {
   overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.5em;
-  height: 4.5em;
+  max-height: 4.5em;
   overflow-y: hidden;
   margin: 4px 0.75rem;
 }
 
 @media (max-width: 768px) {
-  th[aria-label = "Purpose"] > div > div > span {
+  th[aria-label='Purpose'] > div > div > span {
     width: 0;
     display: none;
   }
-  td[data-label = "Purpose"] > div > p {
+  td[data-label='Purpose'] > div > p {
     width: 0;
     display: none;
   }
@@ -84,14 +91,22 @@ th > div > div > span {
   line-height: 2em;
 }
 
-.table{
-  border: 1px solid rgba(215,217,226,1);
+.start {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.table {
+  border: 1px solid rgba(215, 217, 226, 1);
   border-radius: 15px;
 }
-.table > div:first-child > div:last-child > div{
+
+.table > div:first-child > div:last-child > div {
   border-radius: 15px 15px 0 0;
-  border:none;
+  border: none;
 }
+
 .table > div:last-child {
   border-radius: 0 0 15px 15px;
 }

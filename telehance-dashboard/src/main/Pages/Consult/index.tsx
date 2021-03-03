@@ -6,7 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import Controls from './Controls';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
-import Profile from './PatientInfo/PatientInfo';
+import PatientInfo from 'Components/PatientInfo/PatientInfo';
 import { getConsultUrl, updateTranscriptUrl } from 'Api';
 import { fetchWithToken, putWithToken } from 'Util/fetch';
 import useFinishedTranscriptProps from 'Hooks/useFinishedTranscriptProps';
@@ -51,21 +51,18 @@ export default function Consult(props: any) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>
-        
         <section
           className={clsx(classes.main, {
             [classes.sidebarExpanded]: sidebarExpanded,
           })}
         >
-          <Profile 
-            name={consult.patient.given_name + " " + consult.patient.family_name}
-            picture={consult.patient.picture}
-            purpose={consult.purpose}
-          />
+          <PatientInfo patient={consult.patient} purpose={consult.purpose} />
           <Controls {...controlsProps} />
           <Transcript {...transcriptProps} />
           <AudioPlayer
-            src={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/2020/${consult.call_sid}.mp3`}
+            src={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/${new Date(
+              consult.start_time
+            ).getFullYear()}/${consult.call_sid}.mp3`}
             {...audioPlayerProps}
           />
         </section>

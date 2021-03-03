@@ -5,7 +5,7 @@ import {
   faSearch,
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
-import { LiveConsultData } from 'Models';
+import { LiveConsultData, EntityData } from 'Models';
 import Symptoms from './Symptoms/Symptoms';
 import Conditions from './Conditions/Conditions';
 import Notes from './Notes/Notes';
@@ -32,11 +32,17 @@ const tools = {
   },
 } as Tools;
 
-export default function Assistant({ consult, isLive, action }: AssistantProps) {
+const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
+
+export default function Assistant({
+  consult,
+  newEntities,
+  action,
+}: AssistantProps) {
   const {
     consult_id,
     start_time,
-    symptoms,
+    symptoms: entities,
     medical_conditions,
     question,
     patient,
@@ -44,36 +50,40 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
 
   const [currentTool, setCurrentTool] = useState<string>();
   const [isExpanded, setIsExpanded] = useState(false);
-  const awsToken = process.env.REACT_APP_MANAGEMENT_API_KEY;
   const [diagnoseResult, setDiagnoseResult] = useState();
-  const [medicalTerms, setMedicalTerms] = useState(symptoms ? [...symptoms] : []);
+  const [medicalTerms, setMedicalTerms] = useState(entities ?? []);
+
+  useEffect(() => {
+    if (newEntities) {
+      setMedicalTerms((prevTerms) => {
+        const newTerms = newEntities.filter((entity) =>
+          prevTerms.every((prevTerm) => prevTerm.id !== entity.id)
+        );
+        return newTerms.length > 0 ? [...prevTerms, ...newTerms] : prevTerms;
+      });
+    }
+  }, [newEntities]);
 
   function changeTool(option: string) {
     setCurrentTool((oldTool) => (oldTool !== option ? option : undefined));
   }
 
-  async function diagnose(medicalTerms: any) {
+  async function diagnose(medicalTerms: EntityData[]) {
     const options = {
       method: 'POST',
       body: JSON.stringify({
-        symptoms: medicalTerms.map((term: any) => {
-          return ({
-            id: term.id,
-            choice_id: term.choice_id
-          })
-        }),
-        start_time: start_time,
-        consult_id: consult_id,
-        patient_id: patient.user_id
-      })
-    }
+        symptoms: medicalTerms,
+        start_time,
+        consult_id,
+        patient_id: patient.user_id,
+      }),
+    };
     try {
       const diagnosis = await fetchWithToken(diagnoseUrl, awsToken, options);
       setDiagnoseResult(diagnosis);
     } catch (e) {
       alert(`Submission failed! ${e.message}`);
     }
-
   }
 
   useEffect(() => {
@@ -81,11 +91,7 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
     action(!!currentTool);
   }, [currentTool]);
 
-  const Tool = currentTool
-    ? tools[currentTool].component
-    : () => {
-      return <></>;
-    };
+  const Tool = currentTool ? tools[currentTool].component : () => <></>;
 
   return (
     <>
@@ -98,9 +104,10 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
           consultId={consult_id}
           startTime={start_time}
           medicalTerms={medicalTerms}
-          medicalConditions={diagnoseResult ? diagnoseResult : medical_conditions}
+          medicalConditions={
+            diagnoseResult ? diagnoseResult : medical_conditions
+          }
           question={question}
-          isLive={isLive}
           diagnose={diagnose}
           setMedicalTerms={setMedicalTerms}
         />
@@ -112,6 +119,6 @@ export default function Assistant({ consult, isLive, action }: AssistantProps) {
 
 type AssistantProps = {
   consult: LiveConsultData;
-  isLive?: boolean;
+  newEntities?: EntityData[];
   action: (bool: boolean) => void;
 };
