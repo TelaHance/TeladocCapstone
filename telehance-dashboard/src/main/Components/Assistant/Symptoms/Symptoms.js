@@ -44,28 +44,26 @@ const dbMap = [
   { type: 'risk_factor', json: riskFactorsJson },
 ];
 
-const database = dbMap.map(({ type, json }) => {
+const database = dbMap.flatMap(({ type, json }) => {
   const { title, icon, color } = entityMap[type];
-  return {
-    ...json.map(({ id, name, common_name }) => {
-      return {
-        id,
-        label: name,
-        description: common_name,
-        icon: (
-          <FontAwesomeIcon
-            title={title}
-            icon={icon}
-            color={color}
-            style={{
-              height: 20,
-              width: 20,
-            }}
-          />
-        ),
-      };
-    }),
-  };
+  return json.map(({ id, name, common_name }) => {
+    return {
+      id,
+      label: name,
+      description: common_name,
+      icon: (
+        <FontAwesomeIcon
+          title={title}
+          icon={icon}
+          color={color}
+          style={{
+            height: 20,
+            width: 20,
+          }}
+        />
+      ),
+    };
+  });
 });
 
 export default function Symptoms({
@@ -80,9 +78,13 @@ export default function Symptoms({
   function filter(query, options) {
     if (query) {
       return options.filter((item) => {
-        const regex = new RegExp(query, 'i');
-        if (regex.test(item.label) || regex.test(item.description)) {
-          return medicalTerms.every((term) => term.id !== item.id);
+        try {
+          const regex = new RegExp(query, 'i');
+          if (regex.test(item.label) || regex.test(item.description)) {
+            return medicalTerms.every((term) => term.id !== item.id);
+          }
+        } catch (err) {
+          return false;
         }
       });
     }

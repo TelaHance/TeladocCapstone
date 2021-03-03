@@ -14,7 +14,6 @@ import {
 } from './getColumns';
 import ScheduleAppointment from 'Pages/AppointmentDashboard/AppointmentModal';
 import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
-import styles from './AppointmentDashboard.module.css';
 import classes from 'Pages/Admin/Admin.module.css';
 
 const {
