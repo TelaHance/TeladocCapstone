@@ -25,7 +25,7 @@ function SidebarOption({
   );
 }
 
-export default function Sidebar({ currentTool, onClick, tools }: SidebarProps) {
+export default function Sidebar({ currentTool, onClick, tools, isExpanded }: SidebarProps) {
   const options = Object.entries(tools);
   return (
     <div className={classes.sidebar}>
@@ -33,7 +33,7 @@ export default function Sidebar({ currentTool, onClick, tools }: SidebarProps) {
         <SidebarOption
           key={id}
           onClick={() => onClick(id)}
-          active={currentTool === id}
+          active={currentTool === id && isExpanded}
           icon={icon}
         >
           {label}
@@ -47,6 +47,7 @@ export type SidebarProps = {
   currentTool?: string;
   onClick: (id: string) => void;
   tools: Tools;
+  isExpanded: boolean;
 };
 
 export type SidebarOptionProps = {

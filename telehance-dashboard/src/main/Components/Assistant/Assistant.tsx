@@ -15,7 +15,7 @@ import { diagnoseUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
 
 const tools = {
-  symptom: {
+  symptoms: {
     icon: faSearch,
     label: 'Symptoms',
     component: Symptoms,
@@ -53,6 +53,7 @@ export default function Assistant({
   const [diagnoseResult, setDiagnoseResult] = useState<
     Omit<InfermedicaData, 'symptoms'>
   >();
+  const [isLoading, setIsLoading] = useState(false);
   const [medicalTerms, setMedicalTerms] = useState(entities ?? []);
 
   useEffect(() => {
@@ -67,10 +68,13 @@ export default function Assistant({
   }, [newEntities]);
 
   function changeTool(option: string) {
-    setCurrentTool((oldTool) => (oldTool !== option ? option : undefined));
+    setIsExpanded(!(currentTool === option && isExpanded))
+    action(!(currentTool === option && isExpanded))
+    setCurrentTool((oldTool) => (oldTool !== option ? option : oldTool));
   }
 
-  async function diagnose(medicalTerms: EntityData[]) {
+  async function diagnose() {
+    setIsLoading(true);
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -86,12 +90,8 @@ export default function Assistant({
     } catch (e) {
       alert(`Submission failed! ${e.message}`);
     }
+    setIsLoading(false);
   }
-
-  useEffect(() => {
-    setIsExpanded(!!currentTool);
-    action(!!currentTool);
-  }, [currentTool]);
 
   const Tool = currentTool ? tools[currentTool].component : () => <></>;
 
@@ -107,14 +107,17 @@ export default function Assistant({
           startTime={start_time}
           medicalTerms={medicalTerms}
           medicalConditions={
-            diagnoseResult?.medical_conditions ?? medical_conditions
+            // @ts-ignore
+            diagnoseResult?.conditions ?? medical_conditions
           }
           question={diagnoseResult?.question ?? question}
           diagnose={diagnose}
           setMedicalTerms={setMedicalTerms}
+          setActive={changeTool}
+          isLoading={isLoading}
         />
       </div>
-      <Sidebar currentTool={currentTool} onClick={changeTool} tools={tools} />
+      <Sidebar currentTool={currentTool} onClick={changeTool} tools={tools} isExpanded={isExpanded} />
     </>
   );
 }
