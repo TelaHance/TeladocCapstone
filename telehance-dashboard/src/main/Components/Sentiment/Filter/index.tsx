@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { PillTypes, getLabel } from '../Pill';
+import React, { useState, useEffect } from 'react';
 import { ConsultData } from 'Models';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import classes from './Filter.module.css';
+import { Option,ButtonIcon } from 'react-rainbow-components';
+import {
+  faArrowDown,
+  faCircle
+} from '@fortawesome/free-solid-svg-icons';
+// @ts-ignore
+import InternalDropdown from 'react-rainbow-components/components/InternalDropdown';
 
-export const DefaultThreshold: { [key: string]: number } = {
+const DefaultThreshold: { [key: string]: number } = {
   FLIRTATION: 0.75,
   THREAT: 0.75,
   PROFANITY: 0.75,
@@ -15,17 +19,19 @@ export const DefaultThreshold: { [key: string]: number } = {
   TOXICITY: 0.75,
 };
 
-export function filter(filterVal: Set<string>, data: ConsultData[]) {
-  if (!filterVal || filterVal.size === 0) return data;
 
+function onFilter(filterVal: any, data: ConsultData[]) {
+  if (!filterVal || filterVal.length === 0) return data;
+
+  console.log(filterVal)
   return data.filter(({ sentiment }) => {
     let matchesOneFilter = false;
-    filterVal.forEach((filter) => {
+    filterVal.forEach(({name}:any) => {
       if (sentiment === undefined) {
-        if (filter === 'UNRATED') matchesOneFilter = true;
+        if (name === 'UNRATED') matchesOneFilter = true;
         return;
       }
-      if (filter === 'NO_ISSUES') {
+      if (name === 'NO_ISSUES') {
         matchesOneFilter =
           matchesOneFilter ||
           Object.entries(sentiment).every(
@@ -33,84 +39,36 @@ export function filter(filterVal: Set<string>, data: ConsultData[]) {
           );
       } else {
         matchesOneFilter =
-          matchesOneFilter || sentiment[filter] >= DefaultThreshold[filter];
+          matchesOneFilter || sentiment[name] >= DefaultThreshold[name];
       }
     });
     return matchesOneFilter;
   });
 }
 
-const bgColor: { [key: string]: string } = {
-  FLIRTATION: '#e83e8c',
-  THREAT: '#dc3545',
-  PROFANITY: '#e65100',
-  INSULT: '#ffee58',
-  IDENTITY_ATTACK: '#007bff',
-  TOXICITY: '#6f42c1',
-  NO_ISSUES: '#28a745',
-  UNRATED: '#6c757d',
-};
+export default function Filter({ setDisplayConsult, consults }: any) {
+  const [show, setShow] = useState(false);
+  const [value, setValue] = useState();
 
-function FilterItem({ attribute, active }: FilterItemProps) {
+  useEffect(() => {
+    setDisplayConsult(onFilter(value,consults));
+  }, [value]);
   return (
-    <div className={classes['filter-item__container']}>
-      <div
-        className={classes['filter-item__box']}
-        style={{ backgroundColor: bgColor[attribute] }}
-      />
-      <p>{getLabel(attribute)}</p>
-      <FontAwesomeIcon icon={faCheck} color={active ? '#969696' : 'white'} />
+    <div className={classes.container}>
+      <div>
+      <span style={{marginLeft:"57px",marginRight: "10px"}}>Issues</span>
+      <ButtonIcon onClick={() => setShow((show) => !show)} onBlur={()=>setShow(false)} variant="border-filled" size="small" tooltip="Arrow down" icon={<FontAwesomeIcon icon={faArrowDown} />} />
+      </div>
+      {show ? (
+        <InternalDropdown className={classes.dropdown} value={value} onChange={setValue} multiple>
+          <Option label={'Toxicity'} name={'TOXICITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }} />} />
+          <Option label={'Profanity'} name={'PROFANITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e65100' }} />} />
+          <Option label={'Insult'} name={'INSULT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#d6cd00' }} />} />
+          <Option label={'Flirtation'} name={'FLIRTATION'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e83e8c' }} />} />
+          <Option label={'Threat'} name={'THREAT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#dc3545' }} />} />
+          <Option label={'Identity Attack'} name={'IDENTITY_ATTACK'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#007bff' }} />} />
+        </InternalDropdown>
+      ) : null}
     </div>
-  );
-}
-
-type FilterItemProps = { attribute: string; active?: boolean };
-
-export default function Filter({ onFilter }: any) {
-  const [filterAttributes, setFilterAttributes] = useState(new Set<string>());
-  const [open, setOpen] = useState(false);
-
-  function onToggle(
-    isOpen: boolean,
-    event: React.SyntheticEvent<Dropdown>,
-    metadata: {
-      source: 'select' | 'click' | 'rootClose' | 'keydown';
-    }
-  ) {
-    if (metadata.source === 'select') return setOpen(true);
-    setOpen(isOpen);
-  }
-
-  function onChange(type: string) {
-    const newFilterAttributes = new Set(filterAttributes);
-    if (filterAttributes.has(type)) {
-      newFilterAttributes.delete(type);
-    } else newFilterAttributes.add(type);
-    setFilterAttributes(newFilterAttributes);
-    onFilter(newFilterAttributes);
-  }
-
-  return (
-    <DropdownButton
-      id='issues-filter'
-      title=''
-      size='sm'
-      menuAlign='right'
-      show={open}
-      onToggle={onToggle}
-    >
-      {PillTypes.map((type) => (
-        <Dropdown.Item
-          key={type}
-          onClick={() => onChange(type)}
-        >
-          <FilterItem attribute={type} active={filterAttributes.has(type)} />
-        </Dropdown.Item>
-      ))}
-      <Dropdown.Divider />
-      <Dropdown.Item onClick={() => setFilterAttributes(new Set<string>())}>
-        Clear
-      </Dropdown.Item>
-    </DropdownButton>
   );
 }

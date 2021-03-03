@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import useSWR from 'swr';
 import { useAuth0 } from '@auth0/auth0-react';
 import { getAllConsultsUrl, getUserUrl } from 'Api';
@@ -9,7 +9,7 @@ import Spinner from 'Components/Spinner';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import { Column, TableWithBrowserPagination } from 'react-rainbow-components';
+import {Column, TableWithBrowserPagination} from "react-rainbow-components";
 import {
   ButtonFormatter,
   sentimentFormatter,
@@ -17,17 +17,21 @@ import {
   dateFormatter,
 } from './getColumns';
 import classes from './ConsultDashboard.module.css';
+import Filter from 'Components/Sentiment/Filter'
+
+
 
 const { REACT_APP_CONSULT_API_KEY, REACT_APP_MANAGEMENT_API_KEY } = process.env;
 
 function ConsultDashboard() {
+  const [displayConsults,setDisplayConsults] = useState()
+
   const { user } = useAuth0();
   const user_id = user ? user.sub.split('|')[1] : 'NULL';
   const { data: userData } = useSWR(
     [getUserUrl, REACT_APP_MANAGEMENT_API_KEY, 'POST', user_id],
     fetchWithUser
   );
-
   const role = JSON.parse(userData.body).role.toUpperCase();
 
   const { data: consults, error } = useSWR(
@@ -35,9 +39,14 @@ function ConsultDashboard() {
     fetchWithToken
   );
 
+  useEffect(() => {
+    setDisplayConsults((prevConsult)=>prevConsult ?? consults)
+  }, [consults]);
+
   if (!consults) return <Spinner />;
   if (error)
     return <h1 style={{ textAlign: 'center' }}>Error retrieving consults.</h1>;
+
 
   return (
     <>
@@ -45,14 +54,13 @@ function ConsultDashboard() {
       <Container className='mb-5 text-center'>
         <TableWithBrowserPagination
           pageSize={5}
-          data={consults}
+          data={displayConsults}
           keyField='id'
           className={classes.table}
         >
           {role !== 'DOCTOR' && (
             <Column
               header='Doctor'
-              defaultWidth={200}
               field='doctor'
               component={nameFormatter}
             />
@@ -60,7 +68,6 @@ function ConsultDashboard() {
           {role !== 'PATIENT' && (
             <Column
               header='Patient'
-              defaultWidth={200}
               field='patient'
               component={nameFormatter}
             />
@@ -71,14 +78,13 @@ function ConsultDashboard() {
             component={dateFormatter}
           />
           <Column
-            header='Problematic Rating'
-            defaultWidth={190}
+            header={<Filter setDisplayConsult={setDisplayConsults} consults={consults}/>}
             field='sentiment'
             component={sentimentFormatter}
           />
           <Column
             header=''
-            width={150}
+            defaultWidth={183}
             field='consult_id'
             component={ButtonFormatter}
           />
