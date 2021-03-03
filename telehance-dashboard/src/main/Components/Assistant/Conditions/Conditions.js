@@ -3,7 +3,7 @@ import { ProgressBar } from 'react-bootstrap';
 import AnimatedList from '../AnimatedList';
 import classes from '../Assistant.module.css';
 
-function Condition({ item }) {
+function Condition(item) {
   return (
     <div className={classes.item}>
       <div>
