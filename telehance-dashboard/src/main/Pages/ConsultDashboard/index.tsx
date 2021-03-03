@@ -47,7 +47,7 @@ function ConsultDashboard() {
   if (error)
     return <h1 style={{ textAlign: 'center' }}>Error retrieving consults.</h1>;
 
-    
+
   return (
     <>
       <BreadcrumbBar page='Consult Dashboard' />
@@ -61,7 +61,6 @@ function ConsultDashboard() {
           {role !== 'DOCTOR' && (
             <Column
               header='Doctor'
-              // defaultWidth={250}
               field='doctor'
               component={nameFormatter}
             />
@@ -69,7 +68,6 @@ function ConsultDashboard() {
           {role !== 'PATIENT' && (
             <Column
               header='Patient'
-              // defaultWidth={250}
               field='patient'
               component={nameFormatter}
             />
@@ -77,18 +75,16 @@ function ConsultDashboard() {
           <Column
             header='Consult Date'
             field='start_time'
-            // defaultWidth={230}
             component={dateFormatter}
           />
           <Column
             header={<Filter setDisplayConsult={setDisplayConsults} consults={consults}/>}
-            // defaultWidth={195}
             field='sentiment'
             component={sentimentFormatter}
           />
           <Column
             header=''
-            // defaultWidth={183}
+            defaultWidth={183}
             field='consult_id'
             component={ButtonFormatter}
           />
