@@ -1,15 +1,21 @@
 import React from 'react';
+import { UserData } from 'src/main/Models';
 import classes from './PatientInfo.module.css';
 
-export default function PatientInfo({ patient, purpose }) {
+export default function PatientInfo({
+  patient,
+  purpose,
+  children,
+}: PatientInfoProps) {
   const { given_name, family_name, picture } = patient;
   return (
     <div className={classes.container}>
       <div className={classes.patient}>
         <img src={picture} className='rounded-circle' width={90} />
-        <div>
-          <h5>{given_name + ' ' + family_name}</h5>
-        </div>
+        <section>
+          <h4>{given_name + ' ' + family_name}</h4>
+          {children}
+        </section>
       </div>
       {purpose && (
         <div className={classes.purpose}>
@@ -19,4 +25,10 @@ export default function PatientInfo({ patient, purpose }) {
       )}
     </div>
   );
+}
+
+type PatientInfoProps = {
+  patient: UserData;
+  purpose: string;
+  children?: React.ReactNode;
 }
