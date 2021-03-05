@@ -13,7 +13,7 @@ export default function PatientInfo({ patient, purpose }) {
       </div>
       {purpose && (
         <div className={classes.purpose}>
-          <h7>Reason For Visit</h7>
+          <h6>Reason For Visit</h6>
           <div>{purpose}</div>
         </div>
       )}

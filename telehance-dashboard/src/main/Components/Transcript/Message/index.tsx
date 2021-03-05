@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from 'slate-react';
 import { SentimentData } from 'Models';
@@ -15,8 +15,17 @@ export default function Message({
   const speaker = element.speaker as string;
   const isDoctor = doctorLabels.includes(speaker.toUpperCase());
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    // Indicates that this is a live message.
+    if (element.start === undefined) {
+      ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [element])
+
   return (
-    <div className={classes.container}>
+    <div className={classes.container} ref={ref}>
       {element.sentiment ? (
         <Sentiment
           sentiment={element.sentiment as SentimentData}
