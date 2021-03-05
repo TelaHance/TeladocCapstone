@@ -33,10 +33,12 @@
   margin-left: 1em;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .purpose {
   width: 50%;
+  margin-left: 1em;
 }
 
 .purpose > div {

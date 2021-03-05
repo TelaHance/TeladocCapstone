@@ -57,7 +57,7 @@ export default function Consult(props: any) {
           })}
         >
           <PatientInfo patient={consult.patient} purpose={consult.purpose} />
-          <Controls {...controlsProps} />
+          {/* <Controls {...controlsProps} /> */}
           <Transcript {...transcriptProps} />
           <AudioPlayer
             src={`https://s3.us-west-2.amazonaws.com/teleconsults/Recordings/${new Date(

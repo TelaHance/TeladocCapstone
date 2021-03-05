@@ -1,0 +1,15 @@
+.rhap_volume-controls {
+  min-width: 80px;
+}
+
+.rhap_progress-container {
+  flex: 3 0 auto;
+}
+
+.rhap_controls-section {
+  display: none;
+}
+
+.rhap_time {
+  margin: 0 0.5em;
+}
