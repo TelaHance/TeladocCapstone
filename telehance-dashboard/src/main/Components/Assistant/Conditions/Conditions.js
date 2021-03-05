@@ -1,7 +1,10 @@
 import React from 'react';
 import { ProgressBar } from 'react-bootstrap';
+import clsx from 'clsx';
 import AnimatedList from '../AnimatedList';
 import classes from '../Assistant.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 function Condition(item) {
   return (
@@ -13,8 +16,8 @@ function Condition(item) {
             Math.round(item.probability * 100) < 33
               ? 'success'
               : Math.round(item.probability * 100) < 66
-              ? 'warning'
-              : 'danger'
+                ? 'warning'
+                : 'danger'
           }
           className={classes.progressBar}
         />
@@ -28,14 +31,27 @@ function Condition(item) {
   );
 }
 
-const Conditions = ({ medicalConditions, question }) => {
+const Conditions = ({ medicalConditions, question, diagnose, isLoading }) => {
   return (
     <div className={classes.content}>
       <h4>Intelligent Diagnostic Assistant</h4>
-      <h5>Suggested Question</h5>
-      {question && <div style={{ marginBottom: '1rem' }}>{question}</div>}
+      <div className={classes.header}>
+        <div>
+          <h5>Suggested Question</h5>
+          {question && <div style={{ marginBottom: '1rem' }}>{question}</div>}
+        </div>
+        <button title='Refresh' onClick={() => diagnose()}>
+          <FontAwesomeIcon
+            icon={faSync}
+            size='lg'
+          />
+        </button>
+      </div>
+
       {medicalConditions && (
-        <div className={classes.itemContainer}>
+        <div className={clsx(classes.itemContainer, {
+          [classes.loading]: isLoading,
+        })}>
           <AnimatedList items={medicalConditions} component={Condition} />
         </div>
       )}
