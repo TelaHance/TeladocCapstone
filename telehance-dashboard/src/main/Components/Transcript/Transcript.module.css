@@ -1,7 +1,7 @@
 .container {
   flex: 1;
   overflow-y: hidden;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   display: flex;
   padding: 1.5em;
   border-radius: 20px;

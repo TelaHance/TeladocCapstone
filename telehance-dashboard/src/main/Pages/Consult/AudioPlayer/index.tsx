@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import H5AudioPlayer from 'react-h5-audio-player';
+import H5AudioPlayer, { RHAP_UI } from 'react-h5-audio-player';
 import classes from './AudioPlayer.module.css';
 import 'react-h5-audio-player/lib/styles.css';
+import './overrides.css';
 
 export default function AudioPlayer({
   src,
@@ -66,12 +67,19 @@ export default function AudioPlayer({
       src={src}
       listenInterval={50}
       onListen={updateTime}
-      showSkipControls
-      onClickPrevious={previous}
-      onClickNext={next}
+      customProgressBarSection={[
+        RHAP_UI.MAIN_CONTROLS,
+        RHAP_UI.CURRENT_TIME,
+        RHAP_UI.PROGRESS_BAR,
+        RHAP_UI.DURATION,
+        RHAP_UI.VOLUME_CONTROLS,
+      ]}
+      customControlsSection={[]}
       customAdditionalControls={[]}
+      showJumpControls={false}
       className={classes.container}
       ref={player}
+      // layout='horizontal'
     />
   );
 }
