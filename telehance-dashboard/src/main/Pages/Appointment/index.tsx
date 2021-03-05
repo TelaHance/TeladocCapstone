@@ -2,14 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
-import { useHistory, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { consultWebsocketUrl, getTwilioTokenUrl } from 'Api';
+import { AppointmentData, TranscriptData, EntityData } from 'Models';
 import PatientInfo from 'Components/PatientInfo/PatientInfo';
 import Transcript from 'Components/Transcript';
 import Assistant from 'Components/Assistant/Assistant';
-import { AppointmentData, TranscriptData, EntityData } from 'Models';
-import classes from './Appointment.module.css';
 import CallControls, { Status } from './CallControls';
+import EndModal from './EndModal';
+import classes from './Appointment.module.css';
 
 const device = new Device();
 
@@ -23,9 +24,9 @@ export default function Appointment(route: RouteComponentProps) {
   const [transcript, setTranscript] = useState<TranscriptData>([]);
   const [newEntities, setNewEntities] = useState<EntityData[]>();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const { lastMessage, getWebSocket } = useWebSocket(consultWebsocketUrl);
-  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -72,6 +73,7 @@ export default function Appointment(route: RouteComponentProps) {
   function hangup() {
     connection?.disconnect();
     device.destroy();
+    setTimeout(() => setShowModal(true), 1000);
   }
 
   function mute(shouldMute?: boolean) {
@@ -79,32 +81,39 @@ export default function Appointment(route: RouteComponentProps) {
   }
 
   return (
-    <div className={classes.container}>
-      <div className={classes.content}>
-        <section
-          className={clsx(classes.main, {
-            [classes.sidebarExpanded]: sidebarExpanded,
-          })}
-        >
-          <PatientInfo
-            patient={appointment.patient}
-            purpose={appointment.purpose}
+    <>
+      <div className={classes.container}>
+        <div className={classes.content}>
+          <section
+            className={clsx(classes.main, {
+              [classes.sidebarExpanded]: sidebarExpanded,
+            })}
           >
-            <CallControls
-              status={callStatus}
-              call={call}
-              hangup={hangup}
-              mute={mute}
-            />
-          </PatientInfo>
-          <Transcript transcript={transcript} />
-        </section>
-        <Assistant
-          consult={appointment}
-          newEntities={newEntities}
-          action={setSidebarExpanded}
-        />
+            <PatientInfo
+              patient={appointment.patient}
+              purpose={appointment.purpose}
+            >
+              <CallControls
+                status={callStatus}
+                call={call}
+                hangup={hangup}
+                mute={mute}
+              />
+            </PatientInfo>
+            <Transcript transcript={transcript} />
+          </section>
+          <Assistant
+            consult={appointment}
+            newEntities={newEntities}
+            action={setSidebarExpanded}
+          />
+        </div>
       </div>
-    </div>
+      <EndModal
+        consultId={appointment.consult_id}
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
+    </>
   );
 }
