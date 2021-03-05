@@ -1,0 +1,22 @@
+.title {
+  width: 200px;
+  margin: 1em auto 0 auto;
+}
+
+.content > fieldset {
+  width: 100%;
+}
+
+.content > fieldset > div {
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.content > fieldset > div > span {
+  width: calc(100% / 3);
+  padding: 2em;
+}
+
+label[data-id="visual-picker_option-label"] > span:first-child > img {
+  border-radius: 20px;
+}
