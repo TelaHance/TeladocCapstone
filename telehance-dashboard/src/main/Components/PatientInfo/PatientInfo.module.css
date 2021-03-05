@@ -24,9 +24,15 @@
   justify-content: center;
 }
 
-.patient > div > h5 {
+.patient > div > h4 {
   font-weight: 700;
   margin-bottom: 0.5em;
+}
+
+.patient > section {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
 }
 
 .purpose {

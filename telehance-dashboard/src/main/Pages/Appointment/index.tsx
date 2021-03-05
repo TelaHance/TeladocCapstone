@@ -89,14 +89,15 @@ export default function Appointment(route: RouteComponentProps) {
           <PatientInfo
             patient={appointment.patient}
             purpose={appointment.purpose}
-          />
+          >
+            <CallControls
+              status={callStatus}
+              call={call}
+              hangup={hangup}
+              mute={mute}
+            />
+          </PatientInfo>
           <Transcript transcript={transcript} />
-          <CallControls
-            status={callStatus}
-            call={call}
-            hangup={hangup}
-            mute={mute}
-          />
         </section>
         <Assistant
           consult={appointment}
