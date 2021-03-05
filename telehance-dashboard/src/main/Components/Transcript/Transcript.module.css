@@ -1,36 +1,23 @@
 .container {
   flex: 1;
-  overflow-y: hidden;
+  padding: 0.25em;
   margin-bottom: 1em;
   display: flex;
-  padding: 1.5em;
+  overflow-y: hidden;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  padding: 1em 0;
   border-radius: 20px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.container > div[data-slate-editor='true'] {
+.messages > div[data-slate-editor='true'] {
   flex: 1;
   overflow-y: scroll;
   padding-left: 20px;
   white-space: break-spaces !important;
-}
-
-::-webkit-scrollbar {
-  width: 20px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
-  border-radius: 20px;
-  border: 6px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #a8bbbf;
 }
