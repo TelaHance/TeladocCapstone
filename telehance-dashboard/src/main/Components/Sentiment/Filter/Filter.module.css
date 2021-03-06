@@ -26,16 +26,45 @@
   padding-bottom: 100%;
 }
 
-.container{
-  position: relative
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  padding: 0.5em;
 }
 
+.container > span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-.dropdown{
+.container > button {
+  margin-left: auto;
+}
+
+.arrow {
+  transition: 0.3s;
+}
+
+.active {
+  transform: rotateX(180deg);
+}
+
+.dropdown {
   position: fixed;
   z-index: 5000;
   width: 200px;
-  margin-top: 10px;
-  overflow-y: visible
+  margin-top: 3em;
+  overflow-y: visible;
+  transform: translate(50%, 50%);
 }
 
+/* Overrides for Issues Section */
+th {
+  text-align: start;
+}
+th > div > div[role='presentation'] > span {
+  width: 100%;
+}
