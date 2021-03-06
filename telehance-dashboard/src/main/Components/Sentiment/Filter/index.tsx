@@ -1,32 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { ConsultData } from 'Models';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classes from './Filter.module.css';
-import { Option,ButtonIcon } from 'react-rainbow-components';
-import {
-  faArrowDown,
-  faCircle
-} from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
+import { Option, ButtonIcon } from 'react-rainbow-components';
 // @ts-ignore
 import InternalDropdown from 'react-rainbow-components/components/InternalDropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { ConsultData } from 'Models';
+import classes from './Filter.module.css';
 
 const DefaultThreshold: { [key: string]: number } = {
   FLIRTATION: 0.75,
-  THREAT: 0.75,
-  PROFANITY: 0.75,
-  INSULT: 0.75,
   IDENTITY_ATTACK: 0.75,
+  INSULT: 0.75,
+  PROFANITY: 0.75,
+  THREAT: 0.75,
   TOXICITY: 0.75,
 };
 
+const attributes: { [key: string]: string } = {
+  FLIRTATION: '#e83e8c',
+  IDENTITY_ATTACK: '#007bff',
+  INSULT: '#ffee58',
+  NO_ISSUES: '#28a745',
+  PROFANITY: '#e65100',
+  THREAT: '#dc3545',
+  TOXICITY: '#6f42c1',
+  UNRATED: '#6c757d',
+};
+
+function getLabel(attribute: string) {
+  const lowercase = attribute.toLowerCase().split('_');
+  return lowercase
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 function onFilter(filterVal: any, data: ConsultData[]) {
   if (!filterVal || filterVal.length === 0) return data;
 
-  console.log(filterVal)
   return data.filter(({ sentiment }) => {
     let matchesOneFilter = false;
-    filterVal.forEach(({name}:any) => {
+    filterVal.forEach(({ name }: any) => {
       if (sentiment === undefined) {
         if (name === 'UNRATED') matchesOneFilter = true;
         return;
@@ -50,23 +64,57 @@ export default function Filter({ setDisplayConsult, consults }: any) {
   const [show, setShow] = useState(false);
   const [value, setValue] = useState();
 
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    setDisplayConsult(onFilter(value,consults));
+    setDisplayConsult(onFilter(value, consults));
   }, [value]);
+
+  function checkShouldShow(event: any) {
+    if (!ref?.current?.contains(event.target)) {
+      setShow(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', checkShouldShow);
+    return () => {
+      document.removeEventListener('click', checkShouldShow);
+    };
+  }, []);
+
   return (
-    <div className={classes.container}>
-      <div>
-      <span style={{marginLeft:"57px",marginRight: "10px"}}>Issues</span>
-      <ButtonIcon onClick={() => setShow((show) => !show)} onBlur={()=>setShow(false)} variant="border-filled" size="small" tooltip="Arrow down" icon={<FontAwesomeIcon icon={faArrowDown} />} />
-      </div>
+    <div className={classes.container} ref={ref}>
+      <span>Issues</span>
+      <ButtonIcon
+        onClick={() => setShow((show) => !show)}
+        variant='brand'
+        size='small'
+        tooltip='Filter'
+        icon={
+          <FontAwesomeIcon
+            icon={faArrowDown}
+            className={clsx(classes.arrow, { [classes.active]: show })}
+          />
+        }
+      />
       {show ? (
-        <InternalDropdown className={classes.dropdown} value={value} onChange={setValue} multiple>
-          <Option label={'Toxicity'} name={'TOXICITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }} />} />
-          <Option label={'Profanity'} name={'PROFANITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e65100' }} />} />
-          <Option label={'Insult'} name={'INSULT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#d6cd00' }} />} />
-          <Option label={'Flirtation'} name={'FLIRTATION'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e83e8c' }} />} />
-          <Option label={'Threat'} name={'THREAT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#dc3545' }} />} />
-          <Option label={'Identity Attack'} name={'IDENTITY_ATTACK'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#007bff' }} />} />
+        <InternalDropdown
+          className={classes.dropdown}
+          value={value}
+          onChange={setValue}
+          multiple
+        >
+          {Object.entries(attributes).map(([attribute, color]) => (
+            <Option
+              key={attribute}
+              name={attribute}
+              label={getLabel(attribute)}
+              icon={
+                <FontAwesomeIcon icon={faCircle} style={{ color }} size='lg' />
+              }
+            />
+          ))}
         </InternalDropdown>
       ) : null}
     </div>
