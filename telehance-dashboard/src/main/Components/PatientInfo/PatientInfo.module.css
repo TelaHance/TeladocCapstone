@@ -6,7 +6,7 @@
   margin-bottom: 1em;
 }
 
-.container h7 {
+.container h6 {
   font-weight: 700;
 }
 
@@ -24,13 +24,21 @@
   justify-content: center;
 }
 
-.patient > div > h5 {
+.patient > div > h4 {
   font-weight: 700;
   margin-bottom: 0.5em;
 }
 
+.patient > section {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .purpose {
   width: 50%;
+  margin-left: 1em;
 }
 
 .purpose > div {
