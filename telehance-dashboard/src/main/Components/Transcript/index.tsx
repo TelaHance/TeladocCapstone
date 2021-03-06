@@ -17,6 +17,7 @@ export default function Transcript({
   isEditing = false,
   currWordStartTime = -1,
   setStartFrom = () => {},
+  children,
 }: TranscriptProps) {
   const editor = useCustomEditor();
 
@@ -49,17 +50,20 @@ export default function Transcript({
 
   return (
     <div className={classes.container}>
-      <Slate
-        editor={editor}
-        value={transcript}
-        onChange={(value) => onChange(value as TranscriptData)}
-      >
-        <Editable
-          readOnly={!isEditing}
-          renderElement={useMessage}
-          renderLeaf={useWord}
-        />
-      </Slate>
+      {children}
+      <div className={classes.messages}>
+        <Slate
+          editor={editor}
+          value={transcript}
+          onChange={(value) => onChange(value as TranscriptData)}
+        >
+          <Editable
+            readOnly={!isEditing}
+            renderElement={useMessage}
+            renderLeaf={useWord}
+          />
+        </Slate>
+      </div>
     </div>
   );
 }
@@ -70,4 +74,5 @@ export type TranscriptProps = {
   isEditing?: boolean;
   currWordStartTime?: number;
   setStartFrom?: (value: number) => void;
+  children?: React.ReactNode;
 };

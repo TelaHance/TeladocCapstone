@@ -8,9 +8,7 @@ import {
   faTrash,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import Button from 'react-bootstrap/Button';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import { ButtonIcon } from 'react-rainbow-components';
 import ConfirmModal from './ConfirmModal';
 import classes from './Controls.module.css';
 
@@ -28,54 +26,73 @@ export default function Controls({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   return (
-      <div className={classes.container}>
-        {isEditing ? (
-            <>
-              <Button onClick={onCancel} variant='secondary' type='reset'>
-                <FontAwesomeIcon icon={faTimes} />
-              </Button>
-              <Button onClick={onSave} variant='success' type='submit'>
-                <FontAwesomeIcon icon={faSave} /> Save
-              </Button>
-              <Button onClick={() => setShowConfirmModal(true)} variant='danger'>
-                <FontAwesomeIcon icon={faTrash} /> Delete
-              </Button>
-            </>
-        ) : (
-            <Button onClick={onEdit}>
-              <FontAwesomeIcon icon={faPencilAlt} /> Edit
-            </Button>
-        )}
-        {' '}
-        {hasEditedCopy ? (
-            <ToggleButtonGroup type='checkbox' name='view'>
-              <ToggleButton
-                  value={1}
-                  onClick={toggleView}
-                  disabled={isEdited}
-                  onFocus={(e) => e.target.blur()}
-              >
-                <FontAwesomeIcon icon={faNotesMedical} /> Edited
-              </ToggleButton>
-              <ToggleButton
-                  value={2}
-                  onClick={toggleView}
-                  disabled={!isEdited}
-                  onFocus={(e) => e.target.blur()}
-              >
-                <FontAwesomeIcon icon={faFile} /> Original
-              </ToggleButton>
-            </ToggleButtonGroup>
-        ) : null}
-        <ConfirmModal
-            show={showConfirmModal}
-            onCancel={() => setShowConfirmModal(false)}
-            onConfirm={() => {
-              onDelete();
-              setShowConfirmModal(false);
-            }}
+    <div className={classes.container}>
+      {isEditing ? (
+        <>
+          <ButtonIcon
+            onClick={onCancel}
+            variant='border'
+            tooltip='Cancel'
+            shaded
+            icon={<FontAwesomeIcon icon={faTimes} />}
+          />
+          <ButtonIcon
+            onClick={onSave}
+            variant='success'
+            tooltip='Save'
+            shaded
+            icon={<FontAwesomeIcon icon={faSave} />}
+          />
+          <ButtonIcon
+            onClick={() => setShowConfirmModal(true)}
+            // @ts-ignore
+            variant='destructive'
+            tooltip='Delete'
+            shaded
+            icon={<FontAwesomeIcon icon={faTrash} />}
+          />
+        </>
+      ) : (
+        <ButtonIcon
+          onClick={onEdit}
+          variant='brand'
+          tooltip='Edit'
+          shaded
+          icon={<FontAwesomeIcon icon={faPencilAlt} />}
         />
-      </div>
+      )}
+      {hasEditedCopy ? (
+        isEdited ? (
+          <ButtonIcon
+            onClick={toggleView}
+            disabled={!isEdited}
+            variant='border'
+            tooltip='Viewing Edited'
+            shaded
+            icon={<FontAwesomeIcon icon={faNotesMedical} />}
+            onFocus={(e) => e.target.blur()}
+          />
+        ) : (
+          <ButtonIcon
+            onClick={toggleView}
+            disabled={isEdited}
+            variant='border'
+            tooltip='Viewing Original'
+            shaded
+            icon={<FontAwesomeIcon icon={faFile} />}
+            onFocus={(e) => e.target.blur()}
+          />
+        )
+      ) : null}
+      <ConfirmModal
+        show={showConfirmModal}
+        onCancel={() => setShowConfirmModal(false)}
+        onConfirm={() => {
+          onDelete();
+          setShowConfirmModal(false);
+        }}
+      />
+    </div>
   );
 }
 
