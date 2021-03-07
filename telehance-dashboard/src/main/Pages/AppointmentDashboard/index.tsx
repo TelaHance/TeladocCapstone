@@ -51,7 +51,7 @@ export default function AppointmentDashboard() {
           pageSize={3}
           data={appointments}
           keyField='id'
-          className={classes['table']}
+          className={classes.table}
         >
           {role === 'PATIENT' && (
             <Column
