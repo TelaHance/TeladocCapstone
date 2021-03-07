@@ -51,8 +51,8 @@ th > div > div > span {
 }
 
 .avatar {
-  border-radius: 50% !important;
   margin-right: 9px;
+  display: inline-block;
 }
 
 .name {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { UserData } from 'src/main/Models';
+import { Avatar } from 'react-rainbow-components';
 import classes from './PatientInfo.module.css';
 
 export default function PatientInfo({
@@ -8,10 +9,15 @@ export default function PatientInfo({
   children,
 }: PatientInfoProps) {
   const { given_name, family_name, picture } = patient;
+  const fullName = `${given_name} ${family_name}`;
   return (
     <div className={classes.container}>
       <div className={classes.patient}>
-        <img src={picture} className='rounded-circle' width={90} />
+        <Avatar
+          src={picture}
+          assistiveText={fullName}
+          title={fullName}
+        />
         <section>
           <h4>{given_name + ' ' + family_name}</h4>
           {children}
@@ -31,4 +37,4 @@ type PatientInfoProps = {
   patient: UserData;
   purpose: string;
   children?: React.ReactNode;
-}
+};
