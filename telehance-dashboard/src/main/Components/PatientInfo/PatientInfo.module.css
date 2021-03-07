@@ -29,6 +29,10 @@
   min-height: 100px;
 }
 
+.patient > span > img {
+  object-fit: cover;
+}
+
 .patient > div > h4 {
   font-weight: 700;
   margin-bottom: 0.5em;
