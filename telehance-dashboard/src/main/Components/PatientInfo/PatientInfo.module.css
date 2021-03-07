@@ -24,6 +24,11 @@
   justify-content: center;
 }
 
+.patient > span {
+  min-width: 100px;
+  min-height: 100px;
+}
+
 .patient > div > h4 {
   font-weight: 700;
   margin-bottom: 0.5em;
@@ -37,15 +42,26 @@
 }
 
 .purpose {
-  width: 50%;
+  flex: 1 0 50%;
   margin-left: 1em;
 }
 
 .purpose > div {
-  /* background-color: #e9e9e9 !important; */
   text-align: left;
-  padding: 0.5rem;
+  padding: 0.5em;
   border-radius: 0.5em;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 1.5em;
+  max-height: 5.25em;
+  overflow-y: hidden;
+}
+
+@media only screen and (max-width: 992px) {
+  .purpose {
+    width: 0;
+    display: none;
+  }
 }

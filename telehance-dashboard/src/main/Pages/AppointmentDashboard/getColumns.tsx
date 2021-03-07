@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-rainbow-components';
+import { Avatar, Button } from 'react-rainbow-components';
 import { useHistory } from 'react-router-dom';
 import { AppointmentData } from 'Models';
 import classes from './AppointmentDashboard.module.css';
@@ -9,11 +9,13 @@ export function purposeFormatter({ value }: any) {
 }
 
 export function nameFormatter({ value }: any) {
+  const fullName = `${value.given_name} ${value.family_name}`
   return (
     <>
-      <img className={classes.avatar} src={value.picture} width='35' alt='' />
+      <Avatar src={value.picture} assistiveText={fullName} title={fullName} className={classes.avatar}/>
+      {/* <img className={classes.avatar} src={value.picture} width='35' alt='' /> */}
       <span className={classes.name}>
-        {value.given_name} {value.family_name}
+        {fullName}
       </span>
     </>
   );

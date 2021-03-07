@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Sentiment from '../../Components/Sentiment';
+import { Avatar, Button } from 'react-rainbow-components';
 import classes from './ConsultDashboard.module.css';
-import { Button } from 'react-rainbow-components';
 
 // FORMATTERS
 
@@ -27,18 +27,18 @@ export function dateFormatter(value: any) {
   );
 }
 
-export function nameFormatter(cell: any) {
+export function nameFormatter({ value }: any) {
+  const fullName = `${value.given_name} ${value.family_name}`
   return (
     <>
-      <img
+      <Avatar
+        src={value.picture}
+        assistiveText={fullName}
+        title={fullName}
         className={classes.avatar}
-        src={cell.value.picture}
-        width='31'
-        alt=''
-      ></img>
+      />
       <span>
-        {' '}
-        {cell.value.given_name} {cell.value.family_name}{' '}
+        {fullName}
       </span>
     </>
   );
