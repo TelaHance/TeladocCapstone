@@ -50,6 +50,10 @@
   display: inline-block;
 }
 
+.avatar img {
+  object-fit: cover;
+}
+
 .view-container {
   display: flex;
   justify-content: center;
