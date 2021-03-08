@@ -92,10 +92,6 @@ export const AdminCharts = ({ consults }) => {
         return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
     })[0].averages).reverse() : [];
 
-    typeof consults !== 'undefined' ? console.log(Object.values(consults.doctorAverages.filter((doctor) =>{
-        return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-    })[0].averages).reverse().map(a => a[categories[0]])) : console.log('hell');
-
     const avgLabels =
         typeof consults !== 'undefined'
             ? Object.keys(consults.platformAverages).reverse()
