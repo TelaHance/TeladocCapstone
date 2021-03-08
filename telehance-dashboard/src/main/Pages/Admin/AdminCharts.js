@@ -29,6 +29,7 @@ export const AdminCharts = ({ consults }) => {
     const [avgListVal, setAvgListVal] = useState([
         { label: 'Toxicity', name: 'TOXICITY' },{ label: 'Insult', name: 'INSULT' },{ label: 'Flirtation', name: 'FLIRTATION' },
     ]);
+    const [chosenDocSentVal, setChosenDocSentVal] = useState({ label: 'Toxicity', name: 'TOXICITY' });
     const [avgDatasets, setAvgDatasets] = useState([]);
     const [docDatasets, setDocDatasets] = useState([]);
 
@@ -66,36 +67,47 @@ export const AdminCharts = ({ consults }) => {
     useEffect(() => {
         let newDatasets = [];
         if(typeof consults !== 'undefined') {
-            for (let i = 0; i < categories.length; i++) {
-                const values = Object.values(consults.doctorAverage[chosenDoc].sentiment[categories[i]])
-                    .reverse()
-                    .map(function (sentiment) {
-                        return 100 * sentiment;
-                    });
-                newDatasets.push({
-                    title: getLabel(categories[i]),
-                    borderColor: bgColor[categories[i]],
-                    values: values,
-                });
-            }
+            let values = Object.values(consults.doctorAverages.filter((doctor) =>{
+                return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
+            })[0].averages)
+                .reverse()
+                .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
+            newDatasets.push({
+                title: "Dr. " + chosenDoc.split(" ")[1],
+                borderColor: '#24b71a',
+                values: values,
+            });
+            values = Object.values(consults.platformAverages)
+                        .reverse()
+                        .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
+            newDatasets.push({
+                title: 'Average Doctor',
+                borderColor: bgColor[chosenDocSentVal.name],
+                values: values,
+            });
             setDocDatasets(newDatasets);
         }
-    }, [chosenDocVal, consults]);
-    const docLabels =
-        typeof consults !== 'undefined'
-            ? Object.keys(consults.doctorAverage[chosenDoc].sentiment['TOXICITY']).reverse()
-            : [];
+    }, [chosenDocVal, chosenDocSentVal, consults]);
+    const docLabels = typeof consults !== 'undefined' ? Object.keys(consults.doctorAverages.filter((doctor) =>{
+        return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
+    })[0].averages).reverse() : [];
+
     const avgLabels =
         typeof consults !== 'undefined'
             ? Object.keys(consults.platformAverages).reverse()
             : [];
-    const docGraphTitle = "Dr. " + chosenDoc.split(" ")[1] + '\'s Average Consult Ratings';
+    const docGraphTitle = "Dr. " + chosenDoc.split(" ")[1] + '\'s Average ' + chosenDocSentVal.label + ' Consult Rating';
     const options = {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
             yAxes: [
                 {
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Sentiment  Score',
+                        fontSize: 14,
+                    },
                     ticks: {
                         suggestedMin: 0,
                         suggestedMax: 100,
@@ -112,7 +124,7 @@ export const AdminCharts = ({ consults }) => {
                         setAvgListVal(selectedVal);
                     }}
                     value={avgListVal}
-                    label='Select a Toxicity Label'
+                    label='Select Sentiment Categories'
                     className={classes['picklist']}
                     showCheckbox
                     variant='chip'
@@ -136,35 +148,60 @@ export const AdminCharts = ({ consults }) => {
                 </Card>
             </div>
             <div>
-                <Picklist
-                    placeholder={chosenDocVal}
-                    onChange={(selectedVal) => {
-                        setChosenDoc(selectedVal.label);
-                        setChosenDocVal(selectedVal);
-                    }}
-                    value={chosenDocVal}
-                    label='Select a Doctor'
-                    className={classes['picklist']}
-                >
-                    <Option name='header' label='Select a Doctor' variant='header' />
-                    {consults &&
-                    Object.values(consults.doctorAverage).map((doctor) => {
-                        return (
-                            <Option
-                                name={doctor.fullName}
-                                label={doctor.fullName}
-                                icon={
-                                    <img
-                                        className={classes['rounded-circle']}
-                                        src={doctor.picture}
-                                        width='25'
-                                        alt=''
-                                    />
-                                }
-                            />
-                        );
-                    })}
-                </Picklist>
+                <div className={classes['docPickLists']}>
+                    <Picklist
+                        placeholder={chosenDocVal}
+                        onChange={(selectedVal) => {
+                            setChosenDoc(selectedVal.label);
+                            setChosenDocVal(selectedVal);
+                        }}
+                        value={chosenDocVal}
+                        label='Select a Doctor'
+                        className={classes['docPicklist']}
+                    >
+                        <Option name='header' label='Select a Doctor' variant='header' />
+                        {consults &&
+                        Object.values(consults.doctorAverages).map((doctor) => {
+                            return (
+                                <Option
+                                    name={doctor.user.given_name + ' ' + doctor.user.family_name}
+                                    label={doctor.user.given_name + ' ' + doctor.user.family_name}
+                                    icon={
+                                        <img
+                                            className={classes['rounded-circle']}
+                                            src={doctor.user.picture}
+                                            width='25'
+                                            alt=''
+                                        />
+                                    }
+                                />
+                            );
+                        })}
+                    </Picklist>
+                    <Picklist
+                        placeholder={chosenDocSentVal}
+                        onChange={(selectedVal) => {
+                            setChosenDocSentVal(selectedVal.label);
+                            setChosenDocSentVal(selectedVal);
+                        }}
+                        value={chosenDocSentVal}
+                        label='Select a Sentiment'
+                        className={classes['docPicklist']}
+                    >
+                        <Option
+                            name='header'
+                            label='Select a Sentiment Category'
+                            variant='header'
+                        />
+                        <Option label={'Toxicity'} name={'TOXICITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }}/>}/>
+                        <Option label={'Profanity'} name={'PROFANITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e65100' }}/>}/>
+                        <Option label={'Insult'} name={'INSULT'} icon={<FontAwesomeIcon icon={faCircle}style={{ color: '#d6cd00' }} />}/>
+                        <Option label={'Flirtation'} name={'FLIRTATION'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e83e8c' }}/>}/>
+                        <Option label={'Threat'} name={'THREAT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#dc3545' }}/>}/>
+                        <Option label={'Identity Attack'} name={'IDENTITY_ATTACK'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#007bff' }}/>}/>
+
+                    </Picklist>
+                </div>
                 <Card title={docGraphTitle} className={classes.card}>
                     <Chart labels={docLabels} type='bar' options={options}>
                         {renderDataset(docDatasets)}

@@ -39,3 +39,15 @@
   /* flex: 1; */
   width: 420px;
 }
+.docPickLists{
+  display: flex;
+}
+.docPicklist{
+  width: auto;
+  margin-right: 0.5vh;
+  margin-left: 0.5vh;
+}
+.picklist > label{
+  display: block;
+  text-align: center;
+}
