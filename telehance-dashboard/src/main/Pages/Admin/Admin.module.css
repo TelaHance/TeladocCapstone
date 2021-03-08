@@ -17,16 +17,21 @@
 .picklist {
   display: inline;
 }
-.rounded-circle {
-  border-radius: 50% !important;
+.avatar {
+  margin: 9px 9px 9px 0;
+  display: inline-block;
 }
-.table{
-  border: 1px solid rgba(215,217,226,1);
+
+.avatar img {
+  object-fit: cover;
+}
+.table {
+  border: 1px solid rgba(215, 217, 226, 1);
   border-radius: 15px;
 }
-.table > div:first-child > div:last-child > div{
+.table > div:first-child > div:last-child > div {
   border-radius: 15px 15px 0 0;
-  border:none;
+  border: none;
 }
 .table > div:last-child {
   border-radius: 0 0 15px 15px;
@@ -39,15 +44,15 @@
   /* flex: 1; */
   width: 420px;
 }
-.docPickLists{
+.docPickLists {
   display: flex;
 }
-.docPicklist{
+.docPicklist {
   width: auto;
   margin-right: 0.5vh;
   margin-left: 0.5vh;
 }
-.picklist > label{
+.picklist > label {
   display: block;
   text-align: center;
 }
