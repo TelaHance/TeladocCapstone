@@ -1,212 +1,195 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
-    faCircle
-} from '@fortawesome/free-solid-svg-icons';
-import {
-    Card,
-    Dataset,
-    Chart,
-    MultiSelect,
-    Picklist,
-    Option,
-    Avatar,
+  Card,
+  Dataset,
+  Chart,
+  MultiSelect,
+  Picklist,
+  Option,
+  Avatar,
 } from 'react-rainbow-components';
+import {
+  chartOptions,
+  color,
+  defaultUser,
+  sentimentOptions,
+  sentimentValues,
+} from './AdminConstants';
 import classes from './Admin.module.css';
-import {getLabel} from "Components/Sentiment/Pill";
-import {bgColor, categories} from "Pages/Admin/AdminConstants";
-export const AdminCharts = ({ consults }) => {
-    const [chosenDoc, setChosenDoc] = useState('Tanay Komarlu');
-    const [chosenDocVal, setChosenDocVal] = useState({
-        icon: <Avatar
-                src='https://lh5.googleusercontent.com/-nWGfFsvI9FU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmM4LfRfQZBBou_hOJV_eBkkPlFdQ/s96-c/photo.jpg'
-                className={classes.avatarGraph}
-            />,
-        label: "Tanay Komarlu",
-        name: "Tanay Komarlu",
-    });
-    const [avgListVal, setAvgListVal] = useState([
-        { label: 'Toxicity', name: 'TOXICITY' },{ label: 'Insult', name: 'INSULT' },{ label: 'Flirtation', name: 'FLIRTATION' },
-    ]);
-    const [chosenDocSentVal, setChosenDocSentVal] = useState({
-        label: 'Toxicity',
-        name: 'TOXICITY',
-        icon: <FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }}/>
-    });
-    const [avgDatasets, setAvgDatasets] = useState([]);
-    const [docDatasets, setDocDatasets] = useState([]);
 
-    useEffect(() => {
-        let newDatasets = [];
-        for (let i = 0; i < avgListVal.length; i++) {
-            const values =
-                typeof consults !== 'undefined'
-                    ? Object.values(consults.platformAverages)
-                        .map(function (sentiment) {
-                            return 100 * sentiment[avgListVal[i].name];
-                        })
-                    : [];
+function renderDataset(datasets) {
+  return datasets.map(({ title, color, values }) => (
+    <Dataset
+      key={title}
+      title={title}
+      values={values}
+      borderColor={color}
+      backgroundColor={color}
+    />
+  ));
+}
 
-            newDatasets.push({
-                title: avgListVal[i].label,
-                borderColor: bgColor[avgListVal[i].name],
-                values: values,
-            });
+export default function AdminCharts({ consults }) {
+  const [chosenDoc, setChosenDoc] = useState(defaultUser);
+
+  const [avgListVal, setAvgListVal] = useState([
+    sentimentValues.TOXICITY,
+    sentimentValues.INSULT,
+    sentimentValues.FLIRTATION,
+  ]);
+
+  const [docSentValue, setDocSentValue] = useState(sentimentValues.TOXICITY);
+
+  const [avgDatasets, setAvgDatasets] = useState([]);
+  const [docDatasets, setDocDatasets] = useState([]);
+  const [docLabels, setDocLabels] = useState([]);
+
+  const [graphToUpdate, setGraphToUpdate] = useState('ALL');
+
+  useEffect(() => {
+    const newDatasets = avgListVal.map(({ label, name }) => {
+      const values = Object.values(consults?.platformAverages ?? {}).map(
+        function (sentiment) {
+          return Math.round(100 * sentiment[name]);
         }
-        setAvgDatasets(newDatasets);
-    }, [avgListVal, consults]);
+      );
+      return {
+        title: label,
+        color: color[name],
+        values: values,
+      };
+    });
+    setAvgDatasets(newDatasets);
+  }, [avgListVal, consults]);
 
-    const renderDataset = (datasets) => {
-        return datasets.map(({ title, values, borderColor }) => (
-            <Dataset
-                key={title}
-                title={title}
-                values={values}
-                borderColor={borderColor}
-                backgroundColor={borderColor}
-            />
-        ));
-    };
-    useEffect(() => {
-        let newDatasets = [];
-        if(typeof consults !== 'undefined') {
-            let values = Object.values(consults.doctorAverages.filter((doctor) =>{
-                return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-            })[0].averages).reverse()
-                .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
-            newDatasets.push({
-                title: "Dr. " + chosenDoc.split(" ")[1],
-                borderColor: '#24b71a',
-                values: values,
-            });
-            values = Object.values(consults.platformAverages)
-                        .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
-            newDatasets.push({
-                title: 'Average Doctor',
-                borderColor: bgColor[chosenDocSentVal.name],
-                values: values,
-            });
-            setDocDatasets(newDatasets);
-        }
-    }, [chosenDocVal, chosenDocSentVal, consults]);
-    const docLabels = typeof consults !== 'undefined' ? Object.keys(consults.doctorAverages.filter((doctor) =>{
-        return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-    })[0].averages).reverse() : [];
+  useEffect(() => {
+    const docData = Object.entries(
+      consults
+        ? consults.doctorAverages.filter(
+            ({ user: { user_id } }) => user_id === chosenDoc.value.user_id
+          )[0].averages
+        : []
+    ).sort((a, b) => Date.parse(a[0]) - Date.parse(b[0]));
 
-    const avgLabels =
-        typeof consults !== 'undefined'
-            ? Object.keys(consults.platformAverages)
-            : [];
-    const docGraphTitle = "Dr. " + chosenDoc.split(" ")[1] + '\'s Average ' + chosenDocSentVal.label + ' Consult Rating';
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            yAxes: [
-                {
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Sentiment  Score',
-                        fontSize: 14,
-                    },
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 100,
-                    },
-                },
-            ],
-        },
-    };
-    return (
-        <div className={classes['flexContainer']}>
-            <div>
-                <MultiSelect
-                    onChange={(selectedVal) => {
-                        setAvgListVal(selectedVal);
-                    }}
-                    value={avgListVal}
-                    label='Select Sentiment Categories'
-                    className={classes['picklist']}
-                    showCheckbox
-                    variant='chip'
-                >
-                    <Option
-                        name='header'
-                        label='Select Sentiment Categories'
-                        variant='header'
-                    />
-                    <Option label={'Toxicity'} name={'TOXICITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }}/>}/>
-                    <Option label={'Profanity'} name={'PROFANITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e65100' }}/>}/>
-                    <Option label={'Insult'} name={'INSULT'} icon={<FontAwesomeIcon icon={faCircle}style={{ color: '#d6cd00' }} />}/>
-                    <Option label={'Flirtation'} name={'FLIRTATION'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e83e8c' }}/>}/>
-                    <Option label={'Threat'} name={'THREAT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#dc3545' }}/>}/>
-                    <Option label={'Identity Attack'} name={'IDENTITY_ATTACK'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#007bff' }}/>}/>
-                </MultiSelect>
-                <Card title='Average TelaHance Consult Ratings' className={classes.card}>
-                    <Chart labels={avgLabels} type='line' options={options}>
-                        {renderDataset(avgDatasets)}
-                    </Chart>
-                </Card>
-            </div>
-            <div>
-                <div className={classes['docPickLists']}>
-                    <Picklist
-                        placeholder={chosenDocVal}
-                        onChange={(selectedVal) => {
-                            setChosenDoc(selectedVal.label);
-                            setChosenDocVal(selectedVal);
-                        }}
-                        value={chosenDocVal}
-                        label='Select a Doctor'
-                        className={classes['docPicklist']}
-                    >
-                        <Option name='header' label='Select a Doctor' variant='header' />
-                        {consults &&
-                        Object.values(consults.doctorAverages).map((doctor) => {
-                            return (
-                                <Option
-                                    name={doctor.user.given_name + ' ' + doctor.user.family_name}
-                                    label={doctor.user.given_name + ' ' + doctor.user.family_name}
-                                    icon={
-                                        <Avatar
-                                            src={doctor.user.picture}
-                                            className={classes.avatarGraph}
-                                        />
-                                    }
-                                />
-                            );
-                        })}
-                    </Picklist>
-                    <Picklist
-                        placeholder={chosenDocSentVal}
-                        onChange={(selectedVal) => {
-                            setChosenDocSentVal(selectedVal.label);
-                            setChosenDocSentVal(selectedVal);
-                        }}
-                        value={chosenDocSentVal}
-                        label='Select a Sentiment'
-                        className={classes['docPicklist']}
-                    >
-                        <Option
-                            name='header'
-                            label='Select a Sentiment Category'
-                            variant='header'
-                        />
-                        <Option label={'Toxicity'} name={'TOXICITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }}/>}/>
-                        <Option label={'Profanity'} name={'PROFANITY'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e65100' }}/>}/>
-                        <Option label={'Insult'} name={'INSULT'} icon={<FontAwesomeIcon icon={faCircle}style={{ color: '#d6cd00' }} />}/>
-                        <Option label={'Flirtation'} name={'FLIRTATION'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#e83e8c' }}/>}/>
-                        <Option label={'Threat'} name={'THREAT'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#dc3545' }}/>}/>
-                        <Option label={'Identity Attack'} name={'IDENTITY_ATTACK'} icon={<FontAwesomeIcon icon={faCircle} style={{ color: '#007bff' }}/>}/>
+    setDocLabels(docData.map((data) => data[0]));
 
-                    </Picklist>
-                </div>
-                <Card title={docGraphTitle} className={classes.card}>
-                    <Chart labels={docLabels} type='bar' options={options}>
-                        {renderDataset(docDatasets)}
-                    </Chart>
-                </Card>
-            </div>
-        </div>
+    const docValues = docData.map((data) =>
+      Math.round(100 * data[1][docSentValue.name])
     );
-};
+
+    const avgValues = Object.values(
+      consults?.platformAverages ?? {}
+    ).map((sentiment) => Math.round(100 * sentiment[docSentValue.name]));
+
+    setDocDatasets([
+      {
+        title: 'Dr. ' + chosenDoc.value.family_name,
+        color: '#24b71a',
+        values: docValues,
+      },
+      {
+        title: 'Average Doctor',
+        color: color[docSentValue.name],
+        values: avgValues,
+      },
+    ]);
+  }, [chosenDoc, docSentValue, consults]);
+
+  const avgLabels = useMemo(
+    () => Object.keys(consults?.platformAverages ?? {}),
+    [consults]
+  );
+  const docGraphTitle = `Dr. ${chosenDoc.value.family_name}'s Average ${docSentValue.label} Consult Rating`;
+
+  return (
+    <div className={classes.flexContainer}>
+      <div>
+        <MultiSelect
+          onChange={(selectedVal) => {
+            setAvgListVal(selectedVal);
+            setGraphToUpdate('AVG');
+          }}
+          value={avgListVal}
+          label='Select Sentiment Categories'
+          className={classes.picklist}
+          showCheckbox
+          variant='chip'
+        >
+          <Option
+            name='header'
+            label='Select Sentiment Categories'
+            variant='header'
+          />
+          {sentimentOptions}
+        </MultiSelect>
+        <Card
+          title='Average TelaHance Consult Ratings'
+          className={classes.card}
+        >
+          <Chart
+            labels={avgLabels}
+            type='line'
+            options={chartOptions}
+            disableAnimations={graphToUpdate === 'DOC'}
+          >
+            {renderDataset(avgDatasets)}
+          </Chart>
+        </Card>
+      </div>
+      <div>
+        <div className={classes.docPickLists}>
+          <Picklist
+            placeholder={chosenDoc}
+            onChange={(selectedVal) => {
+              setChosenDoc(selectedVal);
+              setGraphToUpdate('DOC');
+            }}
+            value={chosenDoc}
+            label='Select a Doctor'
+            className={classes.docPicklist}
+          >
+            <Option name='header' label='Select a Doctor' variant='header' />
+            {Object.values(consults?.doctorAverages ?? {}).map(({ user }) => (
+              <Option
+                icon={
+                  <Avatar src={user.picture} className={classes.avatarGraph} />
+                }
+                key={user.user_id}
+                label={`${user.given_name} ${user.family_name}`}
+                name={user.user_id}
+                value={user}
+              />
+            ))}
+          </Picklist>
+          <Picklist
+            placeholder={docSentValue}
+            onChange={(selectedVal) => {
+              setDocSentValue(selectedVal);
+              setGraphToUpdate('DOC');
+            }}
+            value={docSentValue}
+            label='Select a Sentiment'
+            className={classes.docPicklist}
+          >
+            <Option
+              name='header'
+              label='Select a Sentiment Category'
+              variant='header'
+            />
+            {sentimentOptions}
+          </Picklist>
+        </div>
+        <Card title={docGraphTitle} className={classes.card}>
+          <Chart
+            labels={docLabels}
+            type='bar'
+            options={chartOptions}
+            disableAnimations={graphToUpdate === 'AVG'}
+          >
+            {renderDataset(docDatasets)}
+          </Chart>
+        </Card>
+      </div>
+    </div>
+  );
+}
