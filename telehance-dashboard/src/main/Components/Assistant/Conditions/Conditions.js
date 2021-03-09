@@ -41,9 +41,10 @@ const Conditions = ({ medicalConditions, question, diagnose, isLoading }) => {
           {question && <div style={{ marginBottom: '1rem' }}>{question}</div>}
         </div>
         <button title='Refresh' onClick={() => diagnose()}>
-          <FontAwesomeIcon
+          <FontAwesomeIcon className={classes.spin}
             icon={faSync}
             size='lg'
+            spin={isLoading}
           />
         </button>
       </div>
