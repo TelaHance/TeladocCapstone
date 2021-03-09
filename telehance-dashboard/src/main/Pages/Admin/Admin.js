@@ -65,15 +65,19 @@ const Admin = () => {
           />
           <Column type='action' width={75}>
             <MenuItem
-              label='Make Admin'
+                label='Change Role'
+                variant="header"
+            />
+            <MenuItem
+              label='Admin'
               onClick={(event, data) => changeRole(data.user_id, 'Admin')}
             />
             <MenuItem
-              label='Make Doctor'
+              label='Doctor'
               onClick={(event, data) => changeRole(data.user_id, 'Doctor')}
             />
             <MenuItem
-              label='Make Patient'
+              label='Patient'
               onClick={(event, data) => changeRole(data.user_id, 'Patient')}
             />
           </Column>
