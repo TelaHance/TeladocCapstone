@@ -141,10 +141,7 @@ export default function AdminCharts({ consults }) {
           <Picklist
             placeholder={chosenDoc}
             onChange={(selectedVal) => {
-              setChosenDoc((prevVal) => {
-                console.log(prevVal === selectedVal);
-                return prevVal === selectedVal ? selectedVal : prevVal;
-              });
+              setChosenDoc(selectedVal);
               setGraphToUpdate('DOC');
             }}
             value={chosenDoc}
