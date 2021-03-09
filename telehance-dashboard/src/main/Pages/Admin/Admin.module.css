@@ -21,6 +21,11 @@
   margin: 9px 9px 9px 0;
   display: inline-block;
 }
+.avatarGraph {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+}
 
 .avatar img {
   object-fit: cover;
