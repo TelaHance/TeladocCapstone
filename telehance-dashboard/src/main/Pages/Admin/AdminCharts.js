@@ -10,6 +10,7 @@ import {
     MultiSelect,
     Picklist,
     Option,
+    Avatar,
 } from 'react-rainbow-components';
 import classes from './Admin.module.css';
 import {getLabel} from "Components/Sentiment/Pill";
@@ -17,19 +18,21 @@ import {bgColor, categories} from "Pages/Admin/AdminConstants";
 export const AdminCharts = ({ consults }) => {
     const [chosenDoc, setChosenDoc] = useState('Tanay Komarlu');
     const [chosenDocVal, setChosenDocVal] = useState({
-        icon: <img
-            className={classes['rounded-circle']}
-            src='https://lh5.googleusercontent.com/-nWGfFsvI9FU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmM4LfRfQZBBou_hOJV_eBkkPlFdQ/s96-c/photo.jpg'
-            width='25'
-            alt=''
-        />,
+        icon: <Avatar
+                src='https://lh5.googleusercontent.com/-nWGfFsvI9FU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmM4LfRfQZBBou_hOJV_eBkkPlFdQ/s96-c/photo.jpg'
+                className={classes.avatarGraph}
+            />,
         label: "Tanay Komarlu",
         name: "Tanay Komarlu",
     });
     const [avgListVal, setAvgListVal] = useState([
         { label: 'Toxicity', name: 'TOXICITY' },{ label: 'Insult', name: 'INSULT' },{ label: 'Flirtation', name: 'FLIRTATION' },
     ]);
-    const [chosenDocSentVal, setChosenDocSentVal] = useState({ label: 'Toxicity', name: 'TOXICITY' });
+    const [chosenDocSentVal, setChosenDocSentVal] = useState({
+        label: 'Toxicity',
+        name: 'TOXICITY',
+        icon: <FontAwesomeIcon icon={faCircle} style={{ color: '#532197' }}/>
+    });
     const [avgDatasets, setAvgDatasets] = useState([]);
     const [docDatasets, setDocDatasets] = useState([]);
 
@@ -39,7 +42,6 @@ export const AdminCharts = ({ consults }) => {
             const values =
                 typeof consults !== 'undefined'
                     ? Object.values(consults.platformAverages)
-                        .reverse()
                         .map(function (sentiment) {
                             return 100 * sentiment[avgListVal[i].name];
                         })
@@ -53,6 +55,7 @@ export const AdminCharts = ({ consults }) => {
         }
         setAvgDatasets(newDatasets);
     }, [avgListVal, consults]);
+
     const renderDataset = (datasets) => {
         return datasets.map(({ title, values, borderColor }) => (
             <Dataset
@@ -70,7 +73,6 @@ export const AdminCharts = ({ consults }) => {
             let values = Object.values(consults.doctorAverages.filter((doctor) =>{
                 return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
             })[0].averages)
-                .reverse()
                 .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
             newDatasets.push({
                 title: "Dr. " + chosenDoc.split(" ")[1],
@@ -78,7 +80,6 @@ export const AdminCharts = ({ consults }) => {
                 values: values,
             });
             values = Object.values(consults.platformAverages)
-                        .reverse()
                         .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
             newDatasets.push({
                 title: 'Average Doctor',
@@ -90,11 +91,11 @@ export const AdminCharts = ({ consults }) => {
     }, [chosenDocVal, chosenDocSentVal, consults]);
     const docLabels = typeof consults !== 'undefined' ? Object.keys(consults.doctorAverages.filter((doctor) =>{
         return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-    })[0].averages).reverse() : [];
+    })[0].averages) : [];
 
     const avgLabels =
         typeof consults !== 'undefined'
-            ? Object.keys(consults.platformAverages).reverse()
+            ? Object.keys(consults.platformAverages)
             : [];
     const docGraphTitle = "Dr. " + chosenDoc.split(" ")[1] + '\'s Average ' + chosenDocSentVal.label + ' Consult Rating';
     const options = {
@@ -167,11 +168,9 @@ export const AdminCharts = ({ consults }) => {
                                     name={doctor.user.given_name + ' ' + doctor.user.family_name}
                                     label={doctor.user.given_name + ' ' + doctor.user.family_name}
                                     icon={
-                                        <img
-                                            className={classes['rounded-circle']}
+                                        <Avatar
                                             src={doctor.user.picture}
-                                            width='25'
-                                            alt=''
+                                            className={classes.avatarGraph}
                                         />
                                     }
                                 />
