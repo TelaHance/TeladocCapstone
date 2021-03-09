@@ -46,7 +46,7 @@
 }
 
 .purpose {
-  flex: 1 0 50%;
+  width: 50%;
   margin-left: 1em;
 }
 

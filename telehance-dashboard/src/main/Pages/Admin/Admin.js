@@ -1,16 +1,16 @@
 import React from 'react';
 import useSWR from 'swr';
-import {getUserUrl, getAllUsersUrl, adminGraphUrl} from 'Api';
+import { getUserUrl, getAllUsersUrl, adminGraphUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
-import {Container, Row} from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
-import {nameFormatter, roleBadge} from "Pages/Admin/getColumns";
+import { nameFormatter, roleBadge } from 'Pages/Admin/getColumns';
 import {
   TableWithBrowserPagination,
   Column,
   MenuItem,
-} from "react-rainbow-components";
-import {AdminCharts} from "Pages/Admin/AdminCharts";
+} from 'react-rainbow-components';
+import { AdminCharts } from 'Pages/Admin/AdminCharts';
 import classes from './Admin.module.css';
 
 const Admin = () => {
@@ -20,9 +20,9 @@ const Admin = () => {
     fetchWithToken
   );
   const consultToken = process.env.REACT_APP_CONSULT_API_KEY;
-  const { data: consults, mutate: mutateConsults } = useSWR(
-      [adminGraphUrl, consultToken],
-      fetchWithToken
+  const { data: consults } = useSWR(
+    [adminGraphUrl, consultToken],
+    fetchWithToken
   );
   const changeRole = async (id, role) => {
     try {
@@ -45,20 +45,37 @@ const Admin = () => {
     <>
       <BreadcrumbBar page='Admin Panel' />
       <Container className='mb-5'>
-        <h2 className='text-left'>Welcome Admin!</h2>
-        <h5 className='text-left'>Dashboard</h5>
-        <br/>
-        <AdminCharts consults={consults}/>
-        <br/><br/>
+        <AdminCharts consults={consults} />
+        <br />
+        <br />
         <h5 className='text-left'>Manage Users</h5>
-        <TableWithBrowserPagination pageSize={10} data={users} keyField="user_id" className={classes['table']}>
-          <Column header="Name" field="name" component={nameFormatter}/>
-          <Column header="email" field="email" />
-          <Column header="Status" field="status" component={roleBadge} />
-          <Column type="action">
-            <MenuItem label="Change role to Admin" onClick={(event, data) => changeRole(data.user_id, 'Admin')} />
-            <MenuItem label="Change role to Doctor" onClick={(event, data) => changeRole(data.user_id, 'Doctor')} />
-            <MenuItem label="Change role to Patient" onClick={(event, data) => changeRole(data.user_id, 'Patient')} />
+        <TableWithBrowserPagination
+          pageSize={10}
+          data={users}
+          keyField='user_id'
+          className={classes.table}
+        >
+          <Column header='Name' field='name' component={nameFormatter} />
+          <Column header='email' field='email' />
+          <Column
+            header='Status'
+            field='status'
+            component={roleBadge}
+            width={90}
+          />
+          <Column type='action' width={75}>
+            <MenuItem
+              label='Make Admin'
+              onClick={(event, data) => changeRole(data.user_id, 'Admin')}
+            />
+            <MenuItem
+              label='Make Doctor'
+              onClick={(event, data) => changeRole(data.user_id, 'Doctor')}
+            />
+            <MenuItem
+              label='Make Patient'
+              onClick={(event, data) => changeRole(data.user_id, 'Patient')}
+            />
           </Column>
         </TableWithBrowserPagination>
       </Container>
