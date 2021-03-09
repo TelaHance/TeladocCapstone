@@ -10,7 +10,7 @@ import {
   Column,
   MenuItem,
 } from 'react-rainbow-components';
-import { AdminCharts } from 'Pages/Admin/AdminCharts';
+import AdminCharts from 'Pages/Admin/AdminCharts';
 import classes from './Admin.module.css';
 
 const Admin = () => {
