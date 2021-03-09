@@ -72,7 +72,7 @@ export const AdminCharts = ({ consults }) => {
         if(typeof consults !== 'undefined') {
             let values = Object.values(consults.doctorAverages.filter((doctor) =>{
                 return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-            })[0].averages)
+            })[0].averages).reverse()
                 .map(sentiment => 100*sentiment[chosenDocSentVal.name]);
             newDatasets.push({
                 title: "Dr. " + chosenDoc.split(" ")[1],
@@ -91,7 +91,7 @@ export const AdminCharts = ({ consults }) => {
     }, [chosenDocVal, chosenDocSentVal, consults]);
     const docLabels = typeof consults !== 'undefined' ? Object.keys(consults.doctorAverages.filter((doctor) =>{
         return doctor.user.given_name + ' ' + doctor.user.family_name === chosenDoc
-    })[0].averages) : [];
+    })[0].averages).reverse() : [];
 
     const avgLabels =
         typeof consults !== 'undefined'
