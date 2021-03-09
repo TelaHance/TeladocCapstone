@@ -67,6 +67,10 @@ export default function Assistant({
     }
   }, [newEntities]);
 
+  useEffect(() => {
+    setMedicalTerms(entities ?? []);
+  }, [entities]);
+
   function changeTool(option: string) {
     setIsExpanded(!(currentTool === option && isExpanded))
     action(!(currentTool === option && isExpanded))
