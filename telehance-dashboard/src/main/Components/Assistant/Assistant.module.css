@@ -142,3 +142,7 @@ button:hover {
 .loading {
   opacity: 0.5;
 }
+
+.spin {
+  animation-duration: 1s;
+}
