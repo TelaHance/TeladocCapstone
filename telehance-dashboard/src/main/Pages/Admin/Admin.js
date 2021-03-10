@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import useSWR from 'swr';
 import { getUserUrl, getAllUsersUrl, adminGraphUrl } from 'Api';
-import { fetchWithToken } from 'Util/fetch';
+import { fetchWithToken, fetchWithUser } from 'Util/fetch';
 import { Container, Row } from 'react-bootstrap';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import { nameFormatter, roleBadge } from 'Pages/Admin/getColumns';
@@ -24,6 +25,19 @@ const Admin = () => {
     [adminGraphUrl, consultToken],
     fetchWithToken
   );
+  const [role, setRole] = useState();
+  const { user } = useAuth0();
+  const sub = user ? user.sub.split('|')[1] : 'NULL';
+  const { data: userData } = useSWR(
+    [getUserUrl, awsToken, 'POST', sub],
+    fetchWithUser
+  );
+
+  useEffect(() => {
+    if (userData?.body) {
+      setRole(JSON.parse(userData.body).role.toLowerCase());
+    }
+  }, [userData]);
   const changeRole = async (id, role) => {
     try {
       await fetchWithToken(getUserUrl, awsToken, {
@@ -48,8 +62,8 @@ const Admin = () => {
         <AdminCharts consults={consults} />
         <br />
         <br />
-        <h5 className='text-left'>Manage Users</h5>
-        <TableWithBrowserPagination
+        {role === 'admin' && <h5 className='text-left'>Manage Users</h5>}
+        {role === 'admin' && <TableWithBrowserPagination
           pageSize={10}
           data={users}
           keyField='user_id'
@@ -80,8 +94,12 @@ const Admin = () => {
               label='Patient'
               onClick={(event, data) => changeRole(data.user_id, 'Patient')}
             />
+            <MenuItem
+              label='Demo'
+              onClick={(event, data) => changeRole(data.user_id, 'Demo')}
+            />
           </Column>
-        </TableWithBrowserPagination>
+        </TableWithBrowserPagination>}
       </Container>
     </>
   );
