@@ -46,15 +46,13 @@ export default function Transcript({
       [isEditing, leaf.start === currWordStartTime, leaf]
     );
 
-  if (!transcript) return <h1>Unable to load transcript.</h1>;
-
   return (
     <div className={classes.container}>
       {children}
       <div className={classes.messages}>
         <Slate
           editor={editor}
-          value={transcript}
+          value={transcript ?? []}
           onChange={(value) => onChange(value as TranscriptData)}
         >
           <Editable
