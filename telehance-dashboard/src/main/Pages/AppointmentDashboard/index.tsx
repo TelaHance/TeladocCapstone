@@ -46,14 +46,14 @@ export default function AppointmentDashboard() {
     <>
       <BreadcrumbBar page='Appointment Dashboard' />
       <Container className='mb-5 text-center'>
-        {role === 'PATIENT' && <ScheduleAppointment />}
+        {role === 'PATIENT' || role === 'DEMO' && <ScheduleAppointment />}
         <TableWithBrowserPagination
           pageSize={3}
           data={appointments}
           keyField='id'
           className={classes.table}
         >
-          {role === 'PATIENT' && (
+          {role === 'PATIENT' || role === 'DEMO' && (
             <Column
               header='Doctor'
               field='doctor'

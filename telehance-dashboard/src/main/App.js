@@ -33,13 +33,13 @@ function App() {
           exact
           path='/consults'
           component={ConsultDashboard}
-          authorizedRoles={['admin', 'doctor', 'patient']}
+          authorizedRoles={['admin', 'doctor', 'patient', 'demo']}
         />
         <PrivateRoute path='/profile' component={Profile} />
         <AuthorizedRoute
           path='/admin'
           component={Admin}
-          authorizedRoles={['admin']}
+          authorizedRoles={['admin', 'demo']}
         />
         <PrivateRoute
           path='/consults/:consultId'
@@ -49,7 +49,7 @@ function App() {
           exact
           path='/appointments'
           component={AppointmentDashboard}
-          authorizedRoles={['patient', 'doctor']}
+          authorizedRoles={['patient', 'doctor', 'demo']}
         />
         <AuthorizedRoute
           path='/appointment/:consultId'

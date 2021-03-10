@@ -74,6 +74,17 @@ export default function Navbar() {
                 Home
               </NavLink>
             </li>
+            {(role === 'patient' || role === 'doctor' || role === 'demo') && (
+              <li>
+                <NavLink
+                  to='/appointments'
+                  activeClassName={styles.active}
+                  onClick={() => setActive(false)}
+                >
+                  Appointments
+                </NavLink>
+              </li>
+            )}
             {role && (
               <li>
                 <NavLink
@@ -85,7 +96,7 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {role === 'admin' && (
+            {(role === 'admin' || role === 'demo') && (
               <li>
                 <NavLink
                   to='/admin'
@@ -96,17 +107,7 @@ export default function Navbar() {
                 </NavLink>
               </li>
             )}
-            {(role === 'patient' || role === 'doctor') && (
-              <li>
-                <NavLink
-                  to='/appointments'
-                  activeClassName={styles.active}
-                  onClick={() => setActive(false)}
-                >
-                  Appointments
-                </NavLink>
-              </li>
-            )}
+            
           </ul>
         </div>
         <ul className={clsx(styles.nav, styles['header-navbar-rht'])}>
