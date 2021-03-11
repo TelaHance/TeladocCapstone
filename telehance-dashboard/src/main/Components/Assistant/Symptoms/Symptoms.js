@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
@@ -66,14 +66,6 @@ const database = dbMap.flatMap(({ type, json }) => {
   });
 });
 
-const theme = {
-  rainbow: {
-    palette: {
-      brand: 'rgb(0, 128, 0)',
-    },
-  },
-};
-
 export default function Symptoms({
   medicalTerms,
   consultId,
@@ -92,6 +84,7 @@ export default function Symptoms({
           if (regex.test(item.label) || regex.test(item.description)) {
             return medicalTerms.every((term) => term.id !== item.id);
           }
+          return false;
         } catch (err) {
           return false;
         }

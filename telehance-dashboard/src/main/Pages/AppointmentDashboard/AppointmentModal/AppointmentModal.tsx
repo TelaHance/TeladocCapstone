@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Lookup,
   Modal,
   Button,
   Textarea,

@@ -2,7 +2,7 @@ import React from 'react';
 import useSWR from 'swr';
 import { getUserUrl, getAllUsersUrl, adminGraphUrl } from 'Api';
 import { fetchWithToken } from 'Util/fetch';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import BreadcrumbBar from 'Components/BreadcrumbBar/BreadcrumbBar';
 import { nameFormatter, roleBadge } from 'Pages/Admin/getColumns';
 import {

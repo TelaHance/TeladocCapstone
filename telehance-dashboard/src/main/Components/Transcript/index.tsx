@@ -43,6 +43,7 @@ export default function Transcript({
           {children}
         </Word>
       ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [isEditing, leaf.start === currWordStartTime, leaf]
     );
 

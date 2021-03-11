@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from 'react-rainbow-components';
 import AppointmentModal from 'Pages/AppointmentDashboard/AppointmentModal/AppointmentModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcaseMedical, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcaseMedical } from '@fortawesome/free-solid-svg-icons';
 import { addApptUrl } from 'Api';
 import { putWithToken } from 'Util/fetch';
 import { useAuth0 } from '@auth0/auth0-react';

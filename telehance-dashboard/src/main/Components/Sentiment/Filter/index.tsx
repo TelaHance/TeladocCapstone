@@ -68,7 +68,7 @@ export default function Filter({ setDisplayConsult, consults }: any) {
 
   useEffect(() => {
     setDisplayConsult(onFilter(value, consults));
-  }, [value]);
+  }, [setDisplayConsult, consults, value]);
 
   function checkShouldShow(event: any) {
     if (!ref?.current?.contains(event.target)) {

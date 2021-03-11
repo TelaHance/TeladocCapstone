@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { Badge, Overlay, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import classes from './Pill.module.css';
 
 export function getLabel(attribute: string) {

@@ -14,7 +14,6 @@ export default function AudioPlayer({
 
   // States for keeping track of which word is active
   const [time, setTime] = useState(0); // Current playback time in ms (minimize float errors)
-  const [currWordIdx, setCurrWordIdx] = useState(0); // Where in startTimes the current word lies
 
   useEffect(() => {
     setTime(startFrom);
@@ -29,11 +28,8 @@ export default function AudioPlayer({
     // If idx out of range (may occur due to floating point errors)
     const nextWordIdx =
       closestTimeIdx < 0 ? startTimes.length - 1 : closestTimeIdx;
-    if (currWordIdx !== nextWordIdx) {
-      setCurrWordIdx(nextWordIdx);
-      setCurrWordStartTime(startTimes[nextWordIdx]);
-    }
-  }, [time, startTimes]);
+    setCurrWordStartTime(startTimes[nextWordIdx]);
+  }, [time, startTimes, setCurrWordStartTime]);
 
   function getPlayerTime() {
     return Math.round(
@@ -48,18 +44,6 @@ export default function AudioPlayer({
 
   function updateTime() {
     setTime(getPlayerTime());
-  }
-
-  function previous() {
-    setTime(0);
-    setPlayerTime(0);
-  }
-
-  function next() {
-    setTime((player?.current?.audio?.current?.duration ?? 0) * 1000);
-    if (player?.current?.audio?.current?.currentTime !== undefined)
-      player.current.audio.current.currentTime =
-        player.current.audio.current.duration;
   }
 
   return (
@@ -79,7 +63,6 @@ export default function AudioPlayer({
       showJumpControls={false}
       className={classes.container}
       ref={player}
-      // layout='horizontal'
     />
   );
 }
