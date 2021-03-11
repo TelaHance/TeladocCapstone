@@ -8,6 +8,16 @@ import {
 import { ButtonIcon } from 'react-rainbow-components';
 import classes from './CallControls.module.css';
 
+export enum Status {
+  Waiting = 'waiting',
+  Ready = 'ready',
+  Initiated = 'initiated',
+  Ringing = 'ringing',
+  InProgress = 'in-progress',
+  Completed = 'completed',
+  Closed = 'closed',
+}
+
 export default function CallControls({
   status,
   call,
@@ -20,7 +30,7 @@ export default function CallControls({
 
   useEffect(() => {
     mute(isMuted);
-  }, [isMuted]);
+  }, [mute, isMuted]);
 
   useEffect(() => {
     switch (status) {
@@ -89,16 +99,6 @@ export default function CallControls({
       )}
     </div>
   );
-}
-
-export enum Status {
-  Waiting = 'waiting',
-  Ready = 'ready',
-  Initiated = 'initiated',
-  Ringing = 'ringing',
-  InProgress = 'in-progress',
-  Completed = 'completed',
-  Closed = 'closed',
 }
 
 type CallControlsProps = {

@@ -4,6 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import styles from './Navbar.module.css';
 
+/* eslint no-extend-native: ["error", { "exceptions": ["String"] }] */
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };

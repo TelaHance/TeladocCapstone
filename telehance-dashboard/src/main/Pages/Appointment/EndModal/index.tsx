@@ -41,7 +41,7 @@ export default function EndModal({
 
   return (
     <Modal
-      title={<img src={TelaHance2} className={classes.title} />}
+      title={<img src={TelaHance2} className={classes.title} alt='TelaHance Logo'/>}
       size='medium'
       isOpen={isOpen}
       onRequestClose={onClose}
@@ -57,7 +57,7 @@ export default function EndModal({
               />
             }
           >
-            <img src={Schedule} />
+            <img src={Schedule} alt='Appointments Page'/>
           </VisualPickerOption>
           <VisualPickerOption
             name={Labels.Consult}
@@ -68,7 +68,7 @@ export default function EndModal({
               />
             }
           >
-            <img src={Clipboard} />
+            <img src={Clipboard} alt='Review Current Consult'/>
           </VisualPickerOption>
           <VisualPickerOption
             name={Labels.Consults}
@@ -79,7 +79,7 @@ export default function EndModal({
               />
             }
           >
-            <img src={Files} />
+            <img src={Files} alt='Consults Page'/>
           </VisualPickerOption>
         </VisualPicker>
       </div>
