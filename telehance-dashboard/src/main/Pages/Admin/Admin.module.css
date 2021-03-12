@@ -19,7 +19,7 @@
 }
 .avatar {
   margin: 9px 9px 9px 0!important;
-  display: inline-block;
+  display: inline-block!important;
 }
 .avatarGraph {
   width: 28px!important;
@@ -50,7 +50,7 @@
 }
 .flexContainer > div {
   /* flex: 1; */
-  width: 420px;
+  width: 420px!important;
 }
 .docPickLists {
   display: flex!important;

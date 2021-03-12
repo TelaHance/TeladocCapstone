@@ -52,7 +52,7 @@ th > div > div > span {
 
 .avatar {
   margin-right: 9px;
-  display: inline-block;
+  display: inline-block!important;
 }
 
 .avatar img {
@@ -113,4 +113,8 @@ th > div > div > span {
 
 .table > div:last-child {
   border-radius: 0 0 15px 15px;
+}
+
+.table td[role='gridcell'] > div {
+  height: inherit;
 }
