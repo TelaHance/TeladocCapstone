@@ -29,8 +29,13 @@ export function getUrl(api: Api, route: string, query?: ApiQuery) {
 // Appointment Api
 
 export const addApptUrl = getUrl('appointment', '/addappt');
-export const getApptsUrl = (role: string, query: GetUserQuery) =>
-  getUrl('appointment', `/by${role.toLowerCase()}`, query);
+export const getApptsUrl = (role: string, query: GetUserQuery) => {
+  if (role === 'DEMO')
+    return getUrl('appointment', `/bypatient`, query);
+  else
+    return getUrl('appointment', `/by${role.toLowerCase()}`, query);
+}
+  
 
 // Consult Api
 
