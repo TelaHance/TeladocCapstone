@@ -41,6 +41,9 @@
 .table > div:last-child {
   border-radius: 0 0 15px 15px!important;
 }
+.table td[role='gridcell'] > div {
+  height: inherit;
+}
 .flexContainer {
   display: flex!important;
   justify-content: space-around!important;
