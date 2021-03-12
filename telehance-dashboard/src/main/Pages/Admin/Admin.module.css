@@ -2,62 +2,62 @@
   table-layout: auto !important;
 }
 .text-center {
-  text-align: center;
+  text-align: center!important;
 }
 .card {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  height: 300px;
-  padding: 0px 10px 10px 10px;
+  margin-top: 10px!important;
+  display: flex!important;
+  flex-direction: column!important;
+  height: 300px!important;
+  padding: 0px 10px 10px 10px!important;
 }
 .card > div:first-child > header:first-child > h2 {
-  font-size: 1rem;
+  font-size: 1rem!important;
 }
 .picklist {
-  display: inline;
+  display: inline!important;
 }
 .avatar {
-  margin: 9px 9px 9px 0;
+  margin: 9px 9px 9px 0!important;
   display: inline-block;
 }
 .avatarGraph {
-  width: 28px;
-  height: 28px;
-  display: inline-block;
+  width: 28px!important;
+  height: 28px!important;
+  display: inline-block!important;
 }
 
 .avatar img {
-  object-fit: cover;
+  object-fit: cover!important;
 }
 .table {
-  border: 1px solid rgba(215, 217, 226, 1);
-  border-radius: 15px;
+  border: 1px solid rgba(215, 217, 226, 1)!important;
+  border-radius: 15px!important;
 }
 .table > div:first-child > div:last-child > div {
-  border-radius: 15px 15px 0 0;
-  border: none;
+  border-radius: 15px 15px 0 0!important;
+  border: none!important;
 }
 .table > div:last-child {
-  border-radius: 0 0 15px 15px;
+  border-radius: 0 0 15px 15px!important;
 }
 .flexContainer {
-  display: flex;
-  justify-content: space-around;
+  display: flex!important;
+  justify-content: space-around!important;
 }
 .flexContainer > div {
   /* flex: 1; */
   width: 420px;
 }
 .docPickLists {
-  display: flex;
+  display: flex!important;
 }
 .docPicklist {
-  width: auto;
-  margin-right: 0.5vh;
-  margin-left: 0.5vh;
+  width: auto!important;
+  margin-right: 0.5vh!important;
+  margin-left: 0.5vh!important;
 }
 .picklist > label {
-  display: block;
-  text-align: center;
+  display: block!important;
+  text-align: center!important;
 }
