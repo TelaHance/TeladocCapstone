@@ -30,7 +30,8 @@ export default function CallControls({
 
   useEffect(() => {
     mute(isMuted);
-  }, [mute, isMuted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMuted]);
 
   useEffect(() => {
     switch (status) {

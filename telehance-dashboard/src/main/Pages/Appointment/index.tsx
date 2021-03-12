@@ -44,7 +44,8 @@ export default function Appointment(route: RouteComponentProps) {
     return () => {
       getWebSocket()?.close();
     };
-  }, [getWebSocket, hangup]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (lastMessage) {
