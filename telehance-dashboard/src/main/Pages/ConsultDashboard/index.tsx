@@ -77,7 +77,7 @@ function ConsultDashboard() {
             component={dateFormatter}
           />
           <Column
-            header={<Filter setDisplayConsult={setDisplayConsults} consults={consults}/>}
+            header={<Filter />}
             field='sentiment'
             component={sentimentFormatter}
           />
