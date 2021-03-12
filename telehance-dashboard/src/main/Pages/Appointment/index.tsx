@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
 import { Device, Connection } from 'twilio-client';
 import useWebSocket from 'react-use-websocket';
@@ -28,6 +28,12 @@ export default function Appointment(route: RouteComponentProps) {
 
   const { lastMessage, getWebSocket } = useWebSocket(consultWebsocketUrl);
 
+  const hangup = useCallback(() => {
+    connection?.disconnect();
+    device.destroy();
+    setTimeout(() => setShowModal(true), 1000);
+  }, [connection]);
+
   useEffect(() => {
     (async () => {
       const data = await (await fetch(getTwilioTokenUrl)).json();
@@ -38,7 +44,7 @@ export default function Appointment(route: RouteComponentProps) {
     return () => {
       getWebSocket()?.close();
     };
-  }, []);
+  }, [getWebSocket, hangup]);
 
   useEffect(() => {
     if (lastMessage) {
@@ -68,12 +74,6 @@ export default function Appointment(route: RouteComponentProps) {
     });
     conn.mute(true);
     setConnection(conn);
-  }
-
-  function hangup() {
-    connection?.disconnect();
-    device.destroy();
-    setTimeout(() => setShowModal(true), 1000);
   }
 
   function mute(shouldMute?: boolean) {
