@@ -42,7 +42,7 @@
   border-radius: 0 0 15px 15px!important;
 }
 .table td[role='gridcell'] > div {
-  height: inherit;
+  height: auto;
 }
 .flexContainer {
   display: flex!important;

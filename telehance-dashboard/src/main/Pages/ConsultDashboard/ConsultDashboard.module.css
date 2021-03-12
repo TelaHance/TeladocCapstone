@@ -70,6 +70,7 @@
 .table > div:last-child {
   border-radius: 0 0 15px 15px;
 }
+.table tr[data-id='table_body-row'] > th > div,
 .table td[role='gridcell'] > div {
-  height: inherit;
+  height: auto;
 }
