@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { Option, ButtonIcon } from 'react-rainbow-components';
 // @ts-ignore
-import InternalDropdown from 'react-rainbow-components/components/InternalDropdown';
+// import InternalDropdown from 'react-rainbow-components/components/InternalDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ConsultData } from 'Models';

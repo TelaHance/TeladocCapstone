@@ -17,7 +17,7 @@ import {
   dateFormatter,
 } from './getColumns';
 import classes from './ConsultDashboard.module.css';
-
+import Filter from 'Components/Sentiment/Filter';
 
 
 const { REACT_APP_CONSULT_API_KEY, REACT_APP_MANAGEMENT_API_KEY } = process.env;
@@ -77,7 +77,7 @@ function ConsultDashboard() {
             component={dateFormatter}
           />
           <Column
-            header='Insults'
+            header={<Filter setDisplayConsult={setDisplayConsults} consults={consults}/>}
             field='sentiment'
             component={sentimentFormatter}
           />
