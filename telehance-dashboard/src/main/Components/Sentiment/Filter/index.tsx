@@ -86,37 +86,7 @@ export default function Filter({ setDisplayConsult, consults }: any) {
   return (
     <div className={classes.container} ref={ref}>
       <span>Issues</span>
-      <ButtonIcon
-        onClick={() => setShow((show) => !show)}
-        variant='brand'
-        size='small'
-        tooltip='Filter'
-        icon={
-          <FontAwesomeIcon
-            icon={faArrowDown}
-            className={clsx(classes.arrow, { [classes.active]: show })}
-          />
-        }
-      />
-      {show ? (
-        <InternalDropdown
-          className={classes.dropdown}
-          value={value}
-          onChange={setValue}
-          multiple
-        >
-          {Object.entries(attributes).map(([attribute, color]) => (
-            <Option
-              key={attribute}
-              name={attribute}
-              label={getLabel(attribute)}
-              icon={
-                <FontAwesomeIcon icon={faCircle} style={{ color }} size='lg' />
-              }
-            />
-          ))}
-        </InternalDropdown>
-      ) : null}
+
     </div>
   );
 }
