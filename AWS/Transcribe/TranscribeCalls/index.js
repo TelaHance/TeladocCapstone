@@ -22,15 +22,14 @@ module.exports.transcribe = (event, context, callback) => {
       TranscriptionJobName,
       OutputBucketName: 'consult-transcription',
       "Settings": {
-        "MaxSpeakerLabels": 2,
-        "ShowSpeakerLabels": true
-   },
+        "ChannelIdentification": true,
+      },
     }).promise();
   });
 
   Promise.all(transcribingPromises)
-    .then(() => {
-      callback(null, { message: 'Start transcription job successfully' });
-    })
-    .catch(err => callback(err, { message: 'Error start transcription job' }));
+      .then(() => {
+        callback(null, { message: 'Start transcription job successfully' });
+      })
+      .catch(err => callback(err, { message: 'Error start transcription job' }));
 };

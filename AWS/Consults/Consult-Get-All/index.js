@@ -16,49 +16,62 @@ exports.handler = async (event) => {
   };
 
   const roleResult = await dynamoDb.get(roleParams).promise();
-  const role = roleResult.Item.toUpperCase();
-  console.log(role);
-  
+  const role = roleResult.Item.role.toUpperCase();
+
   const queryParams = {
-    TableName: 'consults-dev',
-    ExpressionAttributeNames: {
-      '#timestamp': 'timestamp'
+    TableName: 'consults',
+    ExpressionAttributeValues: {
+      // ':now': Date.now(),
+      ':user_id': user_id
     },
-    ExpressionAttributeValues = {
-      'user_id': user_id
-    }
-  }
+    FilterExpression: 'attribute_exists(transcript)',
+  };
 
-  let queryResults;
+  let results;
 
-  if (role === 'ADMIN') {
+  if (role === 'ADMIN' || role === 'DEMO') {
     const scanParams = {
-      TableName: 'consults-dev',
-      ExpressionAttributeNames: {
-        // TODO: Replace with 'start' and 'end'
-        '#timestamp': 'timestamp'
-      },
-      ProjectionExpression: 'consult_id, doctor_id, patient_id, #timestamp, sentiment'
-    }
-    queryResults = await dynamoDb.scan(scanParams).promise();
+      TableName: 'consults',
+      // ExpressionAttributeValues: { ':now': Date.now() },
+      // FilterExpression: 'start_time < :now',
+      FilterExpression: 'attribute_exists(transcript)',
+      ProjectionExpression: 'consult_id, doctor_id, patient_id, start_time, end_time, sentiment'
+    };
+    results = await dynamoDb.scan(scanParams).promise();
   } else if (role === 'DOCTOR') {
-    queryParams.IndexName = 'doctor_id-start-index';
+    queryParams.IndexName = 'doctor-index';
+    // queryParams.KeyConditionExpression = 'doctor_id = :user_id and start_time < :now';
     queryParams.KeyConditionExpression = 'doctor_id = :user_id';
-    queryParams.ProjectionExpression = 'consult_id, patient_id, #timestamp';
-    queryResults = await dynamoDb.query(queryParams).promise();
+    queryParams.ProjectionExpression = 'consult_id, patient_id, start_time, end_time, sentiment';
+    results = await dynamoDb.query(queryParams).promise();
   } else {
-    queryParams.IndexName = 'patient_id-start-index';
-    queryParams.KeyConditionExpression = 'patient_id = :user_id'
-    queryParams.ProjectionExpression = 'consult_id, doctor_id, #timestamp';
-    queryResults = await dynamoDb.query(queryParams).promise();
+    queryParams.IndexName = 'patient-index';
+    // queryParams.KeyConditionExpression = 'patient_id = :user_id and start_time < :now';
+    queryParams.KeyConditionExpression = 'patient_id = :user_id';
+    queryParams.ProjectionExpression = 'consult_id, doctor_id, start_time, end_time';
+    results = await dynamoDb.query(queryParams).promise();
   }
 
-  const consults = queryResults.Items;
-  console.log(consults);
-  const userIds = consults.map(consult => [consult.doctor_id, consult.patient_id]).flat();
-  const uniqueUserIds = [...new Set(userIds)].map(user_id => {return { 'user_id': user_id }});
+  // Return early if no consults matched the scan or query.
+  if (results.Count === 0) {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,GET"
+      },
+      body: JSON.stringify([]),
+    };
+  }
 
-  console.log(uniqueUserIds);
+  const consults = results.Items;
+  consults.sort((a, b) => b.start_time - a.start_time);
+
+  const userIds = consults.map(consult => [consult.doctor_id, consult.patient_id]).flat();
+  const uniqueUserIds = [...new Set(userIds)].map(user_id => {
+    if (user_id) return { 'user_id': user_id };
+  });
 
   const getUsersParams = {
     RequestItems: {
@@ -67,12 +80,26 @@ exports.handler = async (event) => {
       }
     },
     ProjectionExpression: 'user_id, given_name, family_name, picture'
-  }
+  };
 
   const usersResult = await dynamoDb.batchGet(getUsersParams).promise();
-  const { users } = usersResult.Response;
+  const { users } = usersResult.Responses;
 
-  consult.log(users);
+  const userData = {};
+  users.forEach(user => {
+    const { user_id } = user;
+    userData[user_id] = user;
+  });
+
+  const fullConsults = [];
+  consults.forEach(consult => {
+    const { patient_id, doctor_id, ...otherData } = consult;
+    fullConsults.push({
+      ...otherData,
+      patient: userData[patient_id],
+      doctor: userData[doctor_id],
+    });
+  });
 
   return {
     statusCode: 200,
@@ -81,6 +108,6 @@ exports.handler = async (event) => {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,GET"
     },
-    body: JSON.stringify({consults, users})
-  }
+    body: JSON.stringify(fullConsults),
+  };
 };
