@@ -17,7 +17,7 @@ const Footer = () =>{
             <div className={classes['footer']}>
                 <div className={classes['credText']}>
                     Made by&nbsp;
-                    <a className={classes['credLink']} href="https://capstone.cs.ucsb.edu/teams.html">
+                    <a className={classes['credLink']} href="https://capstone.cs.ucsb.edu/teams.html#team4">
                         Team SALT
                     </a>
                 </div>
