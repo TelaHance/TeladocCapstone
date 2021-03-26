@@ -13,6 +13,8 @@ This section serves as a quick reference for values found in [`.env.local.sample
 | `REACT_APP_AUTH0_AUDIENCE`     | See `Getting Started` below |
 | `REACT_APP_CONSULT_API_KEY`    | Ask for an API Key          |
 | `REACT_APP_MANAGEMENT_API_KEY` | Ask for an API Key          |
+| `REACT_APP_APPOINTMENT_API_KEY`    | Ask for an API Key          |
+| `REACT_APP_USER_API_KEY` | Ask for an API Key          |
 
 
 ## Getting started
