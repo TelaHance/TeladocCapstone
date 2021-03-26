@@ -20,7 +20,7 @@ This section serves as a quick reference for values found in [`.env.local.sample
 The first step is to create our secrets file for running the application locally. You can do this by running the following command:
 
 ```bash
-  cp apollo-dashboard/.env.local.sample apollo-dashboard/.env.local
+  cp telahance-dashboard/.env.local.sample telahance-dashboard/.env.local
 ```
 
 The next thing you'll want to do is to choose a name for your application. The name should be lowercase letters, digits, and hyphens only. You'll want to then create this application on Netlify in order to verify that the name is available.
