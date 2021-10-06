@@ -2,6 +2,8 @@
 
 A Clinical Quality Serverless React web app made with Create React App.
 
+Project Poster and Presentation can be found [here](https://capstone.cs.ucsb.edu/past21.html#team4).
+
 ## Property file values
 
 This section serves as a quick reference for values found in [`.env.local.sample`](./.env.local.sample).
